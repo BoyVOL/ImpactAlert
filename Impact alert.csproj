@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Godot.NET.Sdk/3.3.0">
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+    <RootNamespace>Impactalert</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="Node2D.cs" />
+    <Content Include="ClassLibrary.cs" />
+    <Content Include="MathExtra.cs" />
+  </ItemGroup>
+</Project>
