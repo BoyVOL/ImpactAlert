@@ -27,6 +27,18 @@ public class MathExtra
     }
     
     /// <summary>
+    /// Преобразование параболы в контрольные точки квадратичной кривой безье (не реализовано)
+    /// </summary>
+    /// <param name="A">параметр а параболы</param>
+    /// <param name="B">параметр б параболы</param>
+    /// <param name="C">константа параболы</param>
+    /// <returns>массив точек кривой безье</returns>
+    public Vector2[] ParabolaToBezier(Vector2 A, Vector2 B, Vector2 C){
+        Vector2[] Result = new Vector2[3];
+        return Result;
+    }
+    
+    /// <summary>
     /// Метод, возвращающий расстояние максимального сближения двух объектов с заданными скоростями и начальными точками
     /// </summary>
     /// <param name="start1">Начальная точка объекта 1</param>
