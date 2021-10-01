@@ -25,6 +25,29 @@ public class MathExtra
 
         return cpatime;             // time of CPA
     }
+
+    /// <summary>
+    /// Метод, возвращающий момент времени максимального сближения двух объектов с заданными скоростями и начальными точками
+    /// Перегрузка для двухмерных пространств
+    /// </summary>
+    /// <param name="start1">Начальная точка объекта 1</param>
+    /// <param name="start2">Начальная точка объекта 2</param>
+    /// <param name="speed1">Начальная скорость объекта 1</param>
+    /// <param name="speed2">Начальная скорость объекта 2</param>
+    /// <returns>искомый момент времени</returns>
+    public static float cpaTime(Vector2 start1, Vector2 start2, Vector2 speed1, Vector2 speed2)
+    {
+        Vector2 dv = speed1 - speed2;
+
+        float dv2 = dv.Dot(dv);
+        if (dv2 < Mathf.Epsilon)      // the  tracks are almost parallel
+            return 0;             // any time is ok.  Use time 0.
+
+        Vector2 w0 = start1 - start2;
+        float cpatime = -w0.Dot(dv) / dv2;
+
+        return cpatime;             // time of CPA
+    }
     
     /// <summary>
     /// Преобразование параболы в контрольные точки квадратичной кривой безье (не реализовано)
