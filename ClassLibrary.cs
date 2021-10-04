@@ -535,7 +535,7 @@ public class SpaceObject {
 }
 
 /// <summary>
-/// Класс точек для каждой рельсы
+/// Класс точек рельсы, на основе поведения которого будет меняться обработка рельсы
 /// </summary>
 public class RailPoint{
 
@@ -545,9 +545,19 @@ public class RailPoint{
 	public Vector2 Position;
 
 	/// <summary>
-	/// Скорост в данной точке
+	/// Скорость перемещения для интерполяции
 	/// </summary>
-	public Vector2 Speed;
+	Vector2 Speed = new Vector2(0,0);
+
+	/// <summary>
+	/// Угол поворота объекта в радианах
+	/// </summary>
+	public float Rotation;
+
+	/// <summary>
+	/// Скорость поворота объекта для интерполяции
+	/// </summary>
+	float RotSpeed = 0;
 
 	/// <summary>
 	/// Возвращает значение времени пересечения с указанной точкой, начиная от текущей точки.
@@ -557,24 +567,38 @@ public class RailPoint{
 	public float CPA(RailPoint Target){
 		return MathExtra.cpaTime(Position,Target.Position,Speed,Target.Speed);
 	}
+
+	/// <summary>
+	/// Интерполяция положения через заданную точку в течении заданного промежутка времени
+	/// </summary>
+	/// <param name="Target"></param>
+	/// <param name="T"></param>
+	public void InterpolatePos(RailPoint Target, float T){
+		Speed = Target.Position - Position / T;
+	}
+
+	/// <summary>
+	/// Определяет логику экстраполирования траектории движения объекта. По умолчанию просто добавляет пустую точку.
+	/// </summary>
+	/// <param name="T">интервал времени моделирования до следующей точки</param>
+	/// <returns>Новая точка на основе указанных данных</returns>
+	public virtual RailPoint CreateNextPoint(float T){
+		RailPoint Result = new RailPoint();
+		return Result;
+	}
 }
 
 /// <summary>
 /// Класс рельс, по которым объекты должны двигаться
 /// </summary>
-class Rail {
+class Rail<T> where T : RailPoint, new(){
 
 	/// <summary>
 	/// Массив точек, вдоль которых объект перемещается
 	/// </summary>
 	ArrayList Points = new ArrayList();
-	
-	/// <summary>
-	/// Метод вычисления следующего сегмента.
-	/// Виртуален. При новой реализации физики перезаписать
-	/// </summary>
-	public virtual void CalculateSegment(){
-		RailPoint Temp = new RailPoint();
-		Points.Add(Temp);
+
+	public Rail(){
+		Points.Add(new RailPoint());
 	}
 }
