@@ -415,26 +415,24 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\ADMINMINSPORT\\.nuget\\packages\\": {}
+    "C:\\Users\\vladi\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\ADMINMINSPORT\\Documents\\GitHub\\ImpactAlert\\Impact alert.csproj",
+      "projectUniqueName": "C:\\Users\\vladi\\Documents\\GitHub\\ImpactAlert\\Impact alert.csproj",
       "projectName": "Impact alert",
-      "projectPath": "C:\\Users\\ADMINMINSPORT\\Documents\\GitHub\\ImpactAlert\\Impact alert.csproj",
-      "packagesPath": "C:\\Users\\ADMINMINSPORT\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\ADMINMINSPORT\\Documents\\GitHub\\ImpactAlert\\.mono\\temp\\obj\\",
+      "projectPath": "C:\\Users\\vladi\\Documents\\GitHub\\ImpactAlert\\Impact alert.csproj",
+      "packagesPath": "C:\\Users\\vladi\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\vladi\\Documents\\GitHub\\ImpactAlert\\.mono\\temp\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\ADMINMINSPORT\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "C:\\Users\\vladi\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net472"
       ],
       "sources": {
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -460,7 +458,7 @@
             "autoReferenced": true
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files (x86)\\dotnet\\sdk\\5.0.401\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.400\\RuntimeIdentifierGraph.json"
       }
     }
   }

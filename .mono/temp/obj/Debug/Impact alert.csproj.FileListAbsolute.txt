@@ -7,3 +7,12 @@ C:\Users\ADMINMINSPORT\Documents\GitHub\ImpactAlert\.mono\temp\obj\Debug\Impact 
 C:\Users\ADMINMINSPORT\Documents\GitHub\ImpactAlert\.mono\temp\obj\Debug\Impact alert.csproj.CoreCompileInputs.cache
 C:\Users\ADMINMINSPORT\Documents\GitHub\ImpactAlert\.mono\temp\obj\Debug\Impact alert.dll
 C:\Users\ADMINMINSPORT\Documents\GitHub\ImpactAlert\.mono\temp\obj\Debug\Impact alert.pdb
+C:\Users\vladi\Documents\GitHub\ImpactAlert\.mono\temp\bin\Debug\Impact alert.dll
+C:\Users\vladi\Documents\GitHub\ImpactAlert\.mono\temp\bin\Debug\Impact alert.pdb
+C:\Users\vladi\Documents\GitHub\ImpactAlert\.mono\temp\obj\Debug\Impact alert.csproj.AssemblyReference.cache
+C:\Users\vladi\Documents\GitHub\ImpactAlert\.mono\temp\obj\Debug\Impact alert.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\vladi\Documents\GitHub\ImpactAlert\.mono\temp\obj\Debug\Impact alert.AssemblyInfoInputs.cache
+C:\Users\vladi\Documents\GitHub\ImpactAlert\.mono\temp\obj\Debug\Impact alert.AssemblyInfo.cs
+C:\Users\vladi\Documents\GitHub\ImpactAlert\.mono\temp\obj\Debug\Impact alert.csproj.CoreCompileInputs.cache
+C:\Users\vladi\Documents\GitHub\ImpactAlert\.mono\temp\obj\Debug\Impact alert.dll
+C:\Users\vladi\Documents\GitHub\ImpactAlert\.mono\temp\obj\Debug\Impact alert.pdb
