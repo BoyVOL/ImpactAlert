@@ -535,9 +535,30 @@ public class SpaceObject {
 }
 
 /// <summary>
-/// Класс точек рельсы, на основе поведения которого будет меняться обработка рельсы
+/// Класс точек рельсы, который имеет абстрактный метод для порождения дочерних экземпляров для экстраполяции
 /// </summary>
-public class RailPoint{
+public abstract class RailPoint{
+
+	/// <summary>
+	/// Структура для передачи данных об интерполяции
+	/// </summary>
+	public struct InterData{
+
+		/// <summary>
+		/// Координаты положения в пространстве
+		/// </summary>
+		public Vector2 Position;
+
+		/// <summary>
+		/// угловое положение в пространстве
+		/// </summary>
+		public float Rotation;
+
+		public InterData(Vector2 pos, float rot){
+			Position = pos;
+			Rotation = rot;
+		}
+	}
 
 	/// <summary>
 	/// Положение в данной точке
@@ -550,7 +571,7 @@ public class RailPoint{
 	Vector2 Speed = new Vector2(0,0);
 
 	/// <summary>
-	/// Угол поворота объекта в радианах
+	/// Угол поворота объекта в радианах. Подразумевает зранение значений больше чем 2*Pi.
 	/// </summary>
 	public float Rotation;
 
@@ -558,6 +579,18 @@ public class RailPoint{
 	/// Скорость поворота объекта для интерполяции
 	/// </summary>
 	float RotSpeed = 0;
+
+	/// <summary>
+	/// Метод, возвращающий данные о результате интерполяции в виде структуры
+	/// </summary>
+	/// <param name="T">Момент времени, данные в котором надо вернуть</param>
+	/// <returns></returns>
+	public virtual InterData GetInterpol(float T){
+		return new InterData(
+			Position + Speed*T,
+			Rotation + RotSpeed*T
+		);
+	}
 
 	/// <summary>
 	/// Возвращает значение времени пересечения с указанной точкой, начиная от текущей точки.
@@ -569,36 +602,127 @@ public class RailPoint{
 	}
 
 	/// <summary>
-	/// Интерполяция положения через заданную точку в течении заданного промежутка времени
+	/// Интерполяция через заданную точку в течении заданного промежутка времени
 	/// </summary>
 	/// <param name="Target"></param>
 	/// <param name="T"></param>
-	public void InterpolatePos(RailPoint Target, float T){
-		Speed = Target.Position - Position / T;
+	public virtual void InterpolateTo(RailPoint Target, float T){
+		Speed = (Target.Position - Position) / T;
+		GD.Print(Speed);
+		RotSpeed = (Target.Rotation - Rotation) / T;
 	}
 
 	/// <summary>
-	/// Определяет логику экстраполирования траектории движения объекта. По умолчанию просто добавляет пустую точку.
+	/// Определяет логику экстраполирования траектории движения объекта.
 	/// </summary>
 	/// <param name="T">интервал времени моделирования до следующей точки</param>
 	/// <returns>Новая точка на основе указанных данных</returns>
-	public virtual RailPoint CreateNextPoint(float T){
-		RailPoint Result = new RailPoint();
-		return Result;
-	}
+	public abstract RailPoint CreateNextPoint(float T);
 }
 
 /// <summary>
 /// Класс рельс, по которым объекты должны двигаться
 /// </summary>
-class Rail<T> where T : RailPoint, new(){
+public class Rail {
 
 	/// <summary>
 	/// Массив точек, вдоль которых объект перемещается
 	/// </summary>
 	ArrayList Points = new ArrayList();
 
-	public Rail(){
-		Points.Add(new RailPoint());
+	/// <summary>
+	/// Свойство, описывающее, какое количество времени тратится на перемещение между точками
+	/// </summary>
+	float TimeInterval = 100;
+
+	/// <summary>
+	/// Метод установки временного интервала между точками рельсы
+	/// </summary>
+	/// <param name="newInterval"></param>
+	public void SetTimeInterval(float newInterval){
+		TimeInterval = newInterval;
+	}
+
+	public float GetInterval(){
+		return TimeInterval;
+	}
+	
+	/// <summary>
+	/// Метод для повторного заполнения рельсы массивом точек
+	/// </summary>
+	/// <param name="Count">количество точек, которые надо добавить</param>
+	public void ReExtrapolate(int Count){
+		Points.RemoveRange(1,Points.Count-1);
+		Extrapolate(Count);
+	}
+
+	/// <summary>
+	/// Моделирование и добавление новых точек к концу рельсы, а так же связывание их через интерполяцию методами точек
+	/// </summary>
+	/// <param name="Count">количество точек, которые надо добавить</param>
+	public void Extrapolate(int Count){
+		RailPoint Temp = (RailPoint)Points[Points.Count-1];
+		RailPoint Temp2;
+		for (int i = 0; i < Count; i++)
+		{
+			Temp2 = Temp.CreateNextPoint(TimeInterval);
+			Points.Add(Temp2);
+			Temp.InterpolateTo(Temp2,TimeInterval);
+		}
+	}
+
+	/// <summary>
+	/// Устанавливает первую точку рельсы
+	/// </summary>
+	/// <param name="Point"></param>
+	public void SetFirstPoint(RailPoint Point){
+		if(Points.Count < 1){
+			Points.Add(Point);
+		} else {
+			Points[0] = Point;
+		}
+	}
+
+	/// <summary>
+	/// Возвращает точку на указанном индексе
+	/// </summary>
+	/// <param name="i">индекс точки рельсы, которую надо вернуть</param>
+	/// <returns></returns>
+	public RailPoint GetPoint(int i){
+		return (RailPoint)Points[i];
+	}
+
+	/// <summary>
+	/// Метод, возвращающий количество существующих в рельсе точек
+	/// </summary>
+	/// <returns></returns>
+	public int GetLength(){
+		return Points.Count;
+	}
+
+	/// <summary>
+	/// Метод, отвечающий за возврат значения положения на рельсе в соответствии с заданным моментом времени.
+	/// Если момент времени находится за пределами смоделлированного точками участка времени, метод вернёт точки на соответствующей границе рельсы
+	/// За нулевой момент времени взята первая точка рельсы
+	/// </summary>
+	/// <param name="T">заданный момент времени</param>
+	/// <returns>структура, содержащая в себе все необходимые данные для описания текущего положения объекта</returns>
+	public RailPoint.InterData Interpolate(float T){
+		RailPoint Temp;
+		if (T > 0)
+		{
+			if (T < TimeInterval*Points.Count){
+				int Id = (int)Math.Floor(T/TimeInterval);
+				float tau = T%TimeInterval;
+				Temp = (RailPoint)Points[Id];
+				return Temp.GetInterpol(tau);
+			} else {
+				Temp = (RailPoint)Points[Points.Count-1];
+				return Temp.GetInterpol(TimeInterval);
+			}
+		} else {
+			Temp = (RailPoint)Points[0];
+			return Temp.GetInterpol(0);
+		}
 	}
 }

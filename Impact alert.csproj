@@ -5,8 +5,8 @@
     <RootNamespace>Impactalert</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Content Include="Node2D.cs" />
     <Content Include="ClassLibrary.cs" />
     <Content Include="MathExtra.cs" />
+    <Content Include="TestScene.cs" />
   </ItemGroup>
 </Project>
