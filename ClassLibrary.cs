@@ -53,7 +53,7 @@ namespace Legacy {
 	/// <typeparam name="T"></typeparam>
 	public class FixedBufferArray<T> where T : class, new(){
 		/// <summary>
-		/// Vассив объектов
+		/// Массив объектов
 		/// </summary>
 		protected T[] Items;
 		/// <summary>
@@ -656,6 +656,16 @@ public class Rail {
 		Extrapolate(Count);
 	}
 
+	/// <summary>
+	/// Метод, возвращающий все точки пересечения между рельсами на заданном расстоянии друг от друга
+	/// </summary>
+	/// <param name="OtherOne">вторая рельса, с которой надо найти все сближения</param>
+	/// <param name="Distance">минимальная дистанция, которая считается как достаточное сближение</param>
+	/// <returns>массив всех моментов времени, начиная с начального, в которые обе рельсы сближаются на достаточное расстояние</returns>
+	public float[] ApproachToRail(Rail OtherOne, float Distance){
+
+	}
+	
 	/// <summary>
 	/// Моделирование и добавление новых точек к концу рельсы, а так же связывание их через интерполяцию методами точек
 	/// </summary>
