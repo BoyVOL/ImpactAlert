@@ -35,6 +35,11 @@ public class TestScene : Node2D
         GD.Print(B1.GetInterpol(ClosestT).Position);
     }
 
+    
+    public void RailTest(){
+
+    }
+
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {

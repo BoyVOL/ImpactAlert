@@ -8,5 +8,6 @@
     <Content Include="ClassLibrary.cs" />
     <Content Include="MathExtra.cs" />
     <Content Include="TestScene.cs" />
+    <Content Include="Legacy.cs" />
   </ItemGroup>
 </Project>
