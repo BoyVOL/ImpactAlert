@@ -174,8 +174,19 @@ public class Rail {
 	/// </summary>
 	/// <param name="Count">количество точек, которые надо добавить</param>
 	public void ReExtrapolate(int Count){
-		Points.RemoveRange(1,Points.Count-1);
-		Extrapolate(Count);
+		if(Points.Count>1){
+			Points.RemoveRange(1,Points.Count-1);
+			Extrapolate(Count);
+		}
+	}
+	
+	/// <summary>
+	/// Возвращает индект точки, которая описывает указанный момент времени
+	/// </summary>
+	/// <param name="T">момент времени</param>
+	/// <returns>индекс соответствующей точки</returns>
+	public int IDFromTime(float T){
+		return (int)Math.Floor(T/TimeInterval);
 	}
 	
 	/// <summary>
@@ -358,7 +369,9 @@ public class Rail {
 	/// </summary>
 	/// <param name="Count">количество точек для удаления</param>
 	public void RemoveFromStart(int Count){
-		Points.RemoveRange(0, Count);
+		if(Points.Count>0){
+			Points.RemoveRange(0, Count);
+		}
 	}
 
 	/// <summary>
@@ -366,7 +379,9 @@ public class Rail {
 	/// </summary>
 	/// <param name="Count">количество точек для удаления</param>
 	public void RemoveFromEnd(int Count){
-		Points.RemoveRange(Points.Count - Count, Count);
+		if(Points.Count>0){
+			Points.RemoveRange(Points.Count - Count, Count);
+		}
 	}
 	
 	/// <summary>
@@ -389,15 +404,18 @@ public class Rail {
 		if (T > 0)
 		{
 			if (T < TimeInterval*Points.Count){
+				//Возвращает нужную точку
 				int Id = (int)Math.Floor(T/TimeInterval);
 				float tau = T%TimeInterval;
 				Temp = (RailPoint)Points[Id];
 				return Temp.GetInterpol(tau);
 			} else {
+				//Возвращает точку в последнем моменте времени, описанном рельсой
 				Temp = (RailPoint)Points[Points.Count-1];
 				return Temp.GetInterpol(TimeInterval);
 			}
 		} else {
+			//Возвращает начальную позицию рельсы
 			Temp = (RailPoint)Points[0];
 			return Temp.GetInterpol(0);
 		}
