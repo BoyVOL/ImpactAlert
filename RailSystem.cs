@@ -188,7 +188,7 @@ public class Rail {
 	public int IDFromTime(float T){
 		return (int)Math.Floor(T/TimeInterval);
 	}
-
+	
 	/// <summary>
 	/// Метод, возвращающий все моменты времени, в которые две рельсы оказываются столь же близко или ближе друг к другу, чем указанное расстояние
 	/// </summary>
@@ -200,20 +200,19 @@ public class Rail {
 		RailPoint Point2;
 		float T;
 		float InterDist;
-		// Выбираем минимальный момент времени, описываемый одной из рельс
-		float MinTime = Math.Min(
-			Points.Count*TimeInterval,
-			OtherOne.Points.Count*OtherOne.TimeInterval
-		);
-		//Выбираем минимальный момент времени
-		float MinInterval = Math.Min(TimeInterval,OtherOne.TimeInterval);
+		// Выбираем минимальный размер рельсы
+		int LowestCount;
+		if(Points.Count <= OtherOne.Points.Count){
+			LowestCount = Points.Count;
+		} else {
+			LowestCount = OtherOne.Points.Count;
+		}
 		ResultList.Clear();
 		//Проходим вдоль рельс, проверяя точки сближения
-		for (float t = 0; t < MinTime; t+=TimeInterval)
+		for (int i = 0; i < LowestCount; i++)
 		{
-			GD.Print(t,IDFromTime(t),OtherOne.IDFromTime(t));
-			Point1 = (RailPoint)Points[IDFromTime(t)];
-			Point2 = (RailPoint)OtherOne.Points[OtherOne.IDFromTime(t)];
+			Point1 = (RailPoint)Points[i];
+			Point2 = (RailPoint)OtherOne.Points[i];
 			T = Point1.CPA(Point2);
 			if(T<0) T=0;
 			if(T < TimeInterval){
@@ -269,19 +268,19 @@ public class Rail {
 		float MinT = 0;
 		float T = 0;
 		float InterDist;
-		// Выбираем минимальный момент времени, описываемый одной из рельс
-		float MinTime = Math.Min(
-			Points.Count*TimeInterval,
-			OtherOne.Points.Count*OtherOne.TimeInterval
-		);
-		//Выбираем минимальный момент времени
-		float MinInterval = Math.Min(TimeInterval,OtherOne.TimeInterval);
+		// Выбираем минимальный размер рельсы
+		int LowestCount;
+		if(Points.Count <= OtherOne.Points.Count){
+			LowestCount = Points.Count;
+		} else {
+			LowestCount = OtherOne.Points.Count;
+		}
 		ResultList.Clear();
 		//Проходим вдоль рельс, проверяя точки сближения
-		for (float i = 0; i <= MinTime; i+=TimeInterval)
+		for (int i = 0; i < LowestCount; i++)
 		{
-			Point1 = (RailPoint)Points[IDFromTime(i)];
-			Point2 = (RailPoint)OtherOne.Points[OtherOne.IDFromTime(i)];
+			Point1 = (RailPoint)Points[i];
+			Point2 = (RailPoint)OtherOne.Points[i];
 			T = Point1.CPA(Point2);
 			if(T<0) T=0;
 			if(T < TimeInterval){
