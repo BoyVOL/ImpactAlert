@@ -184,7 +184,7 @@ public class Rail {
 	/// <param name="OtherOne">вторая рельса, с которой надо найти все сближения</param>
 	/// <param name="Distance">минимальная дистанция, которая считается как достаточное сближение</param>
 	/// <returns>массив всех моментов времени, начиная с начального, в которые обе рельсы сближаются на достаточное расстояние</returns>
-	public float[] ApprToRail(Rail OtherOne, float Distance){
+	public float[] Approach(Rail OtherOne, float Distance){
 		RailPoint Point1;
 		RailPoint Point2;
 		float T;
@@ -222,7 +222,7 @@ public class Rail {
 	/// <param name="Pos">Положение в пространстве, с которой проверяется сближение</param>
 	/// <param name="Distance">расстояния, ближе которой должнга оказаться рельса</param>
 	/// <returns>все моменты времени, в которые цель сближается</returns>
-	public float[] ApprToPos(Vector2 Pos, float Distance){
+	public float[] Approach(Vector2 Pos, float Distance){
 		RailPoint Point;
 		float T;
 		float InterDist;
@@ -243,6 +243,77 @@ public class Rail {
 		//преобразовываем в массив моментов времени
 		float[] result = (float[])ResultList.ToArray(typeof(float));
 		return result;
+	}
+	
+	/// <summary>
+	/// Метод для нахождения ближайшей точки с переданной в качестве параметра рельсой
+	/// </summary>
+	/// <param name="OtherOne">Рельса, с которой надо найти CPA</param>
+	/// <returns></returns>
+	public float ClosestApproach(Rail OtherOne){
+		RailPoint Point1 = (RailPoint)Points[0];
+		RailPoint Point2 = (RailPoint)OtherOne.Points[0];
+		float MinDist = Point1.Position.DistanceTo(Point2.Position);
+		float MinT = 0;
+		float T = 0;
+		float InterDist;
+		// Выбираем минимальный размер рельсы
+		int LowestCount;
+		if(Points.Count <= OtherOne.Points.Count){
+			LowestCount = Points.Count;
+		} else {
+			LowestCount = OtherOne.Points.Count;
+		}
+		ResultList.Clear();
+		//Проходим вдоль рельс, проверяя точки сближения
+		for (int i = 0; i < LowestCount; i++)
+		{
+			Point1 = (RailPoint)Points[i];
+			Point2 = (RailPoint)OtherOne.Points[i];
+			T = Point1.CPA(Point2);
+			if(T<0) T=0;
+			if(T < TimeInterval){
+				//Момент времени Т меньше интервала рельсы и больше или равен нулю.
+				//Считаем расстояние и записываем момент времени, если схождение < минимального
+				InterDist = Point1.GetInterpol(T).Position.DistanceTo(Point2.GetInterpol(T).Position);
+				if(InterDist < MinDist) {
+					MinDist = InterDist;
+					MinT = T;
+				}
+			}
+		}
+		return MinT;
+	}
+	
+	/// <summary>
+	/// Метод для нахождения ближайшей точки с переданным в качестве параметра вектором
+	/// </summary>
+	/// <param name="Pos">Вектор, с которым надо найти CPA</param>
+	/// <returns></returns>
+	public float ClosestApproach(Vector2 Pos){
+		RailPoint Point1 = (RailPoint)Points[0];
+		float MinDist = Point1.Position.DistanceTo(Pos);
+		float MinT = 0;
+		float T = 0;
+		float InterDist;
+		ResultList.Clear();
+		//Проходим вдоль рельс, проверяя точки сближения
+		for (int i = 0; i < Points.Count; i++)
+		{
+			Point1 = (RailPoint)Points[i];
+			T = Point1.CPA(Pos);
+			if(T<0) T=0;
+			if(T < TimeInterval){
+				//Момент времени Т меньше интервала рельсы и больше или равен нулю.
+				//Считаем расстояние и записываем момент времени, если схождение < минимального
+				InterDist = Point1.GetInterpol(T).Position.DistanceTo(Pos);
+				if(InterDist < MinDist) {
+					MinDist = InterDist;
+					MinT = T;
+				}
+			}
+		}
+		return MinT;
 	}
 	
 	/// <summary>
