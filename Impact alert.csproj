@@ -9,5 +9,6 @@
     <Content Include="MathExtra.cs" />
     <Content Include="TestScene.cs" />
     <Content Include="Legacy.cs" />
+    <Content Include="RailSystem.cs" />
   </ItemGroup>
 </Project>

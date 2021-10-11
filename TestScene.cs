@@ -18,6 +18,10 @@ public class TestScene : Node2D
         }
     }
 
+    Rail TestRail = new Rail();
+
+    Rail TestRail2 = new Rail();
+
     /// <summary>
     /// Метод для проверки работы механизма нахождения точки максимального сближения объектов
     /// </summary>
@@ -35,8 +39,32 @@ public class TestScene : Node2D
         GD.Print(B1.GetInterpol(ClosestT).Position);
     }
 
-    
+    /// <summary>
+    /// метод для проверки работы класса рельсы
+    /// </summary>
     public void RailTest(){
+        TestRail.SetFirstPoint(new KineticPoint(Vector2.Zero,0,new Vector2(10,10)));
+        TestRail.SetInterval(1);
+        TestRail.Extrapolate(10);
+        for (int i = 0; i < 10; i++)
+        {
+            GD.Print(i);
+            GD.Print(TestRail.GetPoint(i).Position);
+        }
+        GD.Print("Смена интервала на 10");
+        TestRail.SetInterval(10);
+        for (int i = 0; i < 10; i++)
+        {
+            GD.Print(i);
+            GD.Print(TestRail.GetPoint(i).Position);
+        }
+        GD.Print(TestRail.Interpolate(55).Position);
+    }
+
+    /// <summary>
+    /// Метод для проверки столкновения двух рельс
+    /// </summary>
+    public void RailCollisionTest(){
 
     }
 
@@ -44,7 +72,8 @@ public class TestScene : Node2D
     public override void _Ready()
     {
         GD.Print("BLA");
-        CPATest(10);
+        RailTest();
+        ///CPATest(10);
     }
 
 //  // Called every frame. 'delta' is the elapsed time since the previous frame.
