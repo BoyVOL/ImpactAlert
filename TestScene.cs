@@ -64,16 +64,26 @@ public class TestScene : Node2D
     /// <summary>
     /// Метод для проверки столкновения двух рельс
     /// </summary>
-    public void RailCollisionTest(){
-        TestRail.SetFirstPoint(new KineticPoint(Vector2.Zero,0,new Vector2(10,10)));
-        TestRail.SetFirstPoint(new KineticPoint(Vector2.Zero,0,new Vector2(10,10)));
+    public void RailDistanceTest(){
+        TestRail.SetInterval(1);
+        TestRail2.SetInterval(10);
+        TestRail.SetFirstPoint(new KineticPoint(Vector2.Zero,0,new Vector2(1,10)));
+        TestRail2.SetFirstPoint(new KineticPoint(new Vector2(20,0),0,new Vector2(-1,10)));
+        TestRail.Extrapolate(1);
+        TestRail2.Extrapolate(10);
+        float[] Below1 = TestRail.Approach(TestRail2,20);
+        foreach (var item in Below1)
+        {
+            GD.Print(item,TestRail.Interpolate(item).Position,TestRail2.Interpolate(item).Position);
+        }
     }
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
         GD.Print("BLA");
-        RailTest();
+        RailDistanceTest();
+        //RailTest();
         ///CPATest(10);
     }
 

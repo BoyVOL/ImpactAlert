@@ -174,10 +174,21 @@ public class Rail {
 	/// </summary>
 	/// <param name="Count">количество точек, которые надо добавить</param>
 	public void ReExtrapolate(int Count){
-		Points.RemoveRange(1,Points.Count-1);
-		Extrapolate(Count);
+		if(Points.Count>1){
+			Points.RemoveRange(1,Points.Count-1);
+			Extrapolate(Count);
+		}
 	}
 	
+	/// <summary>
+	/// Возвращает индект точки, которая описывает указанный момент времени
+	/// </summary>
+	/// <param name="T">момент времени</param>
+	/// <returns>индекс соответствующей точки</returns>
+	public int IDFromTime(float T){
+		return (int)Math.Floor(T/TimeInterval);
+	}
+
 	/// <summary>
 	/// Метод, возвращающий все моменты времени, в которые две рельсы оказываются столь же близко или ближе друг к другу, чем указанное расстояние
 	/// </summary>
@@ -189,19 +200,20 @@ public class Rail {
 		RailPoint Point2;
 		float T;
 		float InterDist;
-		// Выбираем минимальный размер рельсы
-		int LowestCount;
-		if(Points.Count <= OtherOne.Points.Count){
-			LowestCount = Points.Count;
-		} else {
-			LowestCount = OtherOne.Points.Count;
-		}
+		// Выбираем минимальный момент времени, описываемый одной из рельс
+		float MinTime = Math.Min(
+			Points.Count*TimeInterval,
+			OtherOne.Points.Count*OtherOne.TimeInterval
+		);
+		//Выбираем минимальный момент времени
+		float MinInterval = Math.Min(TimeInterval,OtherOne.TimeInterval);
 		ResultList.Clear();
 		//Проходим вдоль рельс, проверяя точки сближения
-		for (int i = 0; i < LowestCount; i++)
+		for (float t = 0; t < MinTime; t+=TimeInterval)
 		{
-			Point1 = (RailPoint)Points[i];
-			Point2 = (RailPoint)OtherOne.Points[i];
+			GD.Print(t,IDFromTime(t),OtherOne.IDFromTime(t));
+			Point1 = (RailPoint)Points[IDFromTime(t)];
+			Point2 = (RailPoint)OtherOne.Points[OtherOne.IDFromTime(t)];
 			T = Point1.CPA(Point2);
 			if(T<0) T=0;
 			if(T < TimeInterval){
@@ -257,19 +269,19 @@ public class Rail {
 		float MinT = 0;
 		float T = 0;
 		float InterDist;
-		// Выбираем минимальный размер рельсы
-		int LowestCount;
-		if(Points.Count <= OtherOne.Points.Count){
-			LowestCount = Points.Count;
-		} else {
-			LowestCount = OtherOne.Points.Count;
-		}
+		// Выбираем минимальный момент времени, описываемый одной из рельс
+		float MinTime = Math.Min(
+			Points.Count*TimeInterval,
+			OtherOne.Points.Count*OtherOne.TimeInterval
+		);
+		//Выбираем минимальный момент времени
+		float MinInterval = Math.Min(TimeInterval,OtherOne.TimeInterval);
 		ResultList.Clear();
 		//Проходим вдоль рельс, проверяя точки сближения
-		for (int i = 0; i < LowestCount; i++)
+		for (float i = 0; i <= MinTime; i+=TimeInterval)
 		{
-			Point1 = (RailPoint)Points[i];
-			Point2 = (RailPoint)OtherOne.Points[i];
+			Point1 = (RailPoint)Points[IDFromTime(i)];
+			Point2 = (RailPoint)OtherOne.Points[OtherOne.IDFromTime(i)];
 			T = Point1.CPA(Point2);
 			if(T<0) T=0;
 			if(T < TimeInterval){
@@ -358,7 +370,9 @@ public class Rail {
 	/// </summary>
 	/// <param name="Count">количество точек для удаления</param>
 	public void RemoveFromStart(int Count){
-		Points.RemoveRange(0, Count);
+		if(Points.Count>0){
+			Points.RemoveRange(0, Count);
+		}
 	}
 
 	/// <summary>
@@ -366,7 +380,9 @@ public class Rail {
 	/// </summary>
 	/// <param name="Count">количество точек для удаления</param>
 	public void RemoveFromEnd(int Count){
-		Points.RemoveRange(Points.Count - Count, Count);
+		if(Points.Count>0){
+			Points.RemoveRange(Points.Count - Count, Count);
+		}
 	}
 	
 	/// <summary>
@@ -389,15 +405,18 @@ public class Rail {
 		if (T > 0)
 		{
 			if (T < TimeInterval*Points.Count){
+				//Возвращает нужную точку
 				int Id = (int)Math.Floor(T/TimeInterval);
 				float tau = T%TimeInterval;
 				Temp = (RailPoint)Points[Id];
 				return Temp.GetInterpol(tau);
 			} else {
+				//Возвращает точку в последнем моменте времени, описанном рельсой
 				Temp = (RailPoint)Points[Points.Count-1];
 				return Temp.GetInterpol(TimeInterval);
 			}
 		} else {
+			//Возвращает начальную позицию рельсы
 			Temp = (RailPoint)Points[0];
 			return Temp.GetInterpol(0);
 		}
