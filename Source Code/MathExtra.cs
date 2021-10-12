@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using Godot;
-
 public class MathExtra
 {
     /// <summary>

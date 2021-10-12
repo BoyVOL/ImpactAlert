@@ -5,10 +5,12 @@
     <RootNamespace>Impactalert</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Content Include="ClassLibrary.cs" />
-    <Content Include="MathExtra.cs" />
     <Content Include="TestScene.cs" />
-    <Content Include="Legacy.cs" />
-    <Content Include="RailSystem.cs" />
+    <Content Include="Source Code\ClassLibrary.cs" />
+    <Content Include="Source Code\Legacy.cs" />
+    <Content Include="Source Code\MathExtra.cs" />
+    <Content Include="Source Code\RailSystem.cs" />
+    <Content Include="Source Code\CollisionSystem.cs" />
+    <Content Include="Source Code\ForceProjectionSystem.cs" />
   </ItemGroup>
 </Project>
