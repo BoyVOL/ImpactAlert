@@ -65,7 +65,6 @@ public class TestScene : Node2D
     /// Метод для проверки столкновения двух рельс
     /// </summary>
     public void RailDistanceTest(){
-        //Блаблаблабла
         TestRail.SetInterval(1);
         TestRail2.SetInterval(10);
         TestRail.SetFirstPoint(new KineticPoint(Vector2.Zero,0,new Vector2(1,10)));
