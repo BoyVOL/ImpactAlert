@@ -1,4 +1,5 @@
 using Godot;
+using RailSystem;
 using System;
 
 public class TestScene : Node2D
@@ -62,17 +63,38 @@ public class TestScene : Node2D
     }
 
     /// <summary>
+    /// Класс для моделирования движения с постоянным ускорением
+    /// </summary>
+    public class ConstantAccelPoint : KineticPoint{
+
+        public Vector2 Accel;
+        
+        public ConstantAccelPoint(Vector2 pos, float rot) : base(pos,rot){
+            Accel = Vector2.Zero;
+        }
+
+        public ConstantAccelPoint(Vector2 pos, float rot, Vector2 simSpeed, Vector2 accel, float simRotSpeed = 0) : base(pos,rot,simSpeed,simRotSpeed){
+            Accel = accel;
+        }
+
+        public override RailPoint CreateNextPoint(float T)
+        {
+            return new ConstantAccelPoint(Position+SimSpeed*T+(Accel*T*T)/2,Rotation+SimRotSpeed*T,SimSpeed+Accel*T,Accel,SimRotSpeed);
+        }
+    }
+    
+    /// <summary>
     /// Метод для проверки столкновения двух рельс
     /// </summary>
     public void RailDistanceTest(){
         //Блаблаблабла
-        TestRail.SetInterval(1);
-        TestRail2.SetInterval(10);
-        TestRail.SetFirstPoint(new KineticPoint(Vector2.Zero,0,new Vector2(1,10)));
-        TestRail2.SetFirstPoint(new KineticPoint(new Vector2(20,0),0,new Vector2(-1,10)));
-        TestRail.Extrapolate(1);
-        TestRail2.Extrapolate(10);
-        float[] Below1 = TestRail.Approach(TestRail2,20);
+        TestRail.SetInterval((float)0.5);
+        TestRail2.SetInterval((float)0.5);
+        TestRail.SetFirstPoint(new ConstantAccelPoint(Vector2.Zero,0,new Vector2(3,10),new Vector2(-0.2f,0)));
+        TestRail2.SetFirstPoint(new ConstantAccelPoint(new Vector2(20,0),0,new Vector2(-3,10),new Vector2(0.2f,0)));
+        TestRail.Extrapolate(100);
+        TestRail2.Extrapolate(100);
+        float[] Below1 = TestRail.Approach(TestRail2,1);
         foreach (var item in Below1)
         {
             GD.Print(item,TestRail.Interpolate(item).Position,TestRail2.Interpolate(item).Position);
