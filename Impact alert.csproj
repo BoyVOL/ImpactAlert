@@ -12,5 +12,6 @@
     <Content Include="Source Code\RailSystem.cs" />
     <Content Include="Source Code\CollisionSystem.cs" />
     <Content Include="Source Code\ForceProjectionSystem.cs" />
+    <Content Include="Source Code\CustomRailPoints.cs" />
   </ItemGroup>
 </Project>

@@ -1,5 +1,6 @@
 using Godot;
 using RailSystem;
+using ForceProjection;
 using Legacy;
 using System;
 
@@ -11,7 +12,7 @@ public class TestScene : Node2D
     /// <summary>
     /// класс массив рельс для массового тестирования
     /// </summary>
-    Rail[] MassRail;
+    ForceRail[] MassRail;
 
     /// <summary>
     /// Спрайты для отображения интерполяций рельс на экране
@@ -22,36 +23,34 @@ public class TestScene : Node2D
     /// Массив следователей по рельсам для тестовых рельс
     /// </summary>
     RailFollower[] MassRailF;
+
+    TestForceProjector TestProjector = new TestForceProjector(new Vector2(500,300),100000);
+
+    ForceProjHandler TestHandler = new ForceProjHandler();
     /// <summary>
     /// Тестовый класс точки рельсы
     /// </summary>
-    class TestPoint : RailPoint{
 
-        public TestPoint(Vector2 pos, float rot = 0){
-            Position = pos;
-            Rotation = rot;
-        }
-        public override RailPoint CreateNextPoint(float T)
-        {
-            return new TestPoint(Position,Rotation);
-        }
-    }
+    class TestForceProjector : ForceProjector{
+        Vector2 Pos;
 
-    /// <summary>
-    /// Метод для проверки работы механизма нахождения точки максимального сближения объектов
-    /// </summary>
-    /// <param name="T"></param>
-    void CPATest(float T){
-        TestPoint A1 = new TestPoint(new Vector2(0,0));
-        TestPoint A2 = new TestPoint(new Vector2(0,10));
-        TestPoint B1 = new TestPoint(new Vector2(20,0));
-        TestPoint B2 = new TestPoint(new Vector2(30,0));
-        A1.InterpolateTo(A1,T);
-        B1.InterpolateTo(B2,T);
-        float ClosestT = A1.CPA(B1);
-        GD.Print("Время пересечения точек - ",ClosestT);
-        GD.Print(A1.GetInterpol(ClosestT).Position);
-        GD.Print(B1.GetInterpol(ClosestT).Position);
+        float Potential;
+
+        public TestForceProjector(Vector2 pos, float potential){
+            Pos = pos;
+            Potential = potential;
+        }
+
+        float Force(float r, float potential){
+            return potential/(r*r);
+        }
+        public override Vector2 GetAccelVector(ForceParams forceParams, float T){
+            float R = Pos.DistanceTo(forceParams.Pos);
+            Vector2 Normal = (Pos - forceParams.Pos);
+            Normal.Normalized();
+            float module = Potential/(R*R);
+            return Normal*module;
+        }
     }
 
     /// <summary>
@@ -79,27 +78,9 @@ public class TestScene : Node2D
         GD.Print(TestRail.Interpolate(55).Position);
     }
 
-    /// <summary>
-    /// Класс для моделирования движения с постоянным ускорением
-    /// </summary>
-    class ConstantAccelPoint : KineticPoint{
-
-        public Vector2 Accel;
-        
-        public ConstantAccelPoint(Vector2 pos, float rot) : base(pos,rot){
-            Accel = Vector2.Zero;
-        }
-
-        public ConstantAccelPoint(Vector2 pos, float rot, Vector2 simSpeed, Vector2 accel, float simRotSpeed = 0) : base(pos,rot,simSpeed,simRotSpeed){
-            Accel = accel;
-        }
-
-        public override RailPoint CreateNextPoint(float T)
-        {
-            return new ConstantAccelPoint(Position+SimSpeed*T+(Accel*T*T)/2,Rotation+SimRotSpeed*T,SimSpeed+Accel*T,Accel,SimRotSpeed);
-        }
+    void TestProjection(){
+        GD.Print(TestProjector.GetAccelVector(new ForceParams(Vector2.Zero,0),0));
     }
-    
     /// <summary>
     /// Метод для проверки столкновения двух рельс
     /// </summary>
@@ -111,8 +92,8 @@ public class TestScene : Node2D
         //Блаблаблабла
         TestRail.SetInterval((float)0.5);
         TestRail2.SetInterval((float)0.5);
-        TestRail.SetFirstPoint(new ConstantAccelPoint(Vector2.Zero,0,new Vector2(3,10),new Vector2(-0.2f,0)));
-        TestRail2.SetFirstPoint(new ConstantAccelPoint(new Vector2(20,0),0,new Vector2(-3,10),new Vector2(0.2f,0)));
+        TestRail.SetFirstPoint(new AccelPoint(Vector2.Zero,0,new Vector2(3,10),new Vector2(-0.2f,0)));
+        TestRail2.SetFirstPoint(new AccelPoint(new Vector2(20,0),0,new Vector2(-3,10),new Vector2(0.2f,0)));
         TestRail.Extrapolate(100);
         TestRail2.Extrapolate(100);
         float[] Below1 = TestRail.Approach(TestRail2,1);
@@ -149,6 +130,10 @@ public class TestScene : Node2D
         GD.Print(TestFollow.TimeShift);
     }
 
+    void ForceSetup(){
+        TestHandler.AddProjector(TestProjector);
+    }
+
     /// <summary>
     /// Метод для настройки тестовой симуляции множества объектов с рельсами
     /// </summary>
@@ -158,24 +143,32 @@ public class TestScene : Node2D
     /// <param name="AccelRange"></param>
     /// <param name="TimeInterval"></param>
     void MassRailTestSetup(
-        int ArraySize = 10000, float posRange = 1000, 
-        float SpeedRange = 100, float AccelRange = 100, float TimeInterval = 0.1f, int raillength = 100){
+        int ArraySize = 100, float posRange = 1000, 
+        float SpeedRange = 100, float AccelRange = 100, float TimeInterval = 0.1f, int raillength = 400){
+
+        ForceRail Temp;
+        
+        ForceParams par = new ForceParams(Vector2.Zero,10);
 
         Random Rnd = new Random();
 
-        MassRail = new Rail[ArraySize];
+        MassRail = new ForceRail[ArraySize];
 
         MassRailF = new RailFollower[ArraySize];
 
         for (int i = 0; i < MassRail.Length; i++)
         {
             Vector2 newPos = new Vector2((float)Rnd.NextDouble()*posRange,(float)Rnd.NextDouble()*posRange);
+            //Vector2 newPos = new Vector2(20,20);
             Vector2 newSpeed = new Vector2((float)(Rnd.NextDouble()*SpeedRange*2-SpeedRange),(float)(Rnd.NextDouble()*SpeedRange*2-SpeedRange));
             Vector2 newAccel = new Vector2((float)Rnd.NextDouble()*AccelRange*2-AccelRange,(float)Rnd.NextDouble()*AccelRange*2-AccelRange);
             //Vector2 newAccel = new Vector2(1,0);
-            MassRail[i] = new Rail();
+            MassRail[i] = new ForceRail();
+            MassRail[i].Handler = TestHandler;
             MassRail[i].SetInterval(TimeInterval);
-            MassRail[i].SetFirstPoint(new ConstantAccelPoint(newPos,(float)(Rnd.NextDouble()*Math.PI*2),newSpeed,newAccel,(float)(Rnd.NextDouble()*2-1)));
+            MassRail[i].SetFirstPoint(new AccelPoint(newPos,(float)(Rnd.NextDouble()*Math.PI*2),newSpeed,newAccel,(float)(Rnd.NextDouble()*2-1)));
+            Temp = (ForceRail)MassRail[i];
+            Temp.ExtrapolateForce(1,par);
             MassRail[i].Extrapolate(raillength);
             MassRailF[i] = MassRail[i].GetRailFollower();
         }
@@ -203,13 +196,16 @@ public class TestScene : Node2D
     /// </summary>
     /// <param name="delta">интервал времени, который надо обновить</param>
     void MassRailTestUpdate(float delta){
+        ForceRail Temp;
+        ForceParams par = new ForceParams(Vector2.Zero,10);
         for (int i = 0; i < MassRail.Length; i++)
         {
             MassRailF[i].TimeShift += delta;
             if(MassRailF[i].CurrentID() > 0){
                 int DeletedCount = MassRailF[i].CurrentID();
                 MassRailF[i].RemoveBehind(DeletedCount);
-                MassRailF[i].Current.Extrapolate(DeletedCount);
+                Temp = (ForceRail)MassRailF[i].Current;
+                Temp.ExtrapolateForce(1,par);
             }
         }
     } 
@@ -225,15 +221,14 @@ public class TestScene : Node2D
         }
     }
 
+    
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
         GD.Print("BLA");
+        ForceSetup();
         MassRailTestSetup();
         SpriteSetup();
-        //RailDistanceTest();
-        //RailTest();
-        ///CPATest(10);
     }
 
     // Called every frame. 'delta' is the elapsed time since the previous frame.
