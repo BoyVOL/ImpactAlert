@@ -81,6 +81,7 @@ public class TestScene : Node2D
     void TestProjection(){
         GD.Print(TestProjector.GetAccelVector(new ForceParams(Vector2.Zero,0),0));
     }
+    
     /// <summary>
     /// Метод для проверки столкновения двух рельс
     /// </summary>
@@ -134,6 +135,32 @@ public class TestScene : Node2D
         TestHandler.AddProjector(TestProjector);
     }
 
+    void PreWritedRail(float TimeInterval = 0.1f, int raillength = 43){
+        
+
+        Random Rnd = new Random();
+        
+        Vector2 newPos = new Vector2(10,10);
+        Vector2 newSpeed = new Vector2(0,100);
+        Vector2 newAccel = new Vector2(10,10);
+
+        ForceParams par = new ForceParams(Vector2.Zero,10);
+
+        MassRail = new ForceRail[1];
+
+        MassRailF = new RailFollower[1];
+
+        ForceRail Temp;
+
+        MassRail[0] = new ForceRail();
+        MassRail[0].Handler = TestHandler;
+        MassRail[0].SetInterval(TimeInterval);
+        MassRail[0].SetFirstPoint(new AccelPoint(Position,(float)(Rnd.NextDouble()*Math.PI*2),newSpeed,newAccel,(float)(Rnd.NextDouble()*2-1)));
+        Temp = (ForceRail)MassRail[0];
+        Temp.ExtrapolateForce(raillength,par);
+        MassRailF[0] = MassRail[0].GetRailFollower();
+    }
+    
     /// <summary>
     /// Метод для настройки тестовой симуляции множества объектов с рельсами
     /// </summary>
@@ -143,8 +170,8 @@ public class TestScene : Node2D
     /// <param name="AccelRange"></param>
     /// <param name="TimeInterval"></param>
     void MassRailTestSetup(
-        int ArraySize = 100, float posRange = 1000, 
-        float SpeedRange = 100, float AccelRange = 100, float TimeInterval = 0.1f, int raillength = 400){
+        int ArraySize = 1000, float posRange = 1000, 
+        float SpeedRange = 100, float AccelRange = 100, float TimeInterval = 0.01f, int raillength = 4000){
 
         ForceRail Temp;
         
@@ -168,8 +195,7 @@ public class TestScene : Node2D
             MassRail[i].SetInterval(TimeInterval);
             MassRail[i].SetFirstPoint(new AccelPoint(newPos,(float)(Rnd.NextDouble()*Math.PI*2),newSpeed,newAccel,(float)(Rnd.NextDouble()*2-1)));
             Temp = (ForceRail)MassRail[i];
-            Temp.ExtrapolateForce(1,par);
-            MassRail[i].Extrapolate(raillength);
+            Temp.ExtrapolateForce(raillength,par);
             MassRailF[i] = MassRail[i].GetRailFollower();
         }
     }
@@ -205,7 +231,7 @@ public class TestScene : Node2D
                 int DeletedCount = MassRailF[i].CurrentID();
                 MassRailF[i].RemoveBehind(DeletedCount);
                 Temp = (ForceRail)MassRailF[i].Current;
-                Temp.ExtrapolateForce(1,par);
+                Temp.ExtrapolateForce(DeletedCount,par);
             }
         }
     } 
@@ -225,10 +251,11 @@ public class TestScene : Node2D
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
-        GD.Print("BLA");
         ForceSetup();
+        //PreWritedRail();
         MassRailTestSetup();
         SpriteSetup();
+        GD.Print("BLA");
     }
 
     // Called every frame. 'delta' is the elapsed time since the previous frame.
