@@ -48,10 +48,11 @@ class ForceRail : Rail{
     /// <param name="shiftT">Смещение по времени/param>
     public void ExtrapolateForce(int Count, ForceParams Params, float shiftT = 0)
     {
+        int LastID;
         if (Handler == null) base.Extrapolate(Count);
         else {
             //Проверка на то, что последняя точка является типа AccelPoint
-            int LastID = GetCount()-1;
+            LastID = GetCount()-1;
             if (GetPoint(LastID).GetType() != typeof(AccelPoint)){
                 base.Extrapolate(Count);
             }
