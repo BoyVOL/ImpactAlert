@@ -24,6 +24,10 @@ namespace RailSystem{
 			/// </summary>
 			public float Rotation;
 
+			public string toString(){
+				return "Position = "+Position+", Rotation = "+Rotation;
+			}
+
 			public InterData(Vector2 pos, float rot){
 				Position = pos;
 				Rotation = rot;
@@ -167,6 +171,10 @@ namespace RailSystem{
 			ReExtrapolate(Points.Count-1);
 		}
 
+		/// <summary>
+		/// Возвращает временной интервал между точками
+		/// </summary>
+		/// <returns></returns>
 		public float GetInterval(){
 			return TimeInterval;
 		}
@@ -403,6 +411,18 @@ namespace RailSystem{
 		}
 
 		/// <summary>
+		/// Возвращает итератор относительно времени
+		/// </summary>
+		/// <param name="CurrentShift">Смещение, заданное итератору. По умолчанию 0</param>
+		/// <returns></returns>
+		public RailFollower GetRailFollower(float CurrentShift = 0){
+			RailFollower Result = new RailFollower();
+			Result.Current = this;
+			Result.TimeShift = CurrentShift;
+			return Result;
+		}
+		
+		/// <summary>
 		/// Метод, отвечающий за возврат значения положения на рельсе в соответствии с заданным моментом времени.
 		/// Если момент времени находится за пределами смоделлированного точками участка времени, метод вернёт точки на соответствующей границе рельсы
 		/// За нулевой момент времени взята первая точка рельсы
@@ -432,4 +452,47 @@ namespace RailSystem{
 		}
 	}
 
+	/// <summary>
+	/// Класс для сохранения текущего состояния для движения по рельсе
+	/// </summary>
+	public class RailFollower{
+
+		/// <summary>
+		/// Рельса, которая связана с данным экземпляром
+		/// </summary>
+		public Rail Current;
+
+		/// <summary>
+		/// Текущее смещение времени относительно стартового положения рельсы
+		/// </summary>
+		public float TimeShift = 0;
+
+		/// <summary>
+		/// Метод для получения текущей интерполяционной точки на рельсе
+		/// </summary>
+		/// <returns></returns>
+		public RailPoint.InterData GetInterpolation(){
+			return Current.Interpolate(TimeShift);
+		}
+
+		/// <summary>
+		/// Метод для удаления точек до текущего объекта с подстройкой смещения под 
+		/// </summary>
+		/// <param name="Count"></param>
+		public void RemoveBehind(int Count){
+			if(Count < Current.IDFromTime(TimeShift)){
+				Current.RemoveFromStart(Count);
+				TimeShift -= Count*Current.GetInterval();
+			}
+			else {
+				int newCount = Current.IDFromTime(TimeShift);
+				Current.RemoveFromStart(newCount);
+				TimeShift -= newCount*Current.GetInterval();
+			}
+		}
+
+		public int CurrentID(){
+			return Current.IDFromTime(TimeShift);
+		}
+	}
 }

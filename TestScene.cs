@@ -1,9 +1,27 @@
 using Godot;
 using RailSystem;
+using Legacy;
 using System;
 
+/// <summary>
+/// Сцена для массового тестирования рельс
+/// </summary>
 public class TestScene : Node2D
-{
+{  
+    /// <summary>
+    /// класс массив рельс для массового тестирования
+    /// </summary>
+    Rail[] MassRail;
+
+    /// <summary>
+    /// Спрайты для отображения интерполяций рельс на экране
+    /// </summary>
+    SpriteBufferArray MassRailSpriteArr;
+
+    /// <summary>
+    /// Массив следователей по рельсам для тестовых рельс
+    /// </summary>
+    RailFollower[] MassRailF;
     /// <summary>
     /// Тестовый класс точки рельсы
     /// </summary>
@@ -19,15 +37,11 @@ public class TestScene : Node2D
         }
     }
 
-    Rail TestRail = new Rail();
-
-    Rail TestRail2 = new Rail();
-
     /// <summary>
     /// Метод для проверки работы механизма нахождения точки максимального сближения объектов
     /// </summary>
     /// <param name="T"></param>
-    public void CPATest(float T){
+    void CPATest(float T){
         TestPoint A1 = new TestPoint(new Vector2(0,0));
         TestPoint A2 = new TestPoint(new Vector2(0,10));
         TestPoint B1 = new TestPoint(new Vector2(20,0));
@@ -43,7 +57,10 @@ public class TestScene : Node2D
     /// <summary>
     /// метод для проверки работы класса рельсы
     /// </summary>
-    public void RailTest(){
+    void RailTest(){
+        
+        Rail TestRail = new Rail();
+
         TestRail.SetFirstPoint(new KineticPoint(Vector2.Zero,0,new Vector2(10,10)));
         TestRail.SetInterval(1);
         TestRail.Extrapolate(10);
@@ -65,7 +82,7 @@ public class TestScene : Node2D
     /// <summary>
     /// Класс для моделирования движения с постоянным ускорением
     /// </summary>
-    public class ConstantAccelPoint : KineticPoint{
+    class ConstantAccelPoint : KineticPoint{
 
         public Vector2 Accel;
         
@@ -86,7 +103,11 @@ public class TestScene : Node2D
     /// <summary>
     /// Метод для проверки столкновения двух рельс
     /// </summary>
-    public void RailDistanceTest(){
+    void RailDistanceTest(){
+        
+        Rail TestRail = new Rail();
+  
+        Rail TestRail2 = new Rail();
         //Блаблаблабла
         TestRail.SetInterval((float)0.5);
         TestRail2.SetInterval((float)0.5);
@@ -101,18 +122,124 @@ public class TestScene : Node2D
         }
     }
 
+    /// <summary>
+    /// Метод для тестирования итератора рельсы
+    /// </summary>
+    void testRailFollower(){
+        Rail Test = new Rail();
+        
+        RailFollower TestFollow = Test.GetRailFollower();
+
+        Test.SetFirstPoint(new KineticPoint(Vector2.Zero,0,new Vector2(10,10),1));
+        Test.SetInterval(1);
+        Test.Extrapolate(10);
+        
+        for (int i = 0; i < 10; i++)
+        {
+            TestFollow.TimeShift += 0.5f;
+            GD.Print(TestFollow.GetInterpolation().toString());
+        }
+        TestFollow.TimeShift = 2.5f;
+        GD.Print("Count = ",Test.GetCount());
+            GD.Print(TestFollow.GetInterpolation().toString());
+        GD.Print(TestFollow.TimeShift);
+        TestFollow.RemoveBehind(2);
+        GD.Print("Count = ",Test.GetCount());
+            GD.Print(TestFollow.GetInterpolation().toString());
+        GD.Print(TestFollow.TimeShift);
+    }
+
+    /// <summary>
+    /// Метод для настройки тестовой симуляции множества объектов с рельсами
+    /// </summary>
+    /// <param name="ArraySize"></param>
+    /// <param name="posRange"></param>
+    /// <param name="SpeedRange"></param>
+    /// <param name="AccelRange"></param>
+    /// <param name="TimeInterval"></param>
+    void MassRailTestSetup(
+        int ArraySize = 10000, float posRange = 1000, 
+        float SpeedRange = 100, float AccelRange = 100, float TimeInterval = 0.1f, int raillength = 100){
+
+        Random Rnd = new Random();
+
+        MassRail = new Rail[ArraySize];
+
+        MassRailF = new RailFollower[ArraySize];
+
+        for (int i = 0; i < MassRail.Length; i++)
+        {
+            Vector2 newPos = new Vector2((float)Rnd.NextDouble()*posRange,(float)Rnd.NextDouble()*posRange);
+            Vector2 newSpeed = new Vector2((float)(Rnd.NextDouble()*SpeedRange*2-SpeedRange),(float)(Rnd.NextDouble()*SpeedRange*2-SpeedRange));
+            Vector2 newAccel = new Vector2((float)Rnd.NextDouble()*AccelRange*2-AccelRange,(float)Rnd.NextDouble()*AccelRange*2-AccelRange);
+            //Vector2 newAccel = new Vector2(1,0);
+            MassRail[i] = new Rail();
+            MassRail[i].SetInterval(TimeInterval);
+            MassRail[i].SetFirstPoint(new ConstantAccelPoint(newPos,(float)(Rnd.NextDouble()*Math.PI*2),newSpeed,newAccel,(float)(Rnd.NextDouble()*2-1)));
+            MassRail[i].Extrapolate(raillength);
+            MassRailF[i] = MassRail[i].GetRailFollower();
+        }
+    }
+
+    /// <summary>
+    /// Метод для задания массива спрайтов
+    /// </summary>
+    void SpriteSetup(){
+        Texture Texture = ResourceLoader.Load<Texture>("res://icon.png");
+        MassRailSpriteArr = new SpriteBufferArray(MassRail.Length);
+        for (int i = 0; i < MassRailSpriteArr.getLength(); i++)
+        {
+            MassRailSpriteArr.AddAsChild(i,this);
+            MassRailSpriteArr.SetTexture(i,Texture);
+            MassRailSpriteArr.SetVisible(i,true);
+            MassRailSpriteArr.SetCoordinates(i,MassRail[i].Interpolate(0).Position);
+            //MassRailSpriteArr.SetSize(i,new Vector2(1,1));
+        }
+    }
+
+
+    /// <summary>
+    /// Метод обновления массового теста рельс
+    /// </summary>
+    /// <param name="delta">интервал времени, который надо обновить</param>
+    void MassRailTestUpdate(float delta){
+        for (int i = 0; i < MassRail.Length; i++)
+        {
+            MassRailF[i].TimeShift += delta;
+            if(MassRailF[i].CurrentID() > 0){
+                int DeletedCount = MassRailF[i].CurrentID();
+                MassRailF[i].RemoveBehind(DeletedCount);
+                MassRailF[i].Current.Extrapolate(DeletedCount);
+            }
+        }
+    } 
+
+    /// <summary>
+    /// Метод для обновления положения спрайтов
+    /// </summary>
+    void MassRailSpriteUpdate(){
+        for (int i = 0; i < MassRailSpriteArr.getLength(); i++)
+        {
+            MassRailSpriteArr.SetCoordinates(i,MassRailF[i].GetInterpolation().Position);
+            MassRailSpriteArr.SetRotation(i,MassRailF[i].GetInterpolation().Rotation);
+        }
+    }
+
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
         GD.Print("BLA");
-        RailDistanceTest();
+        MassRailTestSetup();
+        SpriteSetup();
+        //RailDistanceTest();
         //RailTest();
         ///CPATest(10);
     }
 
-//  // Called every frame. 'delta' is the elapsed time since the previous frame.
-//  public override void _Process(float delta)
-//  {
-//      
-//  }
+    // Called every frame. 'delta' is the elapsed time since the previous frame.
+    public override void _Process(float delta)
+    {
+        MassRailTestUpdate(delta);
+        MassRailSpriteUpdate();
+    }
 }

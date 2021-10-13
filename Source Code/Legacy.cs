@@ -136,6 +136,14 @@ namespace Legacy {
 			Items[i].Position = Coords;
 		}
 		/// <summary>
+		/// Метод задания текущего поворота спрайта в радианах
+		/// </summary>
+		/// <param name="i">индекс спрайта</param>
+		/// <param name="Angle">Угол поворота</param>
+		public void SetRotation(int i, float Angle){
+			Items[i].Rotation = Angle;
+		}
+		/// <summary>
 		/// Метод задания видимости спрайта
 		/// </summary>
 		/// <param name="i">индекс спрайта</param>
