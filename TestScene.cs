@@ -26,6 +26,8 @@ public class TestScene : Node2D
 
     TestForceProjector TestProjector = new TestForceProjector(new Vector2(500,300),100000);
 
+    TestForceProjector TestProjector2 = new TestForceProjector(new Vector2(800,300),100000);
+
     ForceProjHandler TestHandler = new ForceProjHandler();
     /// <summary>
     /// Тестовый класс точки рельсы
@@ -171,7 +173,7 @@ public class TestScene : Node2D
     /// <param name="TimeInterval"></param>
     void MassRailTestSetup(
         int ArraySize = 1000, float posRange = 1000, 
-        float SpeedRange = 100, float AccelRange = 100, float TimeInterval = 0.01f, int raillength = 4000){
+        float SpeedRange = 100, float AccelRange = 100, float TimeInterval = 0.05f, int raillength = 1200){
 
         ForceRail Temp;
         
