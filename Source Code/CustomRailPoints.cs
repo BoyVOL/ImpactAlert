@@ -21,9 +21,27 @@ class AccelPoint : KineticPoint{
     }
 
     /// <summary>
+    /// Метод для вычисления промежуточной точки для вектора приложенных сил
+    /// </summary>
+    /// <param name="T">момент времени, в которой нужно провести моделирование</param>
+    /// <returns></returns>
+    public virtual Vector2 MidPos(float T){
+        return Position+SimSpeed*T+(Accel*T*T)/2;
+    }
+
+    /// <summary>
+    /// Метод для вычисления промежуточной скорости для вычисления приложенных сил
+    /// </summary>
+    /// <param name="T">момент времени, в которой нужно провести моделирование</param>
+    /// <returns>Промежуточная скорость</returns>
+    public virtual Vector2 MidSpeed(float T){
+        return SimSpeed+Accel*T;
+    }
+
+    /// <summary>
     /// Создание следующей точки с учётом ускорения
     /// </summary>
-    /// <param name="T"></param>
+    /// <param name="T">момент времени до следующей точки</param>
     /// <returns></returns>
     public override RailPoint CreateNextPoint(float T)
     {
@@ -39,6 +57,11 @@ class ForceRail : Rail{
     /// Обработчик сил для данной рельсы
     /// </summary>
     public ForceProjHandler Handler = null;
+
+    /// <summary>
+    /// Устанавливает, сколько приближений делать при рассчёте воздействия сил
+    /// </summary>
+    public int ApprCount = 3;
 
     /// <summary>
     /// Метод для экстраполирования точек с учётом приложенных на них сил. Работает только для AccelPoint и его дочерних классов
@@ -60,9 +83,12 @@ class ForceRail : Rail{
                 for (int i = 0; i < Count; i++)
                 {
                     AccelPoint LastPoint = (AccelPoint)GetPoint(LastID);
-                    Params.Pos = LastPoint.Position;
-                    Params.Speed = LastPoint.SimSpeed;
-                    LastPoint.Accel = Handler.GetResultAccel(Params, shiftT + LastID*GetInterval());
+                    for (int j = 0; j < ApprCount; j++)
+                    {
+                        Params.Pos = LastPoint.MidPos(GetInterval()/2);
+                        Params.Speed = LastPoint.MidSpeed(GetInterval()/2);
+                        LastPoint.Accel = Handler.GetResultAccel(Params, shiftT + LastID*GetInterval());
+                    }
                     Extrapolate(1);
                     LastID++;
                 }

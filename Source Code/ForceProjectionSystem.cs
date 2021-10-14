@@ -5,26 +5,26 @@ using System;
 namespace ForceProjection{
 
 
-        /// <summary>
+    /// <summary>
         /// Структура для задания параметров сил, которые будут накладываться с помощью данного проектора
         /// </summary>
-       public struct ForceParams{
-           public Vector2 Pos;
-            public Vector2 Speed;
+    public struct ForceParams{
+        public Vector2 Pos;
+        public Vector2 Speed;
 
-            public float Mass;
-            public ForceParams(Vector2 pos, float mass){
-               Pos = pos;
-               Speed = Vector2.Zero;
-               Mass = mass;
-           }
-            
-            public ForceParams(Vector2 pos, Vector2 speed, float mass){
-                Pos = pos;
-                Speed = speed;
-                Mass = mass;
-            }
+        public float Mass;
+        public ForceParams(Vector2 pos, float mass){
+            Pos = pos;
+            Speed = Vector2.Zero;
+            Mass = mass;
         }
+            
+        public ForceParams(Vector2 pos, Vector2 speed, float mass){
+            Pos = pos;
+            Speed = speed;
+            Mass = mass;
+        }
+    }
     
     /// <summary>
     /// Базовый класс для всех источников силовых полей
