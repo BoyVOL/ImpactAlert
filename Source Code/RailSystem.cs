@@ -163,6 +163,11 @@ namespace RailSystem{
 		float TimeInterval = 100;
 
 		/// <summary>
+		/// Поле, описывающее смещение рельсы относительно остального мира
+		/// </summary>
+		public float ShiftT = 0;
+
+		/// <summary>
 		/// Метод установки временного интервала между точками рельсы
 		/// </summary>
 		/// <param name="newInterval"></param>
@@ -212,15 +217,86 @@ namespace RailSystem{
 				float T;
 				float InterDist;
 				// Выбираем минимальный размер рельсы
-				int LowestCount;
-				if(Points.Count <= OtherOne.Points.Count){
-					LowestCount = Points.Count;
-				} else {
-					LowestCount = OtherOne.Points.Count;
-				}
+				int LowestCount = Math.Min(Points.Count,OtherOne.Points.Count);
 				ResultList.Clear();
 				//Проходим вдоль рельс, проверяя точки сближения
 				for (int i = 0; i < LowestCount; i++)
+				{
+					Point1 = (RailPoint)Points[i];
+					Point2 = (RailPoint)OtherOne.Points[i];
+					T = Point1.CPA(Point2);
+					if(T<0) T=0;
+					if(T>TimeInterval) T=TimeInterval;
+					//Момент времени Т меньше интервала рельсы и больше или равен нулю.
+					//Считаем расстояние и записываем момент времени, если схождение <= Distance
+					InterDist = Point1.GetInterpol(T).Position.DistanceTo(Point2.GetInterpol(T).Position);
+					if(InterDist <= Distance) ResultList.Add(i*TimeInterval+T);
+				}
+				//преобразовываем в массив моментов времени
+				float[] result = (float[])ResultList.ToArray(typeof(float));
+				return result;
+			}
+			else {
+				throw new Exception("Rail intervals are not similar");
+			}
+		}
+
+		/// <summary>
+		/// Метод, возвращающий все моменты времени, в которые две рельсы оказываются столь же близко или ближе друг к другу, чем указанное расстояние
+		/// Перегрузка для проверки конкретной точки
+		/// </summary>
+		/// <param name="OtherOne">вторая рельса, с которой надо найти все сближения</param>
+		/// <param name="Distance">минимальная дистанция, которая считается как достаточное сближение</param>
+		/// <param name="Id">Индекс точки, которую надо проверить</param>
+		/// <returns>массив всех моментов времени, начиная с начального, в которые обе рельсы сближаются на достаточное расстояние</returns>
+		public float[] Approach(Rail OtherOne, float Distance, int Id){
+			if(TimeInterval == OtherOne.TimeInterval){
+				RailPoint Point1;
+				RailPoint Point2;
+				float T;
+				// Выбираем минимальный размер рельсы
+				int LowestCount = Math.Min(Points.Count,OtherOne.Points.Count);
+				ResultList.Clear();
+				//Проходим вдоль рельс, проверяя точки сближения
+				Point1 = (RailPoint)Points[Id];
+				Point2 = (RailPoint)OtherOne.Points[Id];
+				T = Point1.CPA(Point2);
+				if(T<0) T=0;
+				if(T>TimeInterval) T=TimeInterval;
+				//Момент времени Т меньше интервала рельсы и больше или равен нулю.
+				//Считаем расстояние и записываем момент времени, если схождение <= Distance
+				if(Point1.GetInterpol(T).Position.DistanceTo(Point2.GetInterpol(T).Position) <= Distance) ResultList.Add(Id*TimeInterval+T);
+				//преобразовываем в массив моментов времени
+				float[] result = (float[])ResultList.ToArray(typeof(float));
+				return result;
+			}
+			else {
+				throw new Exception("Rail intervals are not similar");
+			}
+		}
+
+		/// <summary>
+		/// Метод, возвращающий все моменты времени, в которые две рельсы оказываются столь же близко или ближе друг к другу, чем указанное расстояние
+		/// Перегрузка для проверки только определённого участка рельсы
+		/// </summary>
+		/// <param name="OtherOne">вторая рельса, с которой надо найти все сближения</param>
+		/// <param name="Distance">минимальная дистанция, которая считается как достаточное сближение</param>
+		/// <param name="startId">Начальный индекс интервала</param>
+		/// <param name="EndId">Конечный индекс интервала</param>
+		/// <returns></returns>
+		public float[] Approach(Rail OtherOne, float Distance, int startId, int EndId){
+			if(TimeInterval == OtherOne.TimeInterval){
+				RailPoint Point1;
+				RailPoint Point2;
+				float T;
+				float InterDist;
+				// Выбираем минимальный размер рельсы
+				int LowestCount = Math.Min(Points.Count,OtherOne.Points.Count);
+				int TempStartId = Math.Min(startId,LowestCount-2);
+				int TempEndId = Math.Min(EndId,LowestCount-1);
+				ResultList.Clear();
+				//Проходим вдоль рельс, проверяя точки сближения
+				for (int i = TempStartId; i <= TempEndId; i++)
 				{
 					Point1 = (RailPoint)Points[i];
 					Point2 = (RailPoint)OtherOne.Points[i];
@@ -284,15 +360,90 @@ namespace RailSystem{
 				float T = 0;
 				float InterDist;
 				// Выбираем минимальный размер рельсы
-				int LowestCount;
-				if(Points.Count <= OtherOne.Points.Count){
-					LowestCount = Points.Count;
-				} else {
-					LowestCount = OtherOne.Points.Count;
-				}
+				int LowestCount = Math.Min(Points.Count,OtherOne.Points.Count);
 				ResultList.Clear();
 				//Проходим вдоль рельс, проверяя точки сближения
 				for (int i = 0; i < LowestCount; i++)
+				{
+					Point1 = (RailPoint)Points[i];
+					Point2 = (RailPoint)OtherOne.Points[i];
+					T = Point1.CPA(Point2);
+					if(T<0) T=0;
+					if(T>TimeInterval) T=TimeInterval;
+					//Момент времени Т меньше интервала рельсы и больше или равен нулю.
+					//Считаем расстояние и записываем момент времени, если схождение < минимального
+					InterDist = Point1.GetInterpol(T).Position.DistanceTo(Point2.GetInterpol(T).Position);
+					if(InterDist < MinDist) {
+						MinDist = InterDist;
+						MinT = i*TimeInterval+T;
+					}
+				}
+				return MinT;
+			}
+			else {
+				throw new Exception("Rail intervals are not similar");
+			}
+		}
+
+		/// <summary>
+		/// Метод для нахождения ближайшей точки с переданной в качестве параметра рельсой
+		/// Перегрузка для проверки одной точки
+		/// </summary>
+		/// <param name="OtherOne">Рельса, с которой надо найти CPA</param>
+		/// <param name="Id">Индекс точки, которую надо проверить</param>
+		/// <returns></returns>
+		public float ClosestApproach(Rail OtherOne, int Id){
+			if(TimeInterval == OtherOne.TimeInterval){
+				RailPoint Point1 = (RailPoint)Points[0];
+				RailPoint Point2 = (RailPoint)OtherOne.Points[0];
+				float MinDist = Point1.Position.DistanceTo(Point2.Position);
+				float MinT = 0;
+				float T = 0;
+				float InterDist;
+				// Выбираем минимальный размер рельсы
+				int LowestCount = Math.Min(Points.Count,OtherOne.Points.Count);
+				ResultList.Clear();
+				//Проходим вдоль рельс, проверяя точки сближения
+				Point1 = (RailPoint)Points[Id];
+				Point2 = (RailPoint)OtherOne.Points[Id];
+				T = Point1.CPA(Point2);
+				if(T<0) T=0;
+				if(T>TimeInterval) T=TimeInterval;
+				//Момент времени Т меньше интервала рельсы и больше или равен нулю.
+				//Считаем расстояние и записываем момент времени, если схождение < минимального
+				InterDist = Point1.GetInterpol(T).Position.DistanceTo(Point2.GetInterpol(T).Position);
+				if(InterDist < MinDist) {
+					MinDist = InterDist;
+					MinT = Id*TimeInterval+T;
+				}
+				return MinT;
+			}
+			else {
+				throw new Exception("Rail intervals are not similar");
+			}
+		}
+
+		/// <summary>
+		/// Метод для нахождения ближайшей точки с переданной в качестве параметра рельсой
+		/// Перегрузка для проверки конкретного отрезка
+		/// </summary>
+		/// <param name="OtherOne">Рельса, с которой надо найти CPA</param>
+		/// <returns></returns>
+		public float ClosestApproach(Rail OtherOne, int startId, int EndId){
+			if(TimeInterval == OtherOne.TimeInterval){
+				RailPoint Point1 = (RailPoint)Points[0];
+				RailPoint Point2 = (RailPoint)OtherOne.Points[0];
+				float MinDist = Point1.Position.DistanceTo(Point2.Position);
+				float MinT = 0;
+				float T = 0;
+				float InterDist;
+				// Выбираем минимальный размер рельсы
+				int LowestCount = Math.Min(Points.Count,OtherOne.Points.Count);
+				int TempStartId = Math.Min(startId,LowestCount-2);
+				int TempEndId = Math.Min(EndId,LowestCount-1);
+				ResultList.Clear();
+				//Проходим вдоль рельс, проверяя точки сближения
+				for (int i = TempStartId; i < TempEndId; i++)
 				{
 					Point1 = (RailPoint)Points[i];
 					Point2 = (RailPoint)OtherOne.Points[i];

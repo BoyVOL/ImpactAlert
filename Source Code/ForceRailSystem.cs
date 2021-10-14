@@ -5,7 +5,7 @@ using ForceProjection;
  /// <summary>
  /// Класс для моделирования движения с ускорением
  /// </summary>
-class AccelPoint : KineticPoint{
+public class AccelPoint : KineticPoint{
 
     /// <summary>
     /// Параметр, хранящий ускорение
@@ -52,7 +52,7 @@ class AccelPoint : KineticPoint{
 /// <summary>
 /// Дочерний класс рельсы для работы с силами взаимодействия
 /// </summary>
-class ForceRail : Rail{
+public class ForceRail : Rail{
     /// <summary>
     /// Обработчик сил для данной рельсы
     /// </summary>
@@ -64,13 +64,18 @@ class ForceRail : Rail{
     public int ApprCount = 3;
 
     /// <summary>
+    /// Поле, отвечающее за хранение параметров силового взаимодействия данной рельсы
+    /// </summary>
+    /// <returns></returns>
+    public ForceParams Params = new ForceParams(Vector2.Zero,0);
+
+    /// <summary>
     /// Метод для экстраполирования точек с учётом приложенных на них сил. Работает только для AccelPoint и его дочерних классов
+    /// Перегрузка, учитывающая смещение по времени относительно родителя
     /// </summary>
     /// <param name="Count">количество точек, которые надо экстраполировать</param>
-    /// <param name="Params">Параметры для обработки сил. Положение и скорость будут переписаны</param>
-    /// <param name="shiftT">Смещение по времени/param>
-    public void ExtrapolateForce(int Count, ForceParams Params, float shiftT = 0)
-    {
+    /// <param name="shiftT">смещение относительно начала рельс силовых проекторов</param>
+    public void Extrapolate(int Count, float shiftT){
         int LastID;
         if (Handler == null) base.Extrapolate(Count);
         else {
@@ -89,10 +94,19 @@ class ForceRail : Rail{
                         Params.Speed = LastPoint.MidSpeed(GetInterval()/2);
                         LastPoint.Accel = Handler.GetResultAccel(Params, shiftT + LastID*GetInterval());
                     }
-                    Extrapolate(1);
+                    base.Extrapolate(1);
                     LastID++;
                 }
             }
         }
+    }
+
+    /// <summary>
+    /// Метод для экстраполирования точек с учётом приложенных на них сил. Работает только для AccelPoint и его дочерних классов
+    /// </summary>
+    /// <param name="Count">количество точек, которые надо экстраполировать</param>
+    public new void Extrapolate(int Count)
+    {
+        Extrapolate(Count,base.ShiftT);
     }
 }

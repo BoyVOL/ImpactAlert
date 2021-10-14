@@ -136,7 +136,7 @@ public class TestScene : Node2D
 
     void ForceSetup(){        
 
-        TestForceProjector TestProjector = new TestForceProjector(new Vector2(500,300),100000);
+        TestForceProjector TestProjector = new TestForceProjector(new Vector2(0,0),100000);
 
         TestForceProjector TestProjector2 = new TestForceProjector(new Vector2(800,300),100000);
         TestHandler.AddProjector(TestProjector);
@@ -164,7 +164,7 @@ public class TestScene : Node2D
         MassRail[0].SetInterval(TimeInterval);
         MassRail[0].SetFirstPoint(new AccelPoint(Position,(float)(Rnd.NextDouble()*Math.PI*2),newSpeed,newAccel,(float)(Rnd.NextDouble()*2-1)));
         Temp = (ForceRail)MassRail[0];
-        Temp.ExtrapolateForce(raillength,par);
+        Temp.Extrapolate(raillength);
         MassRailF[0] = MassRail[0].GetRailFollower();
     }
     
@@ -178,9 +178,7 @@ public class TestScene : Node2D
     /// <param name="TimeInterval"></param>
     void MassRailTestSetup(
         int ArraySize = 1000, float posRange = 1000, 
-        float SpeedRange = 100, float AccelRange = 100, float TimeInterval = 0.05f, int raillength = 1200){
-
-        ForceRail Temp;
+        float SpeedRange = 1000, float AccelRange = 100, float TimeInterval = 0.05f, int raillength = 1200){
         
         ForceParams par = new ForceParams(Vector2.Zero,10);
 
@@ -192,7 +190,7 @@ public class TestScene : Node2D
 
         for (int i = 0; i < MassRail.Length; i++)
         {
-            Vector2 newPos = new Vector2((float)Rnd.NextDouble()*posRange,(float)Rnd.NextDouble()*posRange);
+            Vector2 newPos = new Vector2((float)Rnd.NextDouble()*posRange*2-posRange,(float)Rnd.NextDouble()*posRange*2-posRange);
             //Vector2 newPos = new Vector2(20,20);
             Vector2 newSpeed = new Vector2((float)(Rnd.NextDouble()*SpeedRange*2-SpeedRange),(float)(Rnd.NextDouble()*SpeedRange*2-SpeedRange));
             Vector2 newAccel = new Vector2((float)Rnd.NextDouble()*AccelRange*2-AccelRange,(float)Rnd.NextDouble()*AccelRange*2-AccelRange);
@@ -201,8 +199,7 @@ public class TestScene : Node2D
             MassRail[i].Handler = TestHandler;
             MassRail[i].SetInterval(TimeInterval);
             MassRail[i].SetFirstPoint(new AccelPoint(newPos,(float)(Rnd.NextDouble()*Math.PI*2),newSpeed,newAccel,(float)(Rnd.NextDouble()*2-1)));
-            Temp = (ForceRail)MassRail[i];
-            Temp.ExtrapolateForce(raillength,par);
+            MassRail[i].Extrapolate(raillength);
             MassRailF[i] = MassRail[i].GetRailFollower();
         }
     }
@@ -238,7 +235,7 @@ public class TestScene : Node2D
                 int DeletedCount = MassRailF[i].CurrentID();
                 MassRailF[i].RemoveBehind(DeletedCount);
                 Temp = (ForceRail)MassRailF[i].Current;
-                Temp.ExtrapolateForce(DeletedCount,par);
+                Temp.Extrapolate(DeletedCount);
             }
         }
     } 

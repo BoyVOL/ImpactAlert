@@ -14,5 +14,6 @@
     <Content Include="Source Code\ForceProjectionSystem.cs" />
     <Content Include="Source Code\ForceRailSystem.cs" />
     <Content Include="Source Code\ForceProjectors.cs" />
+    <Content Include="TestCamera.cs" />
   </ItemGroup>
 </Project>
