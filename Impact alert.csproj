@@ -12,6 +12,7 @@
     <Content Include="Source Code\RailSystem.cs" />
     <Content Include="Source Code\CollisionSystem.cs" />
     <Content Include="Source Code\ForceProjectionSystem.cs" />
-    <Content Include="Source Code\CustomRailPoints.cs" />
+    <Content Include="Source Code\ForceRailSystem.cs" />
+    <Content Include="Source Code\ForceProjectors.cs" />
   </ItemGroup>
 </Project>

@@ -24,11 +24,8 @@ public class TestScene : Node2D
     /// </summary>
     RailFollower[] MassRailF;
 
-    TestForceProjector TestProjector = new TestForceProjector(new Vector2(500,300),100000);
-
-    TestForceProjector TestProjector2 = new TestForceProjector(new Vector2(800,300),100000);
-
     ForceProjHandler TestHandler = new ForceProjHandler();
+    
     /// <summary>
     /// Тестовый класс точки рельсы
     /// </summary>
@@ -81,6 +78,10 @@ public class TestScene : Node2D
     }
 
     void TestProjection(){
+        
+
+        TestForceProjector TestProjector = new TestForceProjector(new Vector2(500,300),100000);
+
         GD.Print(TestProjector.GetAccelVector(new ForceParams(Vector2.Zero,0),0));
     }
     
@@ -133,7 +134,11 @@ public class TestScene : Node2D
         GD.Print(TestFollow.TimeShift);
     }
 
-    void ForceSetup(){
+    void ForceSetup(){        
+
+        TestForceProjector TestProjector = new TestForceProjector(new Vector2(500,300),100000);
+
+        TestForceProjector TestProjector2 = new TestForceProjector(new Vector2(800,300),100000);
         TestHandler.AddProjector(TestProjector);
     }
 

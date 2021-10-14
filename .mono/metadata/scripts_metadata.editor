@@ -1,5 +1,1 @@
-<<<<<<< HEAD
-{"res://Node2D.cs":{"modified_time":"1632399853","class":{"namespace":"","class_name":"Node2D","nested":false}},"res://TestScene.cs":{"modified_time":"1634205497","class":{"namespace":"","class_name":"TestScene","nested":false}}}
-=======
-{"res://Node2D.cs":{"modified_time":"1632399853","class":{"namespace":"","class_name":"Node2D","nested":false}},"res://TestScene.cs":{"modified_time":"1634157688","class":{"namespace":"","class_name":"TestScene","nested":false}}}
->>>>>>> main
+{"res://TestScene.cs":{"modified_time":"1634206348","class":{"namespace":"","class_name":"TestScene","nested":false}}}

@@ -1,0 +1,29 @@
+using Godot;
+using RailSystem;
+using ForceProjection;
+
+public class GravityProjector : ForceProjector{
+        Vector2 Pos;
+
+        float Potential;
+
+        public GravityProjector(Vector2 pos, float potential){
+            Pos = pos;
+            Potential = potential;
+        }
+
+        public static float CalculateForce(float m1, float m2, float RQuad, float G){
+            return G*(m1*m2)/RQuad;
+        }
+
+        float Force(float r, float potential){
+            return potential/(r*r);
+        }
+        public override Vector2 GetAccelVector(ForceParams forceParams, float T){
+            float R = Pos.DistanceTo(forceParams.Pos);
+            Vector2 Normal = (Pos - forceParams.Pos);
+            Normal.Normalized();
+            float module = Potential/(R*R);
+            return Normal*module;
+        }
+    }
