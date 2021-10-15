@@ -12,10 +12,6 @@ public class GravityProjector : ForceProjector{
             Potential = potential;
         }
 
-        public static float CalculateForce(float m1, float m2, float RQuad, float G){
-            return G*(m1*m2)/RQuad;
-        }
-
         float Force(float r, float potential){
             return potential/(r*r);
         }

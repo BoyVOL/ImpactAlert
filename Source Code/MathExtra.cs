@@ -77,4 +77,28 @@ public class MathExtra
 
         return Temp.Length();
     }
+
+    /// <summary>
+    /// Функция, возвращающая модуль гравитационной силы на основе заданных параметров
+    /// </summary>
+    /// <param name="m1">Масса первого объекта</param>
+    /// <param name="m2">Масса второго объекта</param>
+    /// <param name="RQuad">Квадрат радиуса между объектами</param>
+    /// <param name="G">Гравитационная постоянная</param>
+    /// <returns></returns>
+    public static float GravityForce(float m1, float m2, float RQuad, float G){
+        return G*(m1*m2)/RQuad;
+    }
+
+    /// <summary>
+    /// Возвращает 
+    /// </summary>
+    /// <param name="mass"></param>
+    /// <param name="Speed2"></param>
+    /// <param name="mass2"></param>
+    /// <returns></returns>
+    public static Vector2 SpeedExchange(float mass, Vector2 Speed2, float mass2){
+        Vector2 Impulse2 = Speed2*mass2;
+        return Impulse2/mass;
+    }
 }

@@ -22,7 +22,6 @@ public class TestCamera : Camera2D
             }
             if (emb.ButtonIndex == (int)ButtonList.WheelDown){
                 this.Zoom += Vector2.One;
-                GD.Print(emb.AsText());
             }
         }
     }
