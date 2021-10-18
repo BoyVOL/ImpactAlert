@@ -13,13 +13,13 @@ namespace CollisionCalculation{
 
     public struct CollisionResults{
 
-        Vector2 NewPos;
+        public Vector2 NewPos;
 
-        Vector2 NewSpeed;
+        public Vector2 NewSpeed;
 
-        Vector2 NewAccel;
+        public Vector2 NewAccel;
 
-        float T;
+        public float T;
     }
 
     /// <summary>
@@ -44,7 +44,7 @@ namespace CollisionCalculation{
         /// <param name="From"></param>
         /// <returns></returns>
         public virtual float[] CollisionCheck(RailCollider Other, int From = 0){
-            if(Current == null){
+            if(Current != null){
                 return Current.Approach(Other.Current,Radius+Other.Radius,From,Current.GetCount()-1);
             } else throw new Exception("You're trying to use Collider without assotiated rail");
         }
@@ -56,6 +56,10 @@ namespace CollisionCalculation{
         /// <param name="T">Момент времени, в который надо обработать столкновение</param>
         public abstract CollisionResults CollisionRes(Rail Other, float T);
 
-
+        /// <summary>
+        /// Метод для применения результатов коллизии к рельсе коллайдера
+        /// </summary>
+        /// <param name="Results">Результаты коллизии, которые надо применить</param>
+        public abstract void ApplyResults(CollisionResults Results);
     }
 }

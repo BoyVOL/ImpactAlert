@@ -15,5 +15,6 @@
     <Content Include="Source Code\ForceRailSystem.cs" />
     <Content Include="Source Code\ForceProjectors.cs" />
     <Content Include="TestCamera.cs" />
+    <Content Include="data_Impact alert\Mono\etc\mono\2.0\DefaultWsdlHelpGenerator.aspx" />
   </ItemGroup>
 </Project>

@@ -601,6 +601,15 @@ namespace RailSystem{
 				return Temp.GetInterpol(0);
 			}
 		}
+
+		/// <summary>
+		/// Метод, проверяющий, содержится ли указанный момент времени Т в промежутке, описываемом рельсой
+		/// </summary>
+		/// <param name="T"></param>
+		/// <returns></returns>
+		public bool TIsOnRail(float T){
+			return (T > 0 && T <= TimeInterval*Points.Count);
+		}
 	}
 
 	/// <summary>

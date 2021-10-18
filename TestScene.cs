@@ -1,6 +1,7 @@
 using Godot;
 using RailSystem;
 using ForceProjection;
+using CollisionCalculation;
 using Legacy;
 using System;
 
@@ -13,6 +14,8 @@ public class TestScene : Node2D
     /// класс массив рельс для массового тестирования
     /// </summary>
     ForceRail[] MassRail;
+
+    TestCollider[] Colliders;
 
     /// <summary>
     /// Спрайты для отображения интерполяций рельс на экране
@@ -49,6 +52,20 @@ public class TestScene : Node2D
             Normal.Normalized();
             float module = Potential/(R*R);
             return Normal*module;
+        }
+    }
+
+    class TestCollider : RailCollider{
+        public override CollisionResults CollisionRes(Rail Other, float T)
+        {
+            CollisionResults Result = new CollisionResults();
+            Result.T = T;
+            return Result;
+        }
+
+        public override void ApplyResults(CollisionResults Results)
+        {
+            throw new NotImplementedException();
         }
     }
 
@@ -169,6 +186,20 @@ public class TestScene : Node2D
     }
     
     /// <summary>
+    /// Метод для установки классов обработки коллизий в тестовых рельсах
+    /// </summary>
+    /// <param name="radius">Рабиус коллайдеров</param>
+    void ColliderSetup(float radius = 100){
+        Colliders = new TestCollider[MassRail.Length];
+        for (int i = 0; i < Colliders.Length; i++)
+        {
+            Colliders[i] = new TestCollider();
+            Colliders[i].Current = MassRail[i];
+            Colliders[i].Radius = radius;
+        }
+    }   
+
+    /// <summary>
     /// Метод для настройки тестовой симуляции множества объектов с рельсами
     /// </summary>
     /// <param name="ArraySize"></param>
@@ -177,8 +208,8 @@ public class TestScene : Node2D
     /// <param name="AccelRange"></param>
     /// <param name="TimeInterval"></param>
     void MassRailTestSetup(
-        int ArraySize = 1000, float posRange = 1000, 
-        float SpeedRange = 1000, float AccelRange = 100, float TimeInterval = 0.05f, int raillength = 1200){
+        int ArraySize = 2, float posRange = 1000, 
+        float SpeedRange = 100, float AccelRange = 100, float TimeInterval = 0.01f, int raillength = 100){
         
         ForceParams par = new ForceParams(Vector2.Zero,10);
 
@@ -227,7 +258,7 @@ public class TestScene : Node2D
     /// <param name="delta">интервал времени, который надо обновить</param>
     void MassRailTestUpdate(float delta){
         ForceRail Temp;
-        ForceParams par = new ForceParams(Vector2.Zero,10);
+        ForceParams par = new ForceParams(Vector2.Zero,100);
         for (int i = 0; i < MassRail.Length; i++)
         {
             MassRailF[i].TimeShift += delta;
@@ -236,6 +267,8 @@ public class TestScene : Node2D
                 MassRailF[i].RemoveBehind(DeletedCount);
                 Temp = (ForceRail)MassRailF[i].Current;
                 Temp.Extrapolate(DeletedCount);
+                DeletedCount = Temp.GetCount();
+                //Temp.ReExtrapolate(DeletedCount-1);
             }
         }
     } 
@@ -251,6 +284,21 @@ public class TestScene : Node2D
         }
     }
 
+    void CollidersUpdate(int startID = 0){
+        for (int i = 0; i < Colliders.Length; i++)
+        {
+            for (int j = i+1; j < Colliders.Length; j++)
+            {
+                float[] Result = Colliders[i].CollisionCheck(Colliders[j],startID);
+                foreach (var item in Result)
+                {
+                    GD.Print("i = ",i,"j = ",j,"T = ",item);
+                }
+                float T = MassRail[i].ClosestApproach(MassRail[j]);
+                GD.Print(MassRail[i].Interpolate(T).Position.DistanceTo(MassRail[j].Interpolate(T).Position));
+            }
+        }
+    }
     
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
@@ -259,6 +307,7 @@ public class TestScene : Node2D
         //PreWritedRail();
         MassRailTestSetup();
         SpriteSetup();
+        ColliderSetup();
         GD.Print("BLA");
     }
 
@@ -267,5 +316,6 @@ public class TestScene : Node2D
     {
         MassRailTestUpdate(delta);
         MassRailSpriteUpdate();
+        CollidersUpdate();
     }
 }
