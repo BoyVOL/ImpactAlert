@@ -6,7 +6,6 @@ using System;
 namespace CollisionCalculation{
 
     public class CollisionHandler{
-        ArrayList Rails = new ArrayList();
 
         ArrayList Colliders = new ArrayList();
     }
