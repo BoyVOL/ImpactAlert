@@ -56,16 +56,17 @@ public class TestScene : Node2D
     }
 
     class TestCollider : RailCollider{
-        public override CollisionResults CollisionRes(Rail Other, float T)
+        public override CollisionResults CollisionRes(RailCollider Other, float T)
         {
             CollisionResults Result = new CollisionResults();
+            GD.Print(Current.Interpolate(T).Position.DistanceTo(Other.Current.Interpolate(T).Position));
             Result.T = T;
             return Result;
         }
 
         public override void ApplyResults(CollisionResults Results)
         {
-            throw new NotImplementedException();
+            GD.Print(Results.T);
         }
     }
 
@@ -293,9 +294,9 @@ public class TestScene : Node2D
                 foreach (var item in Result)
                 {
                     GD.Print("i = ",i,"j = ",j,"T = ",item);
+                    CollisionResults result = Colliders[i].CollisionRes(Colliders[j],item);
+                    Colliders[i].ApplyResults(result);
                 }
-                float T = MassRail[i].ClosestApproach(MassRail[j]);
-                GD.Print(MassRail[i].Interpolate(T).Position.DistanceTo(MassRail[j].Interpolate(T).Position));
             }
         }
     }

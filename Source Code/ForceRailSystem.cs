@@ -127,7 +127,7 @@ public class ForceRail : Rail{
     /// Метод для экстраполирования точек с учётом приложенных на них сил. Работает только для AccelPoint и его дочерних классов
     /// </summary>
     /// <param name="Count">количество точек, которые надо экстраполировать</param>
-    public new void Extrapolate(int Count)
+    public override void Extrapolate(int Count)
     {
         Extrapolate(Count,base.ShiftT);
     }
@@ -136,14 +136,14 @@ public class ForceRail : Rail{
     /// Заменяет метод на эктраполирование с новыми механизмами
     /// </summary>
     /// <param name="Count"></param>
-    public new void ReExtrapolate(int Count){
+    public override void ReExtrapolate(int Count){
         if(GetCount()>1){
                 RemoveFromEnd(GetCount()-1);
 				this.Extrapolate(Count);
 			}
     }
 
-    public new void SetInterval(float newInterval){
+    public override void SetInterval(float newInterval){
         int CountBefore = GetCount();
         if(CountBefore>1){
                 RemoveFromEnd(CountBefore-1);

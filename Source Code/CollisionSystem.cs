@@ -5,9 +5,55 @@ using System;
 
 namespace CollisionCalculation{
 
-    public class CollisionHandler{
-
+    /// <summary>
+    /// Класс для глобальной обработки коллизий всех добавленных коллайдеров
+    /// </summary>
+    public class GlobalCollider{
+        /// <summary>
+        /// Массив коллайдеров, которые обрабатывает данный объект
+        /// </summary>
+        /// <returns></returns>
         ArrayList Colliders = new ArrayList();
+
+        /// <summary>
+        /// Метод для добавления коллайдера в общий пул
+        /// </summary>
+        /// <param name="Collider"></param>
+        public void AddCollider(RailCollider Collider){
+            Colliders.Add(Collider);
+        }
+
+        /// <summary>
+        /// Метод для обработки столкновений между двумя коллайдерами
+        /// </summary>
+        /// <param name="Coll1">Первый Коллайдер</param>
+        /// <param name="Coll2">Второй Коллайдер</param>
+        /// <param name="From"></param>
+        void ProcessCollisions(RailCollider Coll1, RailCollider Coll2, int From){
+            int CollId = From;
+            float[] Time = Coll1.CollisionCheck(Coll2,CollId);
+            while (Time.Length > 0)
+            {
+                //Сохраняем индекс обработанного столкновения
+                CollId = Coll1.Current.IDFromTime(Time[0]);
+                CollisionResults Result1 = Coll1.CollisionRes(Coll2,Time[0]);
+                CollisionResults Result2 = Coll2.CollisionRes(Coll1,Time[0]);
+                Coll1.ApplyResults(Result1);
+                Coll2.ApplyResults(Result2);
+                //Обрабатываем начиная с сохранённого индекса
+                Time = Coll1.CollisionCheck(Coll2,CollId);
+            }
+        }
+
+        void GlobalCollProcess(int From){
+            for (int i = 0; i < Colliders.Count; i++)
+            {
+                for (int j = i+1; j < Colliders.Count; j++)
+                {
+                    ProcessCollisions((RailCollider)Colliders[i],(RailCollider)Colliders[j],From);
+                }
+            }
+        }
     }
 
     public struct CollisionResults{
@@ -49,14 +95,14 @@ namespace CollisionCalculation{
         }
 
         /// <summary>
-        /// Метод, обрабатывающий столкновение с другой рельсой на протяжении всего пути и возвращает массив коллизий
+        /// Метод, обрабатывающий столкновение с другой рельсой в указанном моменте времени и возвращающий результат для данного коллайдера
         /// </summary>
         /// <param name="Other">Рельса, с которой обрабатывается столкновение</param>
         /// <param name="T">Момент времени, в который надо обработать столкновение</param>
-        public abstract CollisionResults CollisionRes(Rail Other, float T);
+        public abstract CollisionResults CollisionRes(RailCollider Other, float T);
 
         /// <summary>
-        /// Метод для применения результатов коллизии к рельсе коллайдера
+        /// Метод для применения результатов коллизии к данному коллайдеру
         /// </summary>
         /// <param name="Results">Результаты коллизии, которые надо применить</param>
         public abstract void ApplyResults(CollisionResults Results);

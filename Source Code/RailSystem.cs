@@ -3,6 +3,77 @@ using System;
 using System.Collections;
 
 namespace RailSystem{
+	/// <summary>
+	/// Класс, ответственный за глобальную обработку и обновление рельс. Все рельсы с одним временным интервалом
+	/// </summary>
+	public class GlobalRailController{
+		ArrayList Rails = new ArrayList();
+
+		float Interval = 1;
+
+		public float ShiftT = 0;
+
+		int GlobalCount = 2;
+
+		/// <summary>
+		/// Устанавливается новый интервал для всех рельс
+		/// </summary>
+		/// <param name="newInterval">интервал, который нужно установить</param>
+		public void SetInterval(float newInterval){
+			Interval = newInterval;
+			foreach (Rail rail in Rails)
+			{
+				rail.SetInterval(newInterval);
+			}
+		}
+
+		/// <summary>
+		/// Возвращается интервал всех рельс
+		/// </summary>
+		/// <returns></returns>
+		public float GetInterval(){
+			return Interval;
+		}
+
+		/// <summary>
+		/// Метод для подстройки рельсы к общему количеству точек
+		/// </summary>
+		/// <param name="rail">рельса, которую надо подстроить</param>
+		public void AdaptCount(Rail rail){
+			int railCount = rail.GetCount();
+			if(railCount > GlobalCount){
+				rail.RemoveFromEnd(railCount - GlobalCount);
+			}
+			if(railCount < GlobalCount){
+				rail.Extrapolate(GlobalCount - railCount);
+			}
+		}
+
+		/// <summary>
+		/// Метод для изменения глобального количества точек
+		/// </summary>
+		/// <param name="newCount"></param>
+		public void SetGlobalCount(int newCount){
+			GlobalCount = newCount;
+			foreach (Rail rail in Rails)
+			{
+				AdaptCount(rail);
+			}
+		}
+
+		/// <summary>
+		/// Передвижение рельсы вперёд с удалением данных элементов с начала рельсы
+		/// </summary>
+		/// <param name="Count">Количество элементов, на которые надо сдвинуть рельсу</param>
+		public void MoveForvard(int Count){
+			foreach (Rail rail in Rails)
+			{
+				rail.Extrapolate(Count);
+				rail.RemoveFromStart(Count);
+			}
+			ShiftT += Interval*Count;
+		}
+	}
 		
 	/// <summary>
 	/// Класс точек рельсы, который имеет абстрактный метод для порождения дочерних экземпляров для экстраполяции
@@ -171,7 +242,7 @@ namespace RailSystem{
 		/// Метод установки временного интервала между точками рельсы
 		/// </summary>
 		/// <param name="newInterval"></param>
-		public void SetInterval(float newInterval){
+		public virtual void SetInterval(float newInterval){
 			TimeInterval = newInterval;
 			ReExtrapolate(Points.Count-1);
 		}
@@ -180,7 +251,7 @@ namespace RailSystem{
 		/// Возвращает временной интервал между точками
 		/// </summary>
 		/// <returns></returns>
-		public float GetInterval(){
+		public virtual float GetInterval(){
 			return TimeInterval;
 		}
 		
@@ -188,7 +259,7 @@ namespace RailSystem{
 		/// Метод для повторного заполнения рельсы массивом точек
 		/// </summary>
 		/// <param name="Count">количество точек, которые надо добавить</param>
-		public void ReExtrapolate(int Count){
+		public virtual void ReExtrapolate(int Count){
 			if(Points.Count>1){
 				Points.RemoveRange(1,Points.Count-1);
 				Extrapolate(Count);
@@ -210,7 +281,7 @@ namespace RailSystem{
 		/// <param name="OtherOne">вторая рельса, с которой надо найти все сближения</param>
 		/// <param name="Distance">минимальная дистанция, которая считается как достаточное сближение</param>
 		/// <returns>массив всех моментов времени, начиная с начального, в которые обе рельсы сближаются на достаточное расстояние</returns>
-		public float[] Approach(Rail OtherOne, float Distance){
+		public virtual float[] Approach(Rail OtherOne, float Distance){
 			if(TimeInterval == OtherOne.TimeInterval){
 				RailPoint Point1;
 				RailPoint Point2;
@@ -249,7 +320,7 @@ namespace RailSystem{
 		/// <param name="Distance">минимальная дистанция, которая считается как достаточное сближение</param>
 		/// <param name="Id">Индекс точки, которую надо проверить</param>
 		/// <returns>массив всех моментов времени, начиная с начального, в которые обе рельсы сближаются на достаточное расстояние</returns>
-		public float[] Approach(Rail OtherOne, float Distance, int Id){
+		public virtual float[] Approach(Rail OtherOne, float Distance, int Id){
 			if(TimeInterval == OtherOne.TimeInterval){
 				RailPoint Point1;
 				RailPoint Point2;
@@ -284,7 +355,7 @@ namespace RailSystem{
 		/// <param name="startId">Начальный индекс интервала</param>
 		/// <param name="EndId">Конечный индекс интервала</param>
 		/// <returns></returns>
-		public float[] Approach(Rail OtherOne, float Distance, int startId, int EndId){
+		public virtual float[] Approach(Rail OtherOne, float Distance, int startId, int EndId){
 			if(TimeInterval == OtherOne.TimeInterval){
 				RailPoint Point1;
 				RailPoint Point2;
@@ -323,7 +394,7 @@ namespace RailSystem{
 		/// <param name="Pos">Положение в пространстве, с которой проверяется сближение</param>
 		/// <param name="Distance">расстояния, ближе которой должнга оказаться рельса</param>
 		/// <returns>все моменты времени, в которые цель сближается</returns>
-		public float[] Approach(Vector2 Pos, float Distance){
+		public virtual float[] Approach(Vector2 Pos, float Distance){
 			RailPoint Point;
 			float T;
 			float InterDist;
@@ -351,7 +422,7 @@ namespace RailSystem{
 		/// </summary>
 		/// <param name="OtherOne">Рельса, с которой надо найти CPA</param>
 		/// <returns></returns>
-		public float ClosestApproach(Rail OtherOne){
+		public virtual float ClosestApproach(Rail OtherOne){
 			if(TimeInterval == OtherOne.TimeInterval){
 				RailPoint Point1 = (RailPoint)Points[0];
 				RailPoint Point2 = (RailPoint)OtherOne.Points[0];
@@ -392,7 +463,7 @@ namespace RailSystem{
 		/// <param name="OtherOne">Рельса, с которой надо найти CPA</param>
 		/// <param name="Id">Индекс точки, которую надо проверить</param>
 		/// <returns></returns>
-		public float ClosestApproach(Rail OtherOne, int Id){
+		public virtual float ClosestApproach(Rail OtherOne, int Id){
 			if(TimeInterval == OtherOne.TimeInterval){
 				RailPoint Point1 = (RailPoint)Points[0];
 				RailPoint Point2 = (RailPoint)OtherOne.Points[0];
@@ -429,7 +500,7 @@ namespace RailSystem{
 		/// </summary>
 		/// <param name="OtherOne">Рельса, с которой надо найти CPA</param>
 		/// <returns></returns>
-		public float ClosestApproach(Rail OtherOne, int startId, int EndId){
+		public virtual float ClosestApproach(Rail OtherOne, int startId, int EndId){
 			if(TimeInterval == OtherOne.TimeInterval){
 				RailPoint Point1 = (RailPoint)Points[0];
 				RailPoint Point2 = (RailPoint)OtherOne.Points[0];
@@ -470,7 +541,7 @@ namespace RailSystem{
 		/// </summary>
 		/// <param name="Pos">Вектор, с которым надо найти CPA</param>
 		/// <returns></returns>
-		public float ClosestApproach(Vector2 Pos){
+		public virtual float ClosestApproach(Vector2 Pos){
 			RailPoint Point1 = (RailPoint)Points[0];
 			float MinDist = Point1.Position.DistanceTo(Pos);
 			float MinT = 0;
@@ -500,7 +571,7 @@ namespace RailSystem{
 		/// Моделирование и добавление новых точек к концу рельсы, а так же связывание их через интерполяцию методами точек
 		/// </summary>
 		/// <param name="Count">количество точек, которые надо добавить</param>
-		public void Extrapolate(int Count){
+		public virtual void Extrapolate(int Count){
 			RailPoint Temp = (RailPoint)Points[Points.Count-1];
 			RailPoint Temp2;
 			for (int i = 0; i < Count; i++)
