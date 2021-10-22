@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 
 namespace RailSystem{
+	
 	/// <summary>
 	/// Класс, ответственный за глобальную обработку и обновление рельс. Все рельсы с одним временным интервалом
 	/// </summary>
@@ -59,6 +60,32 @@ namespace RailSystem{
 			{
 				AdaptCount(rail);
 			}
+		}
+
+		/// <summary>
+		/// Возвращает глобальное количество элементов
+		/// </summary>
+		/// <returns></returns>
+		public int GetGlobalCount(){
+			return GlobalCount;
+		}
+
+		/// <summary>
+		/// Метод, добавляющий рельсу в общую структуру и подстраивающий её под остальные
+		/// </summary>
+		/// <param name="rail"></param>
+		public void AddRail(Rail rail){
+			Rails.Add(rail);
+			rail.SetInterval(Interval);
+			AdaptCount(rail);
+		}
+
+		/// <summary>
+		/// Метод, удаляющий объект
+		/// </summary>
+		/// <param name="rail">объект, который надо удалить</param>
+		public void DeleteRail(Rail rail){
+			Rails.Remove(rail);
 		}
 
 		/// <summary>

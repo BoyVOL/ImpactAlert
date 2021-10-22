@@ -22,6 +22,8 @@ public class TestScene : Node2D
     /// </summary>
     SpriteBufferArray MassRailSpriteArr;
 
+    GlobalRailController RailController = new GlobalRailController();
+
     /// <summary>
     /// Массив следователей по рельсам для тестовых рельс
     /// </summary>
@@ -186,6 +188,11 @@ public class TestScene : Node2D
         MassRailF[0] = MassRail[0].GetRailFollower();
     }
     
+    void GlobalRailUpdaterSetup(){
+        RailController.SetGlobalCount(100);
+        RailController.SetInterval(0.01f);
+    }
+
     /// <summary>
     /// Метод для установки классов обработки коллизий в тестовых рельсах
     /// </summary>
@@ -229,9 +236,8 @@ public class TestScene : Node2D
             //Vector2 newAccel = new Vector2(1,0);
             MassRail[i] = new ForceRail();
             MassRail[i].Handler = TestHandler;
-            MassRail[i].SetInterval(TimeInterval);
             MassRail[i].SetFirstPoint(new AccelPoint(newPos,(float)(Rnd.NextDouble()*Math.PI*2),newSpeed,newAccel,(float)(Rnd.NextDouble()*2-1)));
-            MassRail[i].Extrapolate(raillength);
+            RailController.AddRail(MassRail[i]);
             MassRailF[i] = MassRail[i].GetRailFollower();
         }
     }
@@ -304,6 +310,7 @@ public class TestScene : Node2D
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
+        GlobalRailUpdaterSetup();
         ForceSetup();
         //PreWritedRail();
         MassRailTestSetup();

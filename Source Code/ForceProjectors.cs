@@ -15,6 +15,7 @@ public class GravityProjector : ForceProjector{
         float Force(float r, float potential){
             return potential/(r*r);
         }
+        
         public override Vector2 GetAccelVector(ForceParams forceParams, float T){
             float R = Pos.DistanceTo(forceParams.Pos);
             Vector2 Normal = (Pos - forceParams.Pos);
