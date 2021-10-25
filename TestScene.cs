@@ -235,7 +235,7 @@ public class TestScene : Node2D
     /// <param name="AccelRange"></param>
     /// <param name="TimeInterval"></param>
     void MassRailTestSetup(
-        int ArraySize = 30, float posRange = 1000, 
+        int ArraySize = 100, float posRange = 1000, 
         float SpeedRange = 100, float AccelRange = 100){
         
         ForceParams par = new ForceParams(Vector2.Zero,10);
@@ -322,6 +322,7 @@ public class TestScene : Node2D
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
+        System.Threading.ThreadPool.SetMinThreads(100,100);
         GlobalRailUpdaterSetup();
         MassRailTestSetup();
         MassForceSetup();
