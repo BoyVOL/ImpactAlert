@@ -4,25 +4,42 @@ using System;
 
 namespace ForceProjection{
 
+    /// <summary>
+    /// Структура для передачи результатов воздействия
+    /// </summary>
+    public struct ForceResult{
+        public Vector2 Accel;
+    }
 
     /// <summary>
         /// Структура для задания параметров сил, которые будут накладываться с помощью данного проектора
         /// </summary>
     public struct ForceParams{
+
+        /// <summary>
+        /// Положение, в котором надо посмотреть данные
+        /// </summary>
         public Vector2 Pos;
         public Vector2 Speed;
+
+        /// <summary>
+        /// Массив проекторов сил, которые надо исключить из вычисления
+        /// </summary>
+        public ForceProjector[] Exclude;
 
         public float Mass;
         public ForceParams(Vector2 pos, float mass){
             Pos = pos;
             Speed = Vector2.Zero;
             Mass = mass;
+            Exclude = new ForceProjector[0];
         }
             
         public ForceParams(Vector2 pos, Vector2 speed, float mass){
             Pos = pos;
             Speed = speed;
             Mass = mass;
+            Exclude = new ForceProjector[0];
         }
     }
     
@@ -69,17 +86,28 @@ namespace ForceProjection{
             MainArray.RemoveAt(i);
         }
 
+        public bool CheckIfExcluded(ForceParams Params, ForceProjector Item){
+            for (int i = 0; i < Params.Exclude.Length; i++)
+            {
+                if(Params.Exclude[i] == Item) return true;
+            }
+            return false;
+        }
+
         /// <summary>
         /// Метод сведения всех силовых влияний в единый вектор, воздействующий ускорению объекта в указанной точке
         /// </summary>
         /// <param name="forceParams"></param>
         /// <param name="T"></param>
         /// <returns></returns>
-        public Vector2 GetResultAccel(ForceParams forceParams, float T = 0){
-            Vector2 Result = Vector2.Zero;
+        public ForceResult GetResult(ForceParams forceParams, float T = 0){
+            ForceResult Result = new ForceResult();
+            Result.Accel = Vector2.Zero;
             foreach (ForceProjector item in MainArray)
             {
-                Result += item.GetAccelVector(forceParams,T);
+                if(!CheckIfExcluded(forceParams,item)){
+                    Result.Accel += item.GetAccelVector(forceParams,T);
+                }
             }
             return Result;
         }

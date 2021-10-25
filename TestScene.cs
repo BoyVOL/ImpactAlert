@@ -15,6 +15,8 @@ public class TestScene : Node2D
     /// </summary>
     ForceRail[] MassRail;
 
+    ForceProjector[] Projectors;
+
     TestCollider[] Colliders;
 
     /// <summary>
@@ -36,12 +38,12 @@ public class TestScene : Node2D
     /// </summary>
 
     class TestForceProjector : ForceProjector{
-        Vector2 Pos;
+        Rail Rail;
 
         float Potential;
 
-        public TestForceProjector(Vector2 pos, float potential){
-            Pos = pos;
+        public TestForceProjector(Rail rail, float potential){
+            Rail = rail;
             Potential = potential;
         }
 
@@ -49,6 +51,7 @@ public class TestScene : Node2D
             return potential/(r*r);
         }
         public override Vector2 GetAccelVector(ForceParams forceParams, float T){
+            Vector2 Pos = Rail.Interpolate(T).Position;
             float R = Pos.DistanceTo(forceParams.Pos);
             Vector2 Normal = (Pos - forceParams.Pos);
             Normal.Normalized();
@@ -97,13 +100,13 @@ public class TestScene : Node2D
         GD.Print(TestRail.Interpolate(55).Position);
     }
 
-    void TestProjection(){
+    /*void TestProjection(){
         
 
         TestForceProjector TestProjector = new TestForceProjector(new Vector2(500,300),100000);
 
         GD.Print(TestProjector.GetAccelVector(new ForceParams(Vector2.Zero,0),0));
-    }
+    }*/
     
     /// <summary>
     /// Метод для проверки столкновения двух рельс
@@ -132,8 +135,12 @@ public class TestScene : Node2D
     /// </summary>
     void testRailFollower(){
         Rail Test = new Rail();
+
+        GlobalRailController TestContr = new GlobalRailController();
+
+        TestContr.AddRail(Test);
         
-        RailFollower TestFollow = Test.GetRailFollower();
+        RailFollower TestFollow = TestContr.GetRailFollower(Test);
 
         Test.SetFirstPoint(new KineticPoint(Vector2.Zero,0,new Vector2(10,10),1));
         Test.SetInterval(1);
@@ -141,25 +148,36 @@ public class TestScene : Node2D
         
         for (int i = 0; i < 10; i++)
         {
-            TestFollow.TimeShift += 0.5f;
+            TestFollow.Shift += 0.5f;
             GD.Print(TestFollow.GetInterpolation().toString());
         }
-        TestFollow.TimeShift = 2.5f;
+        TestContr.ShiftT = 2.5f;
         GD.Print("Count = ",Test.GetCount());
             GD.Print(TestFollow.GetInterpolation().toString());
-        GD.Print(TestFollow.TimeShift);
-        TestFollow.RemoveBehind(2);
+        GD.Print(TestContr.ShiftT);
+        TestContr.MoveForvard(2);
         GD.Print("Count = ",Test.GetCount());
             GD.Print(TestFollow.GetInterpolation().toString());
-        GD.Print(TestFollow.TimeShift);
+        GD.Print(TestContr.ShiftT);
     }
 
     void ForceSetup(){        
-
-        TestForceProjector TestProjector = new TestForceProjector(new Vector2(0,0),100000);
-
-        TestForceProjector TestProjector2 = new TestForceProjector(new Vector2(800,300),100000);
+        Rail Rail = new Rail();
+        Rail.SetFirstPoint(new KineticPoint(new Vector2(0,0),0,new Vector2(0,0),0));
+        RailController.AddRail(Rail);
+        TestForceProjector TestProjector = new TestForceProjector(Rail,100000);
         TestHandler.AddProjector(TestProjector);
+    }
+
+    void MassForceSetup(){
+        Projectors = new ForceProjector[MassRail.Length];
+        for (int i = 0; i < Projectors.Length; i++)
+        {
+            Projectors[i] = new TestForceProjector(MassRail[i],100000);
+            TestHandler.AddProjector(Projectors[i]);
+            MassRail[i].Params.Exclude = new ForceProjector[1];
+            MassRail[i].Params.Exclude[0] = Projectors[i];
+        }
     }
 
     void PreWritedRail(float TimeInterval = 0.1f, int raillength = 43){
@@ -185,7 +203,8 @@ public class TestScene : Node2D
         MassRail[0].SetFirstPoint(new AccelPoint(Position,(float)(Rnd.NextDouble()*Math.PI*2),newSpeed,newAccel,(float)(Rnd.NextDouble()*2-1)));
         Temp = (ForceRail)MassRail[0];
         Temp.Extrapolate(raillength);
-        MassRailF[0] = MassRail[0].GetRailFollower();
+        RailController.AddRail(MassRail[0]);
+        MassRailF[0] = RailController.GetRailFollower(MassRail[0]);
     }
     
     void GlobalRailUpdaterSetup(){
@@ -216,8 +235,8 @@ public class TestScene : Node2D
     /// <param name="AccelRange"></param>
     /// <param name="TimeInterval"></param>
     void MassRailTestSetup(
-        int ArraySize = 2, float posRange = 1000, 
-        float SpeedRange = 100, float AccelRange = 100, float TimeInterval = 0.01f, int raillength = 100){
+        int ArraySize = 30, float posRange = 1000, 
+        float SpeedRange = 100, float AccelRange = 100){
         
         ForceParams par = new ForceParams(Vector2.Zero,10);
 
@@ -238,7 +257,7 @@ public class TestScene : Node2D
             MassRail[i].Handler = TestHandler;
             MassRail[i].SetFirstPoint(new AccelPoint(newPos,(float)(Rnd.NextDouble()*Math.PI*2),newSpeed,newAccel,(float)(Rnd.NextDouble()*2-1)));
             RailController.AddRail(MassRail[i]);
-            MassRailF[i] = MassRail[i].GetRailFollower();
+            MassRailF[i] = RailController.GetRailFollower(MassRail[i]);
         }
     }
 
@@ -264,20 +283,13 @@ public class TestScene : Node2D
     /// </summary>
     /// <param name="delta">интервал времени, который надо обновить</param>
     void MassRailTestUpdate(float delta){
-        ForceRail Temp;
         ForceParams par = new ForceParams(Vector2.Zero,100);
         for (int i = 0; i < MassRail.Length; i++)
         {
-            MassRailF[i].TimeShift += delta;
-            if(MassRailF[i].CurrentID() > 0){
-                int DeletedCount = MassRailF[i].CurrentID();
-                MassRailF[i].RemoveBehind(DeletedCount);
-                Temp = (ForceRail)MassRailF[i].Current;
-                Temp.Extrapolate(DeletedCount);
-                DeletedCount = Temp.GetCount();
-                //Temp.ReExtrapolate(DeletedCount-1);
-            }
+            MassRailF[i].Shift += delta;
         }
+        int DeletedCount = MassRailF[0].CurrentID();
+        RailController.MoveForvard(DeletedCount);
     } 
 
     /// <summary>
@@ -311,11 +323,12 @@ public class TestScene : Node2D
     public override void _Ready()
     {
         GlobalRailUpdaterSetup();
+        MassRailTestSetup();
+        MassForceSetup();
         ForceSetup();
         //PreWritedRail();
-        MassRailTestSetup();
         SpriteSetup();
-        ColliderSetup();
+        //ColliderSetup();
         GD.Print("BLA");
     }
 
@@ -324,6 +337,6 @@ public class TestScene : Node2D
     {
         MassRailTestUpdate(delta);
         MassRailSpriteUpdate();
-        CollidersUpdate();
+        //CollidersUpdate();
     }
 }

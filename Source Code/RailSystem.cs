@@ -10,11 +10,31 @@ namespace RailSystem{
 	public class GlobalRailController{
 		ArrayList Rails = new ArrayList();
 
+		/// <summary>
+		/// Интервал времени всех рельс в контроллере
+		/// </summary>
 		float Interval = 1;
 
+		/// <summary>
+		/// Глобальное смещение времени всех рельс относительно глобального "нулевого момента времени"
+		/// </summary>
 		public float ShiftT = 0;
 
+		/// <summary>
+		/// Количество точек всех рельс в контроллере
+		/// </summary>
 		int GlobalCount = 2;
+
+		/// <summary>
+		/// Метод, возвращающий RailFollower для выбранной рельсы
+		/// </summary>
+		/// <param name="rail">выбранная рельса</param>
+		/// <returns></returns>
+		public RailFollower GetRailFollower(Rail rail){
+			RailFollower Result = new RailFollower(this);
+			Result.Current = rail;
+			return Result;
+		}
 
 		/// <summary>
 		/// Устанавливается новый интервал для всех рельс
@@ -87,7 +107,7 @@ namespace RailSystem{
 		public void DeleteRail(Rail rail){
 			Rails.Remove(rail);
 		}
-
+		
 		/// <summary>
 		/// Передвижение рельсы вперёд с удалением данных элементов с начала рельсы
 		/// </summary>
@@ -105,7 +125,7 @@ namespace RailSystem{
 	/// <summary>
 	/// Класс точек рельсы, который имеет абстрактный метод для порождения дочерних экземпляров для экстраполяции
 	/// </summary>
-	public abstract class RailPoint{
+	public class RailPoint{
 
 		/// <summary>
 		/// Структура для передачи данных об интерполяции
@@ -153,6 +173,24 @@ namespace RailSystem{
 		float RotSpeed = 0;
 
 		/// <summary>
+		/// Конструктор по умолчанию
+		/// </summary>
+		public RailPoint(){
+
+		}
+		
+		/// <summary>
+		/// Конструктор копирования
+		/// </summary>
+		/// <param name="Other">Точка, с которой нужно скопировать данные</param>
+		public RailPoint(RailPoint Other){
+			Position = Other.Position;
+			Speed = Other.Speed;
+			Rotation = Other.Rotation;
+			RotSpeed = Other.RotSpeed;
+		}
+
+		/// <summary>
 		/// Метод, возвращающий данные о результате интерполяции в виде структуры
 		/// </summary>
 		/// <param name="T">Момент времени, данные в котором надо вернуть</param>
@@ -194,11 +232,13 @@ namespace RailSystem{
 		}
 
 		/// <summary>
-		/// Определяет логику экстраполирования траектории движения объекта.
+		/// Определяет логику экстраполирования траектории движения объекта. Обязательно должен перегружаться.
 		/// </summary>
 		/// <param name="T">интервал времени моделирования до следующей точки</param>
 		/// <returns>Новая точка на основе указанных данных</returns>
-		public abstract RailPoint CreateNextPoint(float T);
+		public virtual RailPoint CreateNextPoint(float T){
+			throw new NotImplementedException();
+		}
 	}
 
 	/// <summary>
@@ -209,12 +249,23 @@ namespace RailSystem{
 		/// <summary>
 		/// Скорость симуляции объекта
 		/// </summary>
-		public Vector2 SimSpeed;
+		public Vector2 SimSpeed = Vector2.Zero;
 
 		/// <summary>
 		/// Скорость вращения симуляции объекта
 		/// </summary>
-		public float SimRotSpeed;
+		public float SimRotSpeed = 0;
+
+		public KineticPoint(){}
+
+		/// <summary>
+		/// Перегрузка конструктора копирования
+		/// </summary>
+		/// <param name="Other"></param>
+		public KineticPoint(KineticPoint Other):base(Other){
+			SimSpeed = Other.SimSpeed;
+			SimRotSpeed = Other.SimRotSpeed;
+		}
 
 		public KineticPoint(Vector2 pos, float rot){
 			Position = pos;
@@ -264,6 +315,21 @@ namespace RailSystem{
 		/// Поле, описывающее смещение рельсы относительно остального мира
 		/// </summary>
 		public float ShiftT = 0;
+
+		public Rail(){}
+
+		/// <summary>
+		/// Конструктор для глубокого копирования рельсы
+		/// </summary>
+		/// <param name="Other">другая рельса, которую надо скопировать</param>
+		public Rail(Rail Other){
+			for (int i = 0; i < Other.Points.Count; i++)
+			{
+				Points.Add(new RailPoint((RailPoint)Other.Points[i]));
+			}
+			TimeInterval = Other.TimeInterval;
+			ShiftT = Other.ShiftT;
+		}
 
 		/// <summary>
 		/// Метод установки временного интервала между точками рельсы
@@ -658,18 +724,6 @@ namespace RailSystem{
 		public int GetCount(){
 			return Points.Count;
 		}
-
-		/// <summary>
-		/// Возвращает итератор относительно времени
-		/// </summary>
-		/// <param name="CurrentShift">Смещение, заданное итератору. По умолчанию 0</param>
-		/// <returns></returns>
-		public RailFollower GetRailFollower(float CurrentShift = 0){
-			RailFollower Result = new RailFollower();
-			Result.Current = this;
-			Result.TimeShift = CurrentShift;
-			return Result;
-		}
 		
 		/// <summary>
 		/// Метод, отвечающий за возврат значения положения на рельсе в соответствии с заданным моментом времени.
@@ -701,6 +755,14 @@ namespace RailSystem{
 		}
 
 		/// <summary>
+		/// Метод для возврата последнего момента времени, описанного данной ерльсой
+		/// </summary>
+		/// <returns></returns>
+		public float GetLastT(){
+			return Points.Count*TimeInterval;
+		}
+		
+		/// <summary>
 		/// Метод, проверяющий, содержится ли указанный момент времени Т в промежутке, описываемом рельсой
 		/// </summary>
 		/// <param name="T"></param>
@@ -711,46 +773,53 @@ namespace RailSystem{
 	}
 
 	/// <summary>
-	/// Класс для сохранения текущего состояния для движения по рельсе
+	/// Передвигающийся по рельсе объект с сохранением положения. Порождается GlobalRailController
 	/// </summary>
 	public class RailFollower{
 
 		/// <summary>
+		/// GlobalRailController данного адаптера
+		/// </summary>
+		GlobalRailController Parent;
+
+		/// <summary>
 		/// Рельса, которая связана с данным экземпляром
 		/// </summary>
-		public Rail Current;
+		public Rail Current = null;
 
 		/// <summary>
 		/// Текущее смещение времени относительно стартового положения рельсы
 		/// </summary>
-		public float TimeShift = 0;
+		public float Shift = 0;
+
+		public RailFollower(GlobalRailController parent){
+			Parent = parent;
+		}
 
 		/// <summary>
 		/// Метод для получения текущей интерполяционной точки на рельсе
 		/// </summary>
 		/// <returns></returns>
 		public RailPoint.InterData GetInterpolation(){
-			return Current.Interpolate(TimeShift);
+			if(Current != null){
+				if (Shift >= Parent.ShiftT && Shift <= Current.GetLastT()+Parent.ShiftT)
+				{
+					return Current.Interpolate(Shift-Parent.ShiftT);
+				} else throw new Exception("Shift is out of rail");
+			} else throw new Exception("Rail is not set");
 		}
 
 		/// <summary>
-		/// Метод для удаления точек до текущего объекта с подстройкой смещения под 
+		/// Возвращает текущий айди рельсы
 		/// </summary>
-		/// <param name="Count"></param>
-		public void RemoveBehind(int Count){
-			if(Count < Current.IDFromTime(TimeShift)){
-				Current.RemoveFromStart(Count);
-				TimeShift -= Count*Current.GetInterval();
-			}
-			else {
-				int newCount = Current.IDFromTime(TimeShift);
-				Current.RemoveFromStart(newCount);
-				TimeShift -= newCount*Current.GetInterval();
-			}
-		}
-
+		/// <returns></returns>
 		public int CurrentID(){
-			return Current.IDFromTime(TimeShift);
+			if(Current != null){
+				if (Shift >= Parent.ShiftT && Shift <= Current.GetLastT()+Parent.ShiftT)
+				{
+					return Current.IDFromTime(Shift-Parent.ShiftT);
+				} else throw new Exception("Shift is out of rail");
+			} else throw new Exception("Rail is not set");
 		}
 	}
 }

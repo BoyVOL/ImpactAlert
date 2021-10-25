@@ -21,6 +21,15 @@ public class AccelPoint : KineticPoint{
     }
 
     /// <summary>
+    /// Перегрузка конструктора копирования
+    /// </summary>
+    /// <param name="Other">Другая точка, с которой надо скопировать данные</param>
+    /// <returns></returns>
+    public AccelPoint(AccelPoint Other) : base(Other){
+        Accel = Other.Accel;
+    }
+
+    /// <summary>
     /// Метод для вычисления промежуточной точки для вектора приложенных сил
     /// </summary>
     /// <param name="T">момент времени, в которой нужно провести моделирование</param>
@@ -60,11 +69,28 @@ public class ForceRail : Rail{
     public ForceProjHandler Handler = null;
 
     /// <summary>
-    /// Устанавливает, сколько приближений делать при рассчёте воздействия сил
+    /// Устанавливает, сколько раз пересчитывать ускорение для более точного результата
     /// </summary>
     public int ApprCount = 2;
 
+    /// <summary>
+    /// Устанавливает, в скольких промежуточных точках брать ускорение, из которого потом берётся среднее
+    /// </summary>
     public int ApprSteps = 2;
+
+    public ForceRail(){}
+
+    /// <summary>
+    /// Перегрузка конструктора копирования
+    /// </summary>
+    /// <param name="Other">другая рельса, которую надо скопировать</param>
+    /// <returns></returns>
+    public ForceRail(ForceRail Other) : base(Other){
+        Handler = Other.Handler;
+        ApprCount = Other.ApprCount;
+        ApprSteps = Other.ApprSteps;
+        Params = Other.Params;
+    }
 
     /// <summary>
     /// Поле, отвечающее за хранение параметров силового взаимодействия данной рельсы
@@ -78,16 +104,20 @@ public class ForceRail : Rail{
     /// <param name="point">Точка, которую надо проверить</param>
     /// <param name="GlobalT">Глобальное время</param>
     /// <returns></returns>
-    Vector2 GetMidAccel(AccelPoint point, float GlobalT){
-        Vector2 ResultAccel = Vector2.Zero;
+    ForceResult GetMidResults(AccelPoint point, float GlobalT){
+        ForceResult Result = new ForceResult();
+        Result.Accel = Vector2.Zero;
+        ForceResult Temp;
         float InterStep = GetInterval()/ApprSteps;
         for (float t = 0; t <= GetInterval(); t+=InterStep)
         {
             Params.Pos = point.MidPos(t);
             Params.Speed = point.MidSpeed(t);
-            ResultAccel += Handler.GetResultAccel(Params, GlobalT);
+            Temp = Handler.GetResult(Params, GlobalT);
+            Result.Accel += Temp.Accel;
         }
-        return ResultAccel/(ApprSteps+1);
+        Result.Accel /= (ApprSteps+1);
+        return Result;
     }  
 
     /// <summary>
@@ -97,6 +127,7 @@ public class ForceRail : Rail{
     /// <param name="Count">количество точек, которые надо экстраполировать</param>
     /// <param name="shiftT">смещение относительно начала рельс силовых проекторов</param>
     public void Extrapolate(int Count, float shiftT){
+        ForceResult Temp = new ForceResult();
         int LastID;
         if (Handler == null) base.Extrapolate(Count);
         else {
@@ -114,7 +145,8 @@ public class ForceRail : Rail{
                     {
                         Params.Pos = LastPoint.MidPos(GetInterval()/2);
                         Params.Speed = LastPoint.MidSpeed(GetInterval()/2);
-                        LastPoint.Accel = GetMidAccel(LastPoint, shiftT + LastID*GetInterval());
+                        Temp = GetMidResults(LastPoint, shiftT + LastID*GetInterval());
+                        LastPoint.Accel = Temp.Accel;
                     }
                     base.Extrapolate(1);
                     LastID++;
