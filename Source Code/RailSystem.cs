@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Threading;
 using System.Collections;
 
 namespace RailSystem{
@@ -9,6 +10,11 @@ namespace RailSystem{
 	/// </summary>
 	public class GlobalRailController{
 		ArrayList Rails = new ArrayList();
+
+		/// <summary>
+		/// Свойство, контроллирующее, чтобы все этапы обновления рельсового массива свершились
+		/// </summary>
+		CountdownEvent AllStepsCompleted;
 
 		/// <summary>
 		/// Интервал времени всех рельс в контроллере
@@ -108,15 +114,26 @@ namespace RailSystem{
 			Rails.Remove(rail);
 		}
 		
+		void AsynqMove(object Rail){
+			Rail Temp = (Rail)Rail;
+			Temp.Extrapolate(1);
+			Temp.RemoveFromStart(1);
+			AllStepsCompleted.Signal();
+		}
+		
 		/// <summary>
 		/// Передвижение рельсы вперёд с удалением данных элементов с начала рельсы
 		/// </summary>
 		/// <param name="Count">Количество элементов, на которые надо сдвинуть рельсу</param>
 		public void MoveForvard(int Count){
-			foreach (Rail rail in Rails)
+			for (int i = 0; i < Count; i++)
 			{
-				rail.Extrapolate(Count);
-				rail.RemoveFromStart(Count);
+				AllStepsCompleted = new CountdownEvent(Rails.Count);
+				foreach (Rail rail in Rails)
+				{
+					ThreadPool.QueueUserWorkItem(AsynqMove,rail);
+				}
+				AllStepsCompleted.Wait();
 			}
 			ShiftT += Interval*Count;
 		}
