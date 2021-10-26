@@ -26,6 +26,8 @@ public class TestScene : Node2D
 
     GlobalRailController RailController = new GlobalRailController();
 
+    GlobalCollider Collider = new GlobalCollider();
+
     /// <summary>
     /// Массив следователей по рельсам для тестовых рельс
     /// </summary>
@@ -64,14 +66,22 @@ public class TestScene : Node2D
         public override CollisionResults CollisionRes(RailCollider Other, float T)
         {
             CollisionResults Result = new CollisionResults();
-            GD.Print(Current.Interpolate(T).Position.DistanceTo(Other.Current.Interpolate(T).Position));
+            //GD.Print(Current.Interpolate(T).Position.DistanceTo(Other.Current.Interpolate(T).Position));
             Result.T = T;
+            AccelPoint Point = (AccelPoint)Other.Current.GetPoint(Other.Current.IDFromTime(T));
+            Result.NewSpeed = Point.SimSpeed;
             return Result;
         }
 
         public override void ApplyResults(CollisionResults Results)
         {
-            GD.Print(Results.T);
+            int CollId = Current.IDFromTime(Results.T);
+            AccelPoint Point = (AccelPoint)Current.GetPoint(CollId);
+            Point.SimSpeed = Results.NewSpeed;
+            int ExtrapolateCount = Current.GetCount()-CollId-1;
+            Current.RemoveFromEnd(ExtrapolateCount);
+            Current.Extrapolate(ExtrapolateCount);
+            //GD.Print(Results.T);
         }
     }
 
@@ -223,6 +233,7 @@ public class TestScene : Node2D
             Colliders[i] = new TestCollider();
             Colliders[i].Current = MassRail[i];
             Colliders[i].Radius = radius;
+            Collider.AddCollider(Colliders[i]);
         }
     }   
 
@@ -235,7 +246,7 @@ public class TestScene : Node2D
     /// <param name="AccelRange"></param>
     /// <param name="TimeInterval"></param>
     void MassRailTestSetup(
-        int ArraySize = 100, float posRange = 1000, 
+        int ArraySize = 3, float posRange = 1000, 
         float SpeedRange = 100, float AccelRange = 100){
         
         ForceParams par = new ForceParams(Vector2.Zero,10);
@@ -258,8 +269,6 @@ public class TestScene : Node2D
             MassRail[i].SetFirstPoint(new AccelPoint(newPos,(float)(Rnd.NextDouble()*Math.PI*2),newSpeed,newAccel,(float)(Rnd.NextDouble()*2-1)));
         }
         RailController.AddRail(MassRail);
-        
-
         for (int i = 0; i < MassRail.Length; i++)
         {
             MassRailF[i] = RailController.GetRailFollower(MassRail[i]);
@@ -305,23 +314,12 @@ public class TestScene : Node2D
         {
             MassRailSpriteArr.SetCoordinates(i,MassRailF[i].GetInterpolation().Position);
             MassRailSpriteArr.SetRotation(i,MassRailF[i].GetInterpolation().Rotation);
+            MassRailSpriteArr.SetSize(i,new Vector2(2.5f,2.5f));
         }
     }
 
     void CollidersUpdate(int startID = 0){
-        for (int i = 0; i < Colliders.Length; i++)
-        {
-            for (int j = i+1; j < Colliders.Length; j++)
-            {
-                float[] Result = Colliders[i].CollisionCheck(Colliders[j],startID);
-                foreach (var item in Result)
-                {
-                    GD.Print("i = ",i,"j = ",j,"T = ",item);
-                    CollisionResults result = Colliders[i].CollisionRes(Colliders[j],item);
-                    Colliders[i].ApplyResults(result);
-                }
-            }
-        }
+        Collider.GlobalCollProcess(1);
     }
     
     // Called when the node enters the scene tree for the first time.
@@ -334,7 +332,7 @@ public class TestScene : Node2D
         ForceSetup();
         //PreWritedRail();
         SpriteSetup();
-        //ColliderSetup();
+        ColliderSetup();
         GD.Print("BLA");
     }
 
@@ -343,6 +341,6 @@ public class TestScene : Node2D
     {
         MassRailTestUpdate(delta);
         MassRailSpriteUpdate();
-        //CollidersUpdate();
+        CollidersUpdate();
     }
 }
