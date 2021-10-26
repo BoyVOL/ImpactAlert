@@ -256,7 +256,12 @@ public class TestScene : Node2D
             MassRail[i] = new ForceRail();
             MassRail[i].Handler = TestHandler;
             MassRail[i].SetFirstPoint(new AccelPoint(newPos,(float)(Rnd.NextDouble()*Math.PI*2),newSpeed,newAccel,(float)(Rnd.NextDouble()*2-1)));
-            RailController.AddRail(MassRail[i]);
+        }
+        RailController.AddRail(MassRail);
+        
+
+        for (int i = 0; i < MassRail.Length; i++)
+        {
             MassRailF[i] = RailController.GetRailFollower(MassRail[i]);
         }
     }

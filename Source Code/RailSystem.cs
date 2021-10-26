@@ -77,6 +77,37 @@ namespace RailSystem{
 		}
 
 		/// <summary>
+		/// Метод для проверки максимального числа изменений
+		/// </summary>
+		/// <param name="rails"></param>
+		/// <returns></returns>
+		int MaxChange(Rail[] rails){
+			int Changes = 0;
+			for (int i = 0; i < rails.Length; i++)
+			{
+				Changes = Math.Max(Changes,Math.Abs(rails[i].GetCount() - GlobalCount));
+			}
+			return Changes;
+		}
+
+		/// <summary>
+		/// Перегрузка метода подстройки рельс под общий знаменатель для массива рельс
+		/// </summary>
+		/// <param name="rails">массив рельс, которые надо добавить</param>
+		public void AdaptCount(Rail[] rails){
+			int Changes = MaxChange(rails);
+			for (int i = 0; i < Changes; i++)
+			{
+				AllStepsCompleted = new CountdownEvent(Rails.Count);
+				foreach (Rail rail in Rails)
+				{
+					ThreadPool.QueueUserWorkItem(AsynqAdapt,rail);
+				}
+				AllStepsCompleted.Wait();
+			}
+		}
+
+		/// <summary>
 		/// Метод для изменения глобального количества точек
 		/// </summary>
 		/// <param name="newCount"></param>
@@ -107,6 +138,19 @@ namespace RailSystem{
 		}
 
 		/// <summary>
+		/// Перегрузка для добавлениярельс одной пачкой
+		/// </summary>
+		/// <param name="rails"></param>
+		public void AddRail(Rail[] rails){
+			for (int i = 0; i < rails.Length; i++)
+			{
+				Rails.Add(rails[i]);
+				rails[i].SetInterval(Interval);
+			}
+			AdaptCount(rails);
+		}
+
+		/// <summary>
 		/// Метод, удаляющий объект
 		/// </summary>
 		/// <param name="rail">объект, который надо удалить</param>
@@ -118,6 +162,22 @@ namespace RailSystem{
 			Rail Temp = (Rail)Rail;
 			Temp.Extrapolate(1);
 			Temp.RemoveFromStart(1);
+			AllStepsCompleted.Signal();
+		}
+
+		/// <summary>
+		/// Ассинхронный документ для адаптации длинны рельсы в отдельном потоке
+		/// </summary>
+		/// <param name="Rail"></param>
+		void AsynqAdapt(object Rail){
+			Rail Temp = (Rail)Rail;
+			int railCount = Temp.GetCount();
+			if(railCount > GlobalCount){
+				Temp.RemoveFromEnd(1);
+			}
+			if(railCount < GlobalCount){
+				Temp.Extrapolate(1);
+			}
 			AllStepsCompleted.Signal();
 		}
 		
