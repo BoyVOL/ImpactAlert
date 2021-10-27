@@ -378,12 +378,6 @@ namespace RailSystem{
 		ArrayList Points = new ArrayList();
 
 		/// <summary>
-		/// Лист моментов времени для методов поисчка сближений
-		/// </summary>
-		/// <returns></returns>
-		ArrayList ResultList = new ArrayList();
-
-		/// <summary>
 		/// Свойство, описывающее, какое количество времени тратится на перемещение между точками
 		/// </summary>
 		float TimeInterval = 100;
@@ -480,6 +474,7 @@ namespace RailSystem{
 			if(TimeInterval == OtherOne.TimeInterval){
 				RailPoint Point1;
 				RailPoint Point2;
+				ArrayList ResultList = new ArrayList();
 				float T;
 				float InterDist;
 				// Выбираем минимальный размер рельсы
@@ -520,6 +515,7 @@ namespace RailSystem{
 			RailPoint Point;
 			float T;
 			float InterDist;
+			ArrayList ResultList = new ArrayList();
 			ResultList.Clear();
 			//Проходим вдоль рельсы, проверяя точки сближения
 			for (int i = 0; i < Points.Count; i++)
@@ -567,6 +563,7 @@ namespace RailSystem{
 		/// <returns></returns>
 		public virtual float ClosestApproach(Rail OtherOne, int startId, int EndId){
 			if(TimeInterval == OtherOne.TimeInterval){
+				ArrayList ResultList = new ArrayList();
 				RailPoint Point1 = (RailPoint)Points[0];
 				RailPoint Point2 = (RailPoint)OtherOne.Points[0];
 				float MinDist = Point1.Position.DistanceTo(Point2.Position);
@@ -607,6 +604,7 @@ namespace RailSystem{
 		/// <param name="Pos">Вектор, с которым надо найти CPA</param>
 		/// <returns></returns>
 		public virtual float ClosestApproach(Vector2 Pos){
+			ArrayList ResultList = new ArrayList();
 			RailPoint Point1 = (RailPoint)Points[0];
 			float MinDist = Point1.Position.DistanceTo(Pos);
 			float MinT = 0;
