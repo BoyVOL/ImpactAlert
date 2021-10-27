@@ -77,6 +77,37 @@ namespace RailSystem{
 		}
 
 		/// <summary>
+		/// Метод для проверки максимального числа изменений
+		/// </summary>
+		/// <param name="rails"></param>
+		/// <returns></returns>
+		int MaxChange(Rail[] rails){
+			int Changes = 0;
+			for (int i = 0; i < rails.Length; i++)
+			{
+				Changes = Math.Max(Changes,Math.Abs(rails[i].GetCount() - GlobalCount));
+			}
+			return Changes;
+		}
+
+		/// <summary>
+		/// Перегрузка метода подстройки рельс под общий знаменатель для массива рельс
+		/// </summary>
+		/// <param name="rails">массив рельс, которые надо добавить</param>
+		public void AdaptCount(Rail[] rails){
+			int Changes = MaxChange(rails);
+			for (int i = 0; i < Changes; i++)
+			{
+				AllStepsCompleted = new CountdownEvent(Rails.Count);
+				foreach (Rail rail in Rails)
+				{
+					ThreadPool.QueueUserWorkItem(AsynqAdapt,rail);
+				}
+				AllStepsCompleted.Wait();
+			}
+		}
+
+		/// <summary>
 		/// Метод для изменения глобального количества точек
 		/// </summary>
 		/// <param name="newCount"></param>
@@ -107,6 +138,19 @@ namespace RailSystem{
 		}
 
 		/// <summary>
+		/// Перегрузка для добавлениярельс одной пачкой
+		/// </summary>
+		/// <param name="rails"></param>
+		public void AddRail(Rail[] rails){
+			for (int i = 0; i < rails.Length; i++)
+			{
+				Rails.Add(rails[i]);
+				rails[i].SetInterval(Interval);
+			}
+			AdaptCount(rails);
+		}
+
+		/// <summary>
 		/// Метод, удаляющий объект
 		/// </summary>
 		/// <param name="rail">объект, который надо удалить</param>
@@ -118,6 +162,22 @@ namespace RailSystem{
 			Rail Temp = (Rail)Rail;
 			Temp.Extrapolate(1);
 			Temp.RemoveFromStart(1);
+			AllStepsCompleted.Signal();
+		}
+
+		/// <summary>
+		/// Ассинхронный документ для адаптации длинны рельсы в отдельном потоке
+		/// </summary>
+		/// <param name="Rail"></param>
+		void AsynqAdapt(object Rail){
+			Rail Temp = (Rail)Rail;
+			int railCount = Temp.GetCount();
+			if(railCount > GlobalCount){
+				Temp.RemoveFromEnd(1);
+			}
+			if(railCount < GlobalCount){
+				Temp.Extrapolate(1);
+			}
 			AllStepsCompleted.Signal();
 		}
 		
@@ -382,7 +442,7 @@ namespace RailSystem{
 		/// <param name="T">момент времени</param>
 		/// <returns>индекс соответствующей точки</returns>
 		public int IDFromTime(float T){
-			return (int)Math.Floor(T/TimeInterval);
+			return (int)Math.Truncate(T*(int)(1/TimeInterval));
 		}
 		
 		/// <summary>
@@ -392,34 +452,7 @@ namespace RailSystem{
 		/// <param name="Distance">минимальная дистанция, которая считается как достаточное сближение</param>
 		/// <returns>массив всех моментов времени, начиная с начального, в которые обе рельсы сближаются на достаточное расстояние</returns>
 		public virtual float[] Approach(Rail OtherOne, float Distance){
-			if(TimeInterval == OtherOne.TimeInterval){
-				RailPoint Point1;
-				RailPoint Point2;
-				float T;
-				float InterDist;
-				// Выбираем минимальный размер рельсы
-				int LowestCount = Math.Min(Points.Count,OtherOne.Points.Count);
-				ResultList.Clear();
-				//Проходим вдоль рельс, проверяя точки сближения
-				for (int i = 0; i < LowestCount; i++)
-				{
-					Point1 = (RailPoint)Points[i];
-					Point2 = (RailPoint)OtherOne.Points[i];
-					T = Point1.CPA(Point2);
-					if(T<0) T=0;
-					if(T>TimeInterval) T=TimeInterval;
-					//Момент времени Т меньше интервала рельсы и больше или равен нулю.
-					//Считаем расстояние и записываем момент времени, если схождение <= Distance
-					InterDist = Point1.GetInterpol(T).Position.DistanceTo(Point2.GetInterpol(T).Position);
-					if(InterDist <= Distance) ResultList.Add(i*TimeInterval+T);
-				}
-				//преобразовываем в массив моментов времени
-				float[] result = (float[])ResultList.ToArray(typeof(float));
-				return result;
-			}
-			else {
-				throw new Exception("Rail intervals are not similar");
-			}
+			return Approach(OtherOne,Distance,0);
 		}
 
 		/// <summary>
@@ -431,29 +464,7 @@ namespace RailSystem{
 		/// <param name="Id">Индекс точки, которую надо проверить</param>
 		/// <returns>массив всех моментов времени, начиная с начального, в которые обе рельсы сближаются на достаточное расстояние</returns>
 		public virtual float[] Approach(Rail OtherOne, float Distance, int Id){
-			if(TimeInterval == OtherOne.TimeInterval){
-				RailPoint Point1;
-				RailPoint Point2;
-				float T;
-				// Выбираем минимальный размер рельсы
-				int LowestCount = Math.Min(Points.Count,OtherOne.Points.Count);
-				ResultList.Clear();
-				//Проходим вдоль рельс, проверяя точки сближения
-				Point1 = (RailPoint)Points[Id];
-				Point2 = (RailPoint)OtherOne.Points[Id];
-				T = Point1.CPA(Point2);
-				if(T<0) T=0;
-				if(T>TimeInterval) T=TimeInterval;
-				//Момент времени Т меньше интервала рельсы и больше или равен нулю.
-				//Считаем расстояние и записываем момент времени, если схождение <= Distance
-				if(Point1.GetInterpol(T).Position.DistanceTo(Point2.GetInterpol(T).Position) <= Distance) ResultList.Add(Id*TimeInterval+T);
-				//преобразовываем в массив моментов времени
-				float[] result = (float[])ResultList.ToArray(typeof(float));
-				return result;
-			}
-			else {
-				throw new Exception("Rail intervals are not similar");
-			}
+			return Approach(OtherOne,Distance,Id,GetCount()-1);
 		}
 
 		/// <summary>
@@ -473,21 +484,22 @@ namespace RailSystem{
 				float InterDist;
 				// Выбираем минимальный размер рельсы
 				int LowestCount = Math.Min(Points.Count,OtherOne.Points.Count);
-				int TempStartId = Math.Min(startId,LowestCount-2);
-				int TempEndId = Math.Min(EndId,LowestCount-1);
+				if(startId >= LowestCount) throw new Exception("Start index is out of bounds");
+				if(EndId >= LowestCount) throw new Exception("End index is out of bounds");
 				ResultList.Clear();
 				//Проходим вдоль рельс, проверяя точки сближения
-				for (int i = TempStartId; i <= TempEndId; i++)
+				for (int i = startId; i <= EndId; i++)
 				{
 					Point1 = (RailPoint)Points[i];
 					Point2 = (RailPoint)OtherOne.Points[i];
 					T = Point1.CPA(Point2);
-					if(T<0) T=0;
-					if(T>TimeInterval) T=TimeInterval;
-					//Момент времени Т меньше интервала рельсы и больше или равен нулю.
-					//Считаем расстояние и записываем момент времени, если схождение <= Distance
-					InterDist = Point1.GetInterpol(T).Position.DistanceTo(Point2.GetInterpol(T).Position);
-					if(InterDist <= Distance) ResultList.Add(i*TimeInterval+T);
+					if(T < 0) T=0;
+					if(T < TimeInterval){
+						//Момент времени Т меньше интервала рельсы и больше или равен нулю.
+						//Считаем расстояние и записываем момент времени, если схождение <= Distance
+						InterDist = Point1.GetInterpol(T).Position.DistanceTo(Point2.GetInterpol(T).Position);
+						if(InterDist < Distance) ResultList.Add(i*TimeInterval+T);
+					}
 				}
 				//преобразовываем в массив моментов времени
 				float[] result = (float[])ResultList.ToArray(typeof(float));
@@ -533,37 +545,7 @@ namespace RailSystem{
 		/// <param name="OtherOne">Рельса, с которой надо найти CPA</param>
 		/// <returns></returns>
 		public virtual float ClosestApproach(Rail OtherOne){
-			if(TimeInterval == OtherOne.TimeInterval){
-				RailPoint Point1 = (RailPoint)Points[0];
-				RailPoint Point2 = (RailPoint)OtherOne.Points[0];
-				float MinDist = Point1.Position.DistanceTo(Point2.Position);
-				float MinT = 0;
-				float T = 0;
-				float InterDist;
-				// Выбираем минимальный размер рельсы
-				int LowestCount = Math.Min(Points.Count,OtherOne.Points.Count);
-				ResultList.Clear();
-				//Проходим вдоль рельс, проверяя точки сближения
-				for (int i = 0; i < LowestCount; i++)
-				{
-					Point1 = (RailPoint)Points[i];
-					Point2 = (RailPoint)OtherOne.Points[i];
-					T = Point1.CPA(Point2);
-					if(T<0) T=0;
-					if(T>TimeInterval) T=TimeInterval;
-					//Момент времени Т меньше интервала рельсы и больше или равен нулю.
-					//Считаем расстояние и записываем момент времени, если схождение < минимального
-					InterDist = Point1.GetInterpol(T).Position.DistanceTo(Point2.GetInterpol(T).Position);
-					if(InterDist < MinDist) {
-						MinDist = InterDist;
-						MinT = i*TimeInterval+T;
-					}
-				}
-				return MinT;
-			}
-			else {
-				throw new Exception("Rail intervals are not similar");
-			}
+			return ClosestApproach(OtherOne,0);
 		}
 
 		/// <summary>
@@ -574,34 +556,7 @@ namespace RailSystem{
 		/// <param name="Id">Индекс точки, которую надо проверить</param>
 		/// <returns></returns>
 		public virtual float ClosestApproach(Rail OtherOne, int Id){
-			if(TimeInterval == OtherOne.TimeInterval){
-				RailPoint Point1 = (RailPoint)Points[0];
-				RailPoint Point2 = (RailPoint)OtherOne.Points[0];
-				float MinDist = Point1.Position.DistanceTo(Point2.Position);
-				float MinT = 0;
-				float T = 0;
-				float InterDist;
-				// Выбираем минимальный размер рельсы
-				int LowestCount = Math.Min(Points.Count,OtherOne.Points.Count);
-				ResultList.Clear();
-				//Проходим вдоль рельс, проверяя точки сближения
-				Point1 = (RailPoint)Points[Id];
-				Point2 = (RailPoint)OtherOne.Points[Id];
-				T = Point1.CPA(Point2);
-				if(T<0) T=0;
-				if(T>TimeInterval) T=TimeInterval;
-				//Момент времени Т меньше интервала рельсы и больше или равен нулю.
-				//Считаем расстояние и записываем момент времени, если схождение < минимального
-				InterDist = Point1.GetInterpol(T).Position.DistanceTo(Point2.GetInterpol(T).Position);
-				if(InterDist < MinDist) {
-					MinDist = InterDist;
-					MinT = Id*TimeInterval+T;
-				}
-				return MinT;
-			}
-			else {
-				throw new Exception("Rail intervals are not similar");
-			}
+			return ClosestApproach(OtherOne,Id,GetCount()-1);
 		}
 
 		/// <summary>
