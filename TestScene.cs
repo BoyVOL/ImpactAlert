@@ -19,6 +19,8 @@ public class TestScene : Node2D
 
     TestCollider[] Colliders;
 
+    Camera2D Camera;
+
     /// <summary>
     /// Спрайты для отображения интерполяций рельс на экране
     /// </summary>
@@ -78,9 +80,6 @@ public class TestScene : Node2D
             int CollId = Current.IDFromTime(Results.T);
             AccelPoint Point = (AccelPoint)Current.GetPoint(CollId);
             Point.SimSpeed = Results.NewSpeed;
-            int ExtrapolateCount = Current.GetCount()-CollId-1;
-            Current.RemoveFromEnd(ExtrapolateCount);
-            Current.Extrapolate(ExtrapolateCount);
             //GD.Print(Results.T);
         }
     }
@@ -190,7 +189,7 @@ public class TestScene : Node2D
         }
     }
 
-    void PreWritedRail(float TimeInterval = 0.1f, int raillength = 43){
+    void PreWritedRail(float TimeInterval = 0.1f, int raillength = 100){
         
 
         Random Rnd = new Random();
@@ -246,7 +245,7 @@ public class TestScene : Node2D
     /// <param name="AccelRange"></param>
     /// <param name="TimeInterval"></param>
     void MassRailTestSetup(
-        int ArraySize = 3, float posRange = 1000, 
+        int ArraySize = 100, float posRange = 10000, 
         float SpeedRange = 100, float AccelRange = 100){
         
         ForceParams par = new ForceParams(Vector2.Zero,10);
@@ -289,6 +288,8 @@ public class TestScene : Node2D
             MassRailSpriteArr.SetCoordinates(i,MassRail[i].Interpolate(0).Position);
             //MassRailSpriteArr.SetSize(i,new Vector2(1,1));
         }
+        Camera = GetNode<Camera2D>("TestCamera");
+        Camera.SmoothingEnabled = false;
     }
 
 
@@ -303,7 +304,12 @@ public class TestScene : Node2D
             MassRailF[i].Shift += delta;
         }
         int DeletedCount = MassRailF[0].CurrentID();
-        RailController.MoveForvard(DeletedCount);
+        for (int i = 0; i < DeletedCount; i++)
+        {
+            RailController.MoveForvard(1);
+            Collider.GlobalCollProcess(RailController.GetGlobalCount()-1);
+            RailController.GlobalAdapt();
+        }
     } 
 
     /// <summary>
@@ -319,7 +325,6 @@ public class TestScene : Node2D
     }
 
     void CollidersUpdate(int startID = 0){
-        Collider.GlobalCollProcess(1);
     }
     
     // Called when the node enters the scene tree for the first time.
@@ -342,5 +347,6 @@ public class TestScene : Node2D
         MassRailTestUpdate(delta);
         MassRailSpriteUpdate();
         CollidersUpdate();
+        Camera.Position = MassRailSpriteArr.GetItem(0).Position;
     }
 }

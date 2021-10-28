@@ -197,6 +197,15 @@ namespace RailSystem{
 			}
 			ShiftT += Interval*Count;
 		}
+
+		public void GlobalAdapt(){
+				AllStepsCompleted = new CountdownEvent(Rails.Count);
+				foreach (Rail rail in Rails)
+				{
+					ThreadPool.QueueUserWorkItem(AsynqAdapt,rail);
+				}
+				AllStepsCompleted.Wait();
+		}
 	}
 		
 	/// <summary>
@@ -455,10 +464,10 @@ namespace RailSystem{
 		/// </summary>
 		/// <param name="OtherOne">вторая рельса, с которой надо найти все сближения</param>
 		/// <param name="Distance">минимальная дистанция, которая считается как достаточное сближение</param>
-		/// <param name="Id">Индекс точки, которую надо проверить</param>
+		/// <param name="Start">Индекс точки, начиная с которой надо провести проверку</param>
 		/// <returns>массив всех моментов времени, начиная с начального, в которые обе рельсы сближаются на достаточное расстояние</returns>
-		public virtual float[] Approach(Rail OtherOne, float Distance, int Id){
-			return Approach(OtherOne,Distance,Id,GetCount()-1);
+		public virtual float[] Approach(Rail OtherOne, float Distance, int Start){
+			return Approach(OtherOne,Distance,Start,GetCount()-1);
 		}
 
 		/// <summary>
@@ -468,7 +477,7 @@ namespace RailSystem{
 		/// <param name="OtherOne">вторая рельса, с которой надо найти все сближения</param>
 		/// <param name="Distance">минимальная дистанция, которая считается как достаточное сближение</param>
 		/// <param name="startId">Начальный индекс интервала</param>
-		/// <param name="EndId">Конечный индекс интервала</param>
+		/// <param name="EndId">Последний проверяемый индекс интервала</param>
 		/// <returns></returns>
 		public virtual float[] Approach(Rail OtherOne, float Distance, int startId, int EndId){
 			if(TimeInterval == OtherOne.TimeInterval){
@@ -479,8 +488,8 @@ namespace RailSystem{
 				float InterDist;
 				// Выбираем минимальный размер рельсы
 				int LowestCount = Math.Min(Points.Count,OtherOne.Points.Count);
-				if(startId >= LowestCount) throw new Exception("Start index is out of bounds");
-				if(EndId >= LowestCount) throw new Exception("End index is out of bounds");
+				if(startId >= LowestCount) throw new Exception("Start index "+startId+" is Greater then  "+LowestCount);
+				if(EndId >= LowestCount) throw new Exception("End index "+EndId+" is Greater then  "+LowestCount);
 				ResultList.Clear();
 				//Проходим вдоль рельс, проверяя точки сближения
 				for (int i = startId; i <= EndId; i++)
@@ -708,13 +717,15 @@ namespace RailSystem{
 			{
 				if (T < TimeInterval*Points.Count){
 					//Возвращает нужную точку
-					int Id = (int)Math.Floor(T/TimeInterval);
+					int Id = IDFromTime(T);
 					float tau = T%TimeInterval;
+					if(Id >= GetCount()) Id = GetCount()-1;
+					if(Id < 0) Id = 0;
 					Temp = (RailPoint)Points[Id];
 					return Temp.GetInterpol(tau);
 				} else {
 					//Возвращает точку в последнем моменте времени, описанном рельсой
-					Temp = (RailPoint)Points[Points.Count-1];
+					Temp = (RailPoint)Points[GetCount()-1];
 					return Temp.GetInterpol(TimeInterval);
 				}
 			} else {
