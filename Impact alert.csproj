@@ -16,5 +16,6 @@
     <Content Include="Source Code\ForceProjectors.cs" />
     <Content Include="TestCamera.cs" />
     <Content Include="data_Impact alert\Mono\etc\mono\2.0\DefaultWsdlHelpGenerator.aspx" />
+    <Content Include="Source Code\RailInfluence.cs" />
   </ItemGroup>
 </Project>
