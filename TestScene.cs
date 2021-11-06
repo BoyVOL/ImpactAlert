@@ -13,7 +13,7 @@ public class TestScene : Node2D
     /// <summary>
     /// класс массив рельс для массового тестирования
     /// </summary>
-    ForceRail[] MassRail;
+    InfluencedRail[] MassRail;
 
     ForceProjector[] Projectors;
 
@@ -40,29 +40,6 @@ public class TestScene : Node2D
     /// <summary>
     /// Тестовый класс точки рельсы
     /// </summary>
-
-    class TestForceProjector : ForceProjector{
-        Rail Rail;
-
-        float Potential;
-
-        public TestForceProjector(Rail rail, float potential){
-            Rail = rail;
-            Potential = potential;
-        }
-
-        float Force(float r, float potential){
-            return potential/(r*r);
-        }
-        public override Vector2 GetAccelVector(ForceParams forceParams, float T){
-            Vector2 Pos = Rail.Interpolate(T).Position;
-            float R = Pos.DistanceTo(forceParams.Pos);
-            Vector2 Normal = (Pos - forceParams.Pos);
-            Normal.Normalized();
-            float module = Potential/(R*R);
-            return Normal*module;
-        }
-    }
 
     class TestCollider : RailCollider{
         public override CollisionResults CollisionRes(RailCollider Other, float T)
@@ -174,7 +151,7 @@ public class TestScene : Node2D
         Rail Rail = new Rail();
         Rail.SetFirstPoint(new KineticPoint(new Vector2(0,0),0,new Vector2(0,0),0));
         RailController.AddRail(Rail);
-        TestForceProjector TestProjector = new TestForceProjector(Rail,100000);
+        GravityRailProjector TestProjector = new GravityRailProjector(Rail,100000);
         TestHandler.AddProjector(TestProjector);
     }
 
@@ -182,10 +159,11 @@ public class TestScene : Node2D
         Projectors = new ForceProjector[MassRail.Length];
         for (int i = 0; i < Projectors.Length; i++)
         {
-            Projectors[i] = new TestForceProjector(MassRail[i],100000);
+            Projectors[i] = new GravityRailProjector(MassRail[i],100000);
             TestHandler.AddProjector(Projectors[i]);
-            MassRail[i].Params.Exclude = new ForceProjector[1];
-            MassRail[i].Params.Exclude[0] = Projectors[i];
+            ForceFieldInfluencer Temp = (ForceFieldInfluencer)MassRail[i].GetInfluencer(0);
+            Temp.Params.Exclude = new ForceProjector[1];
+            Temp.Params.Exclude[0] = Projectors[i];
         }
     }
 
@@ -200,17 +178,16 @@ public class TestScene : Node2D
 
         ForceParams par = new ForceParams(Vector2.Zero,10);
 
-        MassRail = new ForceRail[1];
+        MassRail = new InfluencedRail[1];
 
         MassRailF = new RailFollower[1];
 
-        ForceRail Temp;
+        InfluencedRail Temp;
 
-        MassRail[0] = new ForceRail();
-        MassRail[0].Handler = TestHandler;
+        MassRail[0] = new InfluencedRail();
         MassRail[0].SetInterval(TimeInterval);
         MassRail[0].SetFirstPoint(new AccelPoint(Position,(float)(Rnd.NextDouble()*Math.PI*2),newSpeed,newAccel,(float)(Rnd.NextDouble()*2-1)));
-        Temp = (ForceRail)MassRail[0];
+        Temp = (InfluencedRail)MassRail[0];
         Temp.Extrapolate(raillength);
         RailController.AddRail(MassRail[0]);
         MassRailF[0] = RailController.GetRailFollower(MassRail[0]);
@@ -252,7 +229,7 @@ public class TestScene : Node2D
 
         Random Rnd = new Random();
 
-        MassRail = new ForceRail[ArraySize];
+        MassRail = new InfluencedRail[ArraySize];
 
         MassRailF = new RailFollower[ArraySize];
 
@@ -263,8 +240,10 @@ public class TestScene : Node2D
             Vector2 newSpeed = new Vector2((float)(Rnd.NextDouble()*SpeedRange*2-SpeedRange),(float)(Rnd.NextDouble()*SpeedRange*2-SpeedRange));
             Vector2 newAccel = new Vector2((float)Rnd.NextDouble()*AccelRange*2-AccelRange,(float)Rnd.NextDouble()*AccelRange*2-AccelRange);
             //Vector2 newAccel = new Vector2(1,0);
-            MassRail[i] = new ForceRail();
-            MassRail[i].Handler = TestHandler;
+            MassRail[i] = new InfluencedRail();
+            ForceFieldInfluencer Temp = new ForceFieldInfluencer();
+            Temp.Handler = TestHandler;
+            MassRail[i].AddInfluencer(Temp);
             MassRail[i].SetFirstPoint(new AccelPoint(newPos,(float)(Rnd.NextDouble()*Math.PI*2),newSpeed,newAccel,(float)(Rnd.NextDouble()*2-1)));
         }
         RailController.AddRail(MassRail);
@@ -332,7 +311,9 @@ public class TestScene : Node2D
     {
         System.Threading.ThreadPool.SetMinThreads(100,100);
         GlobalRailUpdaterSetup();
+        GD.Print("Rails");
         MassRailTestSetup();
+        GD.Print("Force");
         MassForceSetup();
         ForceSetup();
         //PreWritedRail();

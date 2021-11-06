@@ -1,5 +1,6 @@
 using Godot;
 using System.Collections;
+using RailSystem;
 using System;
 
 namespace ForceProjection{
@@ -112,4 +113,66 @@ namespace ForceProjection{
             return Result;
         }
     }
+
+    public class ForceFieldInfluencer : IRaillnfluence{
+    
+    /// <summary>
+    /// Обработчик сил для данной рельсы
+    /// </summary>
+    public ForceProjHandler Handler = null;
+
+    /// <summary>
+    /// Устанавливает, сколько раз пересчитывать ускорение для более точного результата
+    /// </summary>
+    public int ApprCount = 2;
+
+    /// <summary>
+    /// Устанавливает, в скольких промежуточных точках брать ускорение, из которого потом берётся среднее
+    /// </summary>
+    public int ApprSteps = 2;
+    
+    /// <summary>
+    /// Поле, отвечающее за хранение параметров силового взаимодействия данной рельсы
+    /// </summary>
+    /// <returns></returns>
+    public ForceParams Params = new ForceParams(Vector2.Zero,0);
+
+    /// <summary>
+    /// Функция, отвечающая за апробацию ускорения в нескольких точках рельсы, количество которых задаётся параметром ApprSteps, и вывод среднего арифметического
+    /// </summary>
+    /// <param name="point">Точка, которую надо проверить</param>
+    /// <param name="GlobalT">Глобальное время</param>
+    /// <param name="GlobalT">Глобальное время</param>
+    /// <returns></returns>
+    ForceResult GetMidResults(AccelPoint point, float GlobalT, float Interval){
+        ForceResult Result = new ForceResult();
+        Result.Accel = Vector2.Zero;
+        ForceResult Temp;
+        float InterStep = Interval/ApprSteps;
+        for (float t = 0; t <= Interval; t+=InterStep)
+        {
+            Params.Pos = point.MidPos(t);
+            Params.Speed = point.MidSpeed(t);
+            Temp = Handler.GetResult(Params, GlobalT);
+            Result.Accel += Temp.Accel;
+        }
+        Result.Accel /= (ApprSteps+1);
+        return Result;
+    }
+
+    void IRaillnfluence.UpdatePoint(RailPoint Point, float T, float Interval){
+       if(Point.GetType() == typeof(AccelPoint)){
+            AccelPoint TempPoint = (AccelPoint)Point;
+            ForceResult Temp = new ForceResult();
+            float ApprStep = Interval/ApprCount;
+            for (int j = 0; j < ApprCount; j++)
+            {
+                Params.Pos = TempPoint.MidPos(Interval/2);
+                Params.Speed = TempPoint.MidSpeed(Interval/2);
+                Temp = GetMidResults(TempPoint, T, Interval);
+                TempPoint.Accel = Temp.Accel;
+            }
+        }
+    }
+}
 }
