@@ -303,8 +303,6 @@ public class TestScene : Node2D
         }
     }
 
-    void CollidersUpdate(int startID = 0){
-    }
     
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
@@ -327,7 +325,6 @@ public class TestScene : Node2D
     {
         MassRailTestUpdate(delta);
         MassRailSpriteUpdate();
-        CollidersUpdate();
         Camera.Position = MassRailSpriteArr.GetItem(0).Position;
     }
 }
