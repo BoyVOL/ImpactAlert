@@ -783,10 +783,16 @@ namespace RailSystem{
 		/// <returns></returns>
 		public RailPoint.InterData GetInterpolation(){
 			if(Current != null){
-				if (Shift >= Parent.ShiftT && Shift <= Current.GetLastT()+Parent.ShiftT)
-				{
-					return Current.Interpolate(Shift-Parent.ShiftT);
-				} else throw new Exception("Shift is out of rail");
+				if (Shift >= Parent.ShiftT){
+					if(Shift <= Current.GetLastT()+Parent.ShiftT)
+					{
+						return Current.Interpolate(Shift-Parent.ShiftT);
+					} else {
+						return Current.Interpolate(Current.GetLastT());
+					}
+				} else {
+					return Current.Interpolate(0);
+				}
 			} else throw new Exception("Rail is not set");
 		}
 
@@ -796,10 +802,16 @@ namespace RailSystem{
 		/// <returns></returns>
 		public int CurrentID(){
 			if(Current != null){
-				if (Shift >= Parent.ShiftT && Shift <= Current.GetLastT()+Parent.ShiftT)
-				{
-					return Current.IDFromTime(Shift-Parent.ShiftT);
-				} else throw new Exception("Shift is out of rail");
+				if (Shift >= Parent.ShiftT){
+					if(Shift <= Current.GetLastT()+Parent.ShiftT)
+					{
+						return Current.IDFromTime(Shift-Parent.ShiftT);
+					} else {
+						return Current.IDFromTime(Current.GetLastT());
+					}
+				} else {
+					return Current.IDFromTime(0);
+				}
 			} else throw new Exception("Rail is not set");
 		}
 	}

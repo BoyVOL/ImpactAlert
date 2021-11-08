@@ -145,6 +145,7 @@ namespace ForceProjection{
     /// <param name="GlobalT">Глобальное время</param>
     /// <returns></returns>
     ForceResult GetMidResults(AccelPoint point, float GlobalT, float Interval){
+        if(Handler == null) throw new Exception("ForceProjHandler must not be null");
         ForceResult Result = new ForceResult();
         Result.Accel = Vector2.Zero;
         ForceResult Temp;
@@ -161,6 +162,7 @@ namespace ForceProjection{
     }
 
     void IRaillnfluence.UpdatePoint(RailPoint Point, float T, float Interval){
+        if(Handler == null) throw new Exception("ForceProjHandler must not be null");
        if(Point.GetType() == typeof(AccelPoint)){
             AccelPoint TempPoint = (AccelPoint)Point;
             ForceResult Temp = new ForceResult();

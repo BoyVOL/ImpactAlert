@@ -17,5 +17,8 @@
     <Content Include="data_Impact alert\Mono\etc\mono\2.0\DefaultWsdlHelpGenerator.aspx" />
     <Content Include="Source Code\RailInfluence.cs" />
     <Content Include="Source Code\PhysicsControll.cs" />
+    <Content Include="TestObjectRes.cs" />
+    <Content Include="Source Code\Colliders.cs" />
+    <Content Include="GravityCenter.cs" />
   </ItemGroup>
 </Project>

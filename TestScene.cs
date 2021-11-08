@@ -1,7 +1,6 @@
 using Godot;
 using RailSystem;
 using ForceProjection;
-using CollisionCalculation;
 using Legacy;
 using System;
 
@@ -9,57 +8,14 @@ using System;
 /// Сцена для массового тестирования рельс
 /// </summary>
 public class TestScene : Node2D
-{  
-    /// <summary>
-    /// класс массив рельс для массового тестирования
-    /// </summary>
-    InfluencedRail[] MassRail;
+{
+    public GlobalPhysUpdater Updater = new GlobalPhysUpdater();
 
-    ForceProjector[] Projectors;
+    PackedScene NewObject = (PackedScene)ResourceLoader.Load("res://TestObjectRes.tscn");
 
-    TestCollider[] Colliders;
+    PackedScene GravCenter = (PackedScene)ResourceLoader.Load("res://GravityCenter.tscn");
 
     Camera2D Camera;
-
-    /// <summary>
-    /// Спрайты для отображения интерполяций рельс на экране
-    /// </summary>
-    SpriteBufferArray MassRailSpriteArr;
-
-    GlobalRailController RailController = new GlobalRailController();
-
-    GlobalCollider Collider = new GlobalCollider();
-
-    /// <summary>
-    /// Массив следователей по рельсам для тестовых рельс
-    /// </summary>
-    RailFollower[] MassRailF;
-
-    ForceProjHandler TestHandler = new ForceProjHandler();
-    
-    /// <summary>
-    /// Тестовый класс точки рельсы
-    /// </summary>
-
-    class TestCollider : RailCollider{
-        public override CollisionResults CollisionRes(RailCollider Other, float T)
-        {
-            CollisionResults Result = new CollisionResults();
-            //GD.Print(Current.Interpolate(T).Position.DistanceTo(Other.Current.Interpolate(T).Position));
-            Result.T = T;
-            AccelPoint Point = (AccelPoint)Other.Current.GetPoint(Other.Current.IDFromTime(T));
-            Result.NewSpeed = Point.SimSpeed;
-            return Result;
-        }
-
-        public override void ApplyResults(CollisionResults Results)
-        {
-            int CollId = Current.IDFromTime(Results.T);
-            AccelPoint Point = (AccelPoint)Current.GetPoint(CollId);
-            Point.SimSpeed = Results.NewSpeed;
-            //GD.Print(Results.T);
-        }
-    }
 
     /// <summary>
     /// метод для проверки работы класса рельсы
@@ -146,185 +102,83 @@ public class TestScene : Node2D
             GD.Print(TestFollow.GetInterpolation().toString());
         GD.Print(TestContr.ShiftT);
     }
-
-    void ForceSetup(){        
-        Rail Rail = new Rail();
-        Rail.SetFirstPoint(new KineticPoint(new Vector2(0,0),0,new Vector2(0,0),0));
-        RailController.AddRail(Rail);
-        GravityRailProjector TestProjector = new GravityRailProjector(Rail,100000);
-        TestHandler.AddProjector(TestProjector);
-    }
-
-    void MassForceSetup(){
-        Projectors = new ForceProjector[MassRail.Length];
-        for (int i = 0; i < Projectors.Length; i++)
-        {
-            Projectors[i] = new GravityRailProjector(MassRail[i],100000);
-            TestHandler.AddProjector(Projectors[i]);
-            ForceFieldInfluencer Temp = (ForceFieldInfluencer)MassRail[i].GetInfluencer(0);
-            Temp.Params.Exclude = new ForceProjector[1];
-            Temp.Params.Exclude[0] = Projectors[i];
-        }
-    }
-
-    void PreWritedRail(float TimeInterval = 0.1f, int raillength = 100){
-        
-
-        Random Rnd = new Random();
-        
-        Vector2 newPos = new Vector2(10,10);
-        Vector2 newSpeed = new Vector2(0,100);
-        Vector2 newAccel = new Vector2(10,10);
-
-        ForceParams par = new ForceParams(Vector2.Zero,10);
-
-        MassRail = new InfluencedRail[1];
-
-        MassRailF = new RailFollower[1];
-
-        InfluencedRail Temp;
-
-        MassRail[0] = new InfluencedRail();
-        MassRail[0].SetInterval(TimeInterval);
-        MassRail[0].SetFirstPoint(new AccelPoint(Position,(float)(Rnd.NextDouble()*Math.PI*2),newSpeed,newAccel,(float)(Rnd.NextDouble()*2-1)));
-        Temp = (InfluencedRail)MassRail[0];
-        Temp.Extrapolate(raillength);
-        RailController.AddRail(MassRail[0]);
-        MassRailF[0] = RailController.GetRailFollower(MassRail[0]);
-    }
     
     void GlobalRailUpdaterSetup(){
-        RailController.SetGlobalCount(100);
-        RailController.SetInterval(0.01f);
+        Updater.RailController.SetGlobalCount(100);
+        Updater.RailController.SetInterval(0.05f);
     }
-
-    /// <summary>
-    /// Метод для установки классов обработки коллизий в тестовых рельсах
-    /// </summary>
-    /// <param name="radius">Рабиус коллайдеров</param>
-    void ColliderSetup(float radius = 100){
-        Colliders = new TestCollider[MassRail.Length];
-        for (int i = 0; i < Colliders.Length; i++)
-        {
-            Colliders[i] = new TestCollider();
-            Colliders[i].Current = MassRail[i];
-            Colliders[i].Radius = radius;
-            Collider.AddCollider(Colliders[i]);
-        }
-    }   
-
-    /// <summary>
-    /// Метод для настройки тестовой симуляции множества объектов с рельсами
-    /// </summary>
-    /// <param name="ArraySize"></param>
-    /// <param name="posRange"></param>
-    /// <param name="SpeedRange"></param>
-    /// <param name="AccelRange"></param>
-    /// <param name="TimeInterval"></param>
-    void MassRailTestSetup(
-        int ArraySize = 100, float posRange = 10000, 
-        float SpeedRange = 100, float AccelRange = 100){
-        
-        ForceParams par = new ForceParams(Vector2.Zero,10);
-
-        Random Rnd = new Random();
-
-        MassRail = new InfluencedRail[ArraySize];
-
-        MassRailF = new RailFollower[ArraySize];
-
-        for (int i = 0; i < MassRail.Length; i++)
-        {
-            Vector2 newPos = new Vector2((float)Rnd.NextDouble()*posRange*2-posRange,(float)Rnd.NextDouble()*posRange*2-posRange);
-            //Vector2 newPos = new Vector2(20,20);
-            Vector2 newSpeed = new Vector2((float)(Rnd.NextDouble()*SpeedRange*2-SpeedRange),(float)(Rnd.NextDouble()*SpeedRange*2-SpeedRange));
-            Vector2 newAccel = new Vector2((float)Rnd.NextDouble()*AccelRange*2-AccelRange,(float)Rnd.NextDouble()*AccelRange*2-AccelRange);
-            //Vector2 newAccel = new Vector2(1,0);
-            MassRail[i] = new InfluencedRail();
-            ForceFieldInfluencer Temp = new ForceFieldInfluencer();
-            Temp.Handler = TestHandler;
-            MassRail[i].AddInfluencer(Temp);
-            MassRail[i].SetFirstPoint(new AccelPoint(newPos,(float)(Rnd.NextDouble()*Math.PI*2),newSpeed,newAccel,(float)(Rnd.NextDouble()*2-1)));
-        }
-        RailController.AddRail(MassRail);
-        for (int i = 0; i < MassRail.Length; i++)
-        {
-            MassRailF[i] = RailController.GetRailFollower(MassRail[i]);
-        }
-    }
-
-    /// <summary>
-    /// Метод для задания массива спрайтов
-    /// </summary>
-    void SpriteSetup(){
-        Texture Texture = ResourceLoader.Load<Texture>("res://icon.png");
-        MassRailSpriteArr = new SpriteBufferArray(MassRail.Length);
-        for (int i = 0; i < MassRailSpriteArr.getLength(); i++)
-        {
-            MassRailSpriteArr.AddAsChild(i,this);
-            MassRailSpriteArr.SetTexture(i,Texture);
-            MassRailSpriteArr.SetVisible(i,true);
-            MassRailSpriteArr.SetCoordinates(i,MassRail[i].Interpolate(0).Position);
-            //MassRailSpriteArr.SetSize(i,new Vector2(1,1));
-        }
-        Camera = GetNode<Camera2D>("TestCamera");
-        Camera.SmoothingEnabled = false;
-    }
-
 
     /// <summary>
     /// Метод обновления массового теста рельс
     /// </summary>
     /// <param name="delta">интервал времени, который надо обновить</param>
-    void MassRailTestUpdate(float delta){
-        ForceParams par = new ForceParams(Vector2.Zero,100);
-        for (int i = 0; i < MassRail.Length; i++)
-        {
-            MassRailF[i].Shift += delta;
-        }
-        int DeletedCount = MassRailF[0].CurrentID();
-        for (int i = 0; i < DeletedCount; i++)
-        {
-            RailController.MoveForvard(1);
-            Collider.GlobalCollProcess(RailController.GetGlobalCount()-1);
-            RailController.GlobalAdapt();
-        }
+    void MassRailTestUpdate(){
+        Updater.MoveToWatcher();
     } 
 
-    /// <summary>
-    /// Метод для обновления положения спрайтов
-    /// </summary>
-    void MassRailSpriteUpdate(){
-        for (int i = 0; i < MassRailSpriteArr.getLength(); i++)
+    void AddTestResource(){
+        GD.Print("Adding");
+        Node2D Object = (Node2D)NewObject.Instance();
+        this.AddChild(Object);
+        Camera = GetNode<Camera2D>("TestCamera");
+        Camera.SmoothingEnabled = false;
+        this.RemoveChild(Camera);
+        Object.AddChild(Camera);
+        GD.Print("Added");
+    }
+
+    void AddTestResourceArray(){
+        Node2D[] Array = new Node2D[2];
+        for (int i = 0; i < Array.Length; i++)
         {
-            MassRailSpriteArr.SetCoordinates(i,MassRailF[i].GetInterpolation().Position);
-            MassRailSpriteArr.SetRotation(i,MassRailF[i].GetInterpolation().Rotation);
-            MassRailSpriteArr.SetSize(i,new Vector2(2.5f,2.5f));
+            Array[i] = (Node2D)NewObject.Instance();
+            this.AddChild(Array[i]);
         }
     }
 
-    
+    void AddObjects(){
+        Node2D[] Array = new Node2D[2];
+        for (int i = 0; i < Array.Length; i++)
+        {
+            Array[i] = (Node2D)NewObject.Instance();
+            this.AddChild(Array[i]);
+        }
+    }
+
+    void AddGravityCenter(){
+        Node2D Object = (Node2D)GravCenter.Instance();
+        this.AddChild(Object);
+    }
+
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
+        AddTestResource();
+        AddGravityCenter();
+        AddTestResourceArray();
         System.Threading.ThreadPool.SetMinThreads(100,100);
         GlobalRailUpdaterSetup();
-        GD.Print("Rails");
-        MassRailTestSetup();
-        GD.Print("Force");
-        MassForceSetup();
-        ForceSetup();
-        //PreWritedRail();
-        SpriteSetup();
-        ColliderSetup();
-        GD.Print("BLA");
     }
 
     // Called every frame. 'delta' is the elapsed time since the previous frame.
     public override void _Process(float delta)
     {
-        MassRailTestUpdate(delta);
-        MassRailSpriteUpdate();
-        Camera.Position = MassRailSpriteArr.GetItem(0).Position;
+        Updater.Watcher.Shift+=delta;
+    }
+
+    public override void _PhysicsProcess(float delta)
+    {
+        MassRailTestUpdate();
+    }
+
+    public override void _UnhandledInput(InputEvent @event){
+        if (@event is InputEventKey){
+            InputEventKey emb = (InputEventKey)@event;
+            if (emb.IsPressed()){
+                if (emb.Unicode == (int)KeyList.Space){
+                    AddObjects();
+                }
+            }
+        }
     }
 }
