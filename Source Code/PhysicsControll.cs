@@ -49,7 +49,7 @@ public class GlobalPhysUpdater{
     /// </summary>
     /// <param name="delta">интервал времени, который надо обновить</param>
     public void MoveToWatcher(){
-        int DeletedCount = Watcher.CurrentID();
+        int DeletedCount = Watcher.CurrentID()-1;
         for (int i = 0; i < DeletedCount; i++)
         {
             MoveForward();

@@ -11,6 +11,8 @@ public class TestScene : Node2D
 {
     public GlobalPhysUpdater Updater = new GlobalPhysUpdater();
 
+    Node2D FocusObject = null;
+
     PackedScene NewObject = (PackedScene)ResourceLoader.Load("res://TestObjectRes.tscn");
 
     PackedScene GravCenter = (PackedScene)ResourceLoader.Load("res://GravityCenter.tscn");
@@ -118,12 +120,12 @@ public class TestScene : Node2D
 
     void AddTestResource(){
         GD.Print("Adding");
-        Node2D Object = (Node2D)NewObject.Instance();
-        this.AddChild(Object);
+        FocusObject = (Node2D)NewObject.Instance();
+        this.AddChild(FocusObject);
         Camera = GetNode<Camera2D>("TestCamera");
         Camera.SmoothingEnabled = false;
         this.RemoveChild(Camera);
-        Object.AddChild(Camera);
+        FocusObject.AddChild(Camera);
         GD.Print("Added");
     }
 
