@@ -22,21 +22,13 @@ namespace CollisionCalculation{
 		CountdownEvent AllStepsCompleted;
 
         /// <summary>
-        /// Буфферный массив для хранения результатов нахождения моментов времени коллизий
-        /// </summary>
-        float[][] TimeArrays;
-
-        /// <summary>
         /// Буфферный массив для хранения очередей, в которые записываются результаты коллизий для каждого объекта
         /// </summary>
         Queue[] ResultsArray;
 
-        /// <summary>
-        /// Буфферный массив индексов текущей обработки рельс
-        /// </summary>
-        int[] IDArray;
-
-        int GlobalCount;
+        public int GetCount(){
+            return Colliders.Count;
+        }
 
         /// <summary>
         /// Метод для добавления коллайдера в общий пул
@@ -45,29 +37,7 @@ namespace CollisionCalculation{
         public void AddCollider(RailCollider Collider){
             Colliders.Add(Collider);
         }
-
-        /// <summary>
-        /// Метод для обработки столкновений между двумя коллайдерами
-        /// </summary>
-        /// <param name="Coll1">Первый Коллайдер</param>
-        /// <param name="Coll2">Второй Коллайдер</param>
-        /// <param name="From"></param>
-        void ProcessCollisions(RailCollider Coll1, RailCollider Coll2, int From){
-            int CollId = From;
-            float[] Time = Coll1.CollisionCheck(Coll2,CollId);
-            while (Time.Length > 0)
-            {
-                //Сохраняем индекс обработанного столкновения
-                CollId = Coll1.Current.IDFromTime(Time[0]);
-                CollisionResults Result1 = Coll1.CollisionRes(Coll2,Time[0]);
-                CollisionResults Result2 = Coll2.CollisionRes(Coll1,Time[0]);
-                Coll1.ApplyResults(Result1);
-                Coll2.ApplyResults(Result2);
-                //Обрабатываем начиная с сохранённого индекса
-                Time = Coll1.CollisionCheck(Coll2,CollId);
-            }
-        }
-        
+     
         struct ThreadData{
             
             public int id;
@@ -105,17 +75,12 @@ namespace CollisionCalculation{
             CalcResMultAsync(Data.id,Data.CurrentID);
             AllStepsCompleted.Signal();
         }
-        
-        struct ApplyResultDataData{
-            public int id;
-        }
+
         void ApplyResultAsync(int ID, int Step){
             RailCollider Coll = (RailCollider)Colliders[ID];
-                if(ResultsArray[ID].Count > 0){
+                while(ResultsArray[ID].Count > 0){
                     CollisionResults Result = (CollisionResults)ResultsArray[ID].Dequeue();
                     Coll.ApplyResults(Result);
-                    int DeleteCount = Coll.Current.GetCount()-Coll.Current.IDFromTime(Result.T)-1;
-                    Coll.Current.RemoveFromEnd(DeleteCount);
                     //Coll.Current.Extrapolate(DeleteCount);
                 }
         }
@@ -130,24 +95,20 @@ namespace CollisionCalculation{
         /// Метод, настраивающий размерность буфферных массивов
         /// </summary>
         void BufferSetup(int Count){
-            TimeArrays = new float[Count][];
             ResultsArray = new Queue[Count];
             for (int i = 0; i < ResultsArray.Length; i++)
             {
                 ResultsArray[i] = new Queue();
             }
-            IDArray = new int[Count];
-            RailCollider Coll = (RailCollider)Colliders[0];
-            GlobalCount = Coll.Current.GetCount();
         }
 
         /// <summary>
-        /// Метод для глобальной обработки коллизий
+        /// Метод для глобальной обработки коллизий на указанном индексе
         /// </summary>
         /// <param name="From"></param>
-        public void GlobalCollProcess(int From){ 
+        public void GlobalCollProcess(int From, int To){ 
             BufferSetup(Colliders.Count);
-            for (int k = From; k < GlobalCount; k++)
+            for (int k = From; k <= To; k++)
             {
                 AllStepsCompleted = new CountdownEvent(Colliders.Count);
                 for (int i = 0; i < Colliders.Count; i++)
@@ -241,17 +202,10 @@ namespace CollisionCalculation{
         /// <param name="T">Момент времени, в который надо обработать столкновение</param>
         public abstract CollisionResults CollisionRes(RailCollider Other, float T);
 
-        public virtual void ApplyResults(Queue Results){
-            for (int i = 0; i < Results.Count; i++)
-            {
-                ApplyResults((CollisionResults)Results.Dequeue());
-            }
-        }
-
         /// <summary>
         /// Метод для применения результатов коллизии к данному коллайдеру
         /// </summary>
         /// <param name="Results">Результаты коллизии, которые надо применить</param>
-        public abstract void ApplyResults(CollisionResults Results);
+        public abstract bool ApplyResults(CollisionResults Results);
     }
 }

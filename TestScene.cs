@@ -11,11 +11,21 @@ public class TestScene : Node2D
 {
     public GlobalPhysUpdater Updater = new GlobalPhysUpdater();
 
+    System.Threading.Thread Thread1;
+    
+    System.Threading.Thread Thread2;
+
+    public GlobalPhysUpdater Updater2 = new GlobalPhysUpdater();
+
     Node2D FocusObject = null;
 
-    PackedScene NewObject = (PackedScene)ResourceLoader.Load("res://TestObjectRes.tscn");
+    PackedScene NewObject = (PackedScene)ResourceLoader.Load("res://TestScenes/TestObjectRes.tscn");
 
-    PackedScene GravCenter = (PackedScene)ResourceLoader.Load("res://GravityCenter.tscn");
+    PackedScene GravCenter = (PackedScene)ResourceLoader.Load("res://TestScenes/GravityCenter.tscn");
+
+    PackedScene GravCenter2 = (PackedScene)ResourceLoader.Load("res://TestScenes/GravityCenter2.tscn");
+
+    PackedScene Arrow = (PackedScene)ResourceLoader.Load("res://TestScenes/TestArrow.tscn");
 
     Camera2D Camera;
 
@@ -108,6 +118,8 @@ public class TestScene : Node2D
     void GlobalRailUpdaterSetup(){
         Updater.RailController.SetGlobalCount(100);
         Updater.RailController.SetInterval(0.05f);
+        Updater2.RailController.SetGlobalCount(100);
+        Updater2.RailController.SetInterval(0.05f);
     }
 
     /// <summary>
@@ -116,7 +128,10 @@ public class TestScene : Node2D
     /// <param name="delta">интервал времени, который надо обновить</param>
     void MassRailTestUpdate(){
         Updater.MoveToWatcher();
+        Updater2.MoveToWatcher();
     } 
+
+
 
     void AddTestResource(){
         GD.Print("Adding");
@@ -130,10 +145,10 @@ public class TestScene : Node2D
     }
 
     void AddTestResourceArray(){
-        Node2D[] Array = new Node2D[2];
+        Node2D[] Array = new Node2D[50];
         for (int i = 0; i < Array.Length; i++)
         {
-            Array[i] = (Node2D)NewObject.Instance();
+            Array[i] = (Node2D)Arrow.Instance();
             this.AddChild(Array[i]);
         }
     }
@@ -150,6 +165,8 @@ public class TestScene : Node2D
     void AddGravityCenter(){
         Node2D Object = (Node2D)GravCenter.Instance();
         this.AddChild(Object);
+        Node2D Object2 = (Node2D)GravCenter2.Instance();
+        this.AddChild(Object2);
     }
 
     // Called when the node enters the scene tree for the first time.
@@ -166,11 +183,17 @@ public class TestScene : Node2D
     public override void _Process(float delta)
     {
         Updater.Watcher.Shift+=delta;
+        Updater2.Watcher.Shift=Updater.Watcher.Shift;
     }
 
     public override void _PhysicsProcess(float delta)
     {
-        MassRailTestUpdate();
+        Thread1 = new System.Threading.Thread(Updater.MoveToWatcher);
+        Thread1.Start();
+        Thread2 = new System.Threading.Thread(Updater2.MoveToWatcher);
+        Thread2.Start();
+        Thread1.Join();
+        Thread2.Join();
     }
 
     public override void _UnhandledInput(InputEvent @event){

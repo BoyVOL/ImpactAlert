@@ -66,7 +66,7 @@ namespace RailSystem{
 		/// Метод для подстройки рельсы к общему количеству точек
 		/// </summary>
 		/// <param name="rail">рельса, которую надо подстроить</param>
-		public void AdaptCount(Rail rail){
+		void AdaptCount(Rail rail){
 			int railCount = rail.GetCount();
 			if(railCount > GlobalCount){
 				rail.RemoveFromEnd(railCount - GlobalCount);
@@ -81,29 +81,35 @@ namespace RailSystem{
 		/// </summary>
 		/// <param name="rails"></param>
 		/// <returns></returns>
-		int MaxChange(Rail[] rails){
+		public int MaxChange(){
 			int Changes = 0;
-			for (int i = 0; i < rails.Length; i++)
+			Rail Temp;
+			for (int i = 0; i < Rails.Count; i++)
 			{
-				Changes = Math.Max(Changes,Math.Abs(rails[i].GetCount() - GlobalCount));
+				Temp = (Rail)Rails[i];
+				Changes = Math.Max(Changes,Math.Abs(Temp.GetCount() - GlobalCount));
 			}
 			return Changes;
 		}
 
 		/// <summary>
-		/// Перегрузка метода подстройки рельс под общий знаменатель для массива рельс
+		/// Многопоточно распределённый метод подстройки рельс на заданное количество элементов
 		/// </summary>
-		/// <param name="rails">массив рельс, которые надо добавить</param>
-		public void AdaptCount(Rail[] rails){
-			int Changes = MaxChange(rails);
-			for (int i = 0; i < Changes; i++)
+		/// <param name="count">сколько раз надо подстраивать</param>
+		public void GlobalAdapt(int Count){
+			for (int i = 0; i < Count; i++)
 			{
-				AllStepsCompleted = new CountdownEvent(Rails.Count);
-				foreach (Rail rail in Rails)
-				{
-					ThreadPool.QueueUserWorkItem(AsynqAdapt,rail);
-				}
-				AllStepsCompleted.Wait();
+				GlobalAdapt();
+			}
+		}
+
+		/// <summary>
+		/// Метод, позволяющий обрезать все рельсы до нужной длинны
+		/// </summary>
+		public void CutToIndex(int ID){
+			foreach (Rail rail in Rails)
+			{
+				rail.RemoveFromEnd(rail.GetCount()-(ID));
 			}
 		}
 
@@ -134,11 +140,10 @@ namespace RailSystem{
 		public void AddRail(Rail rail){
 			Rails.Add(rail);
 			rail.SetInterval(Interval);
-			AdaptCount(rail);
 		}
 
 		/// <summary>
-		/// Перегрузка для добавлениярельс одной пачкой
+		/// Перегрузка для добавления рельс одной пачкой
 		/// </summary>
 		/// <param name="rails"></param>
 		public void AddRail(Rail[] rails){
@@ -147,7 +152,6 @@ namespace RailSystem{
 				Rails.Add(rails[i]);
 				rails[i].SetInterval(Interval);
 			}
-			AdaptCount(rails);
 		}
 
 		/// <summary>
@@ -165,18 +169,24 @@ namespace RailSystem{
 			AllStepsCompleted.Signal();
 		}
 
+		struct AdaptData{
+			public Rail rail;
+
+			public int id;
+		}
+
 		/// <summary>
-		/// Ассинхронный документ для адаптации длинны рельсы в отдельном потоке
+		/// Ассинхронный метод для адаптации длинны рельсы в отдельном потоке
 		/// </summary>
 		/// <param name="Rail"></param>
-		void AsynqAdapt(object Rail){
-			Rail Temp = (Rail)Rail;
-			int railCount = Temp.GetCount();
+		void AsynqAdapt(object Data){
+			AdaptData Temp = (AdaptData)Data;
+			int railCount = Temp.rail.GetCount();
 			if(railCount > GlobalCount){
-				Temp.RemoveFromEnd(1);
+				Temp.rail.RemoveFromEnd(1);
 			}
-			if(railCount < GlobalCount){
-				Temp.Extrapolate(1);
+			if(railCount < Temp.id){
+				Temp.rail.Extrapolate(1);
 			}
 			AllStepsCompleted.Signal();
 		}
@@ -202,7 +212,10 @@ namespace RailSystem{
 				AllStepsCompleted = new CountdownEvent(Rails.Count);
 				foreach (Rail rail in Rails)
 				{
-					ThreadPool.QueueUserWorkItem(AsynqAdapt,rail);
+					AdaptData Data = new AdaptData();
+					Data.rail = rail;
+					Data.id = GlobalCount;
+					ThreadPool.QueueUserWorkItem(AsynqAdapt,Data);
 				}
 				AllStepsCompleted.Wait();
 		}
@@ -488,8 +501,8 @@ namespace RailSystem{
 				float InterDist;
 				// Выбираем минимальный размер рельсы
 				int LowestCount = Math.Min(Points.Count,OtherOne.Points.Count);
-				if(startId >= LowestCount) throw new Exception("Start index "+startId+" is Greater then  "+LowestCount);
-				if(EndId >= LowestCount) throw new Exception("End index "+EndId+" is Greater then  "+LowestCount);
+				if(startId >= LowestCount) throw new Exception("Start index "+startId+" is Greater than  "+(LowestCount-1));
+				if(EndId >= LowestCount) throw new Exception("End index "+EndId+" is Greater than  "+(LowestCount-1));
 				ResultList.Clear();
 				//Проходим вдоль рельс, проверяя точки сближения
 				for (int i = startId; i <= EndId; i++)

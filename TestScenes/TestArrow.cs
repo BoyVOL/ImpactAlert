@@ -3,7 +3,7 @@ using System;
 using RailSystem;
 using ForceProjection;
 
-public class TestObjectRes : Node2D
+public class TestArrow : Node2D
 {
     TestScene Scene;
 
@@ -23,6 +23,7 @@ public class TestObjectRes : Node2D
 
     void InitLine(){
         DebugPath = GetNode<Line2D>("LinePath");
+        DebugPath.ZIndex = 0;
         for (int i = 0; i < 100; i++)
         {
             DebugPath.AddPoint(new Vector2(0,0));
@@ -52,17 +53,17 @@ public class TestObjectRes : Node2D
 
             Rail.AddInfluencer(Influencer);
             Rail.SetFirstPoint(new AccelPoint(newPos,(float)(Rnd.NextDouble()*Math.PI*2),newSpeed,newAccel,(float)(Rnd.NextDouble()*2-1)));
-            Updater.RailController.AddRail(Rail);
+            Updater.AddRail(Rail);
             Follower = Updater.RailController.GetRailFollower(Rail);
             Follower.Shift = Updater.Watcher.Shift;
+            Influencer.Handler = Updater.ForceHandler;
+            Influencer.Params.Exclude = new ForceProjector[1];
+            Influencer.Params.Exclude[0] = Projector;
     } 
 
     void ForceSetup(){
         Projector = new GravityRailProjector(Rail,100000);
         Updater.ForceHandler.AddProjector(Projector);
-        Influencer.Handler = Updater.ForceHandler;
-        Influencer.Params.Exclude = new ForceProjector[1];
-        Influencer.Params.Exclude[0] = Projector;
     }
 
     void CollisionSetup(float radius = 100){
@@ -78,7 +79,8 @@ public class TestObjectRes : Node2D
     public override void _Ready()
     {
         Scene = GetParent<TestScene>();
-        Updater = Scene.Updater;
+        Updater = Scene.Updater2;
+        ZIndex = 1;
         ForceSetup();
         CollisionSetup();
         RailSetup();

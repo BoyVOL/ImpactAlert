@@ -38,6 +38,8 @@ public class GlobalPhysUpdater{
     /// <returns></returns>
     public GlobalRailController RailController = new GlobalRailController();
 
+    Queue Buffer = new Queue();
+
     public GlobalPhysUpdater(){
         WatcherRail.SetFirstPoint(new KineticPoint());
         RailController.AddRail(WatcherRail);
@@ -45,25 +47,69 @@ public class GlobalPhysUpdater{
     }
 
     /// <summary>
+    /// Метод для проверки коллизий для всех непроверенных участков
+    /// </summary>
+    public void RecalcCollisions(){
+        int Count = RailController.MaxChange();
+        RailController.CutToIndex(RailController.GetGlobalCount()-Count);
+        for (int i = 0; i < Count; i++)
+        {
+            int ID = RailController.GetGlobalCount()-RailController.MaxChange()-1;
+            Collider.GlobalCollProcess(ID,ID);
+            RailController.GlobalAdapt(1);
+        }
+    }
+
+    /// <summary>
+    /// Преобразование буффера рельс в массив
+    /// </summary>
+    /// <returns></returns>
+    Rail[] RailArrayFromBuffer(){
+        Rail[] Result = new Rail[Buffer.Count];
+        for (int i = 0; i < Result.Length; i++)
+        {
+            Result[i] = (Rail)Buffer.Dequeue();
+        }
+        return Result;
+    }
+
+    /// <summary>
     /// Метод обновления массового теста рельс
     /// </summary>
     /// <param name="delta">интервал времени, который надо обновить</param>
     public void MoveToWatcher(){
+        Rail[] Temp = RailArrayFromBuffer();
+        RailController.AddRail(Temp);
+        RecalcCollisions();
         int DeletedCount = Watcher.CurrentID()-1;
         for (int i = 0; i < DeletedCount; i++)
         {
             MoveForward();
         }
     } 
-
     
+    /// <summary>
+    /// Проверка коллизий на указанном элементе
+    /// </summary>
+    /// <param name="ID"></param>
+    void CheckCollision(int ID){
+        Collider.GlobalCollProcess(ID,ID);
+        RailController.GlobalAdapt();
+    }
 
     /// <summary>
     /// Перемещение вперёд на один элемент
     /// </summary>
-    public void MoveForward(){
+    void MoveForward(){
         RailController.MoveForvard(1);
-        Collider.GlobalCollProcess(RailController.GetGlobalCount()-1);
+        CheckCollision(RailController.GetGlobalCount()-1);
         RailController.GlobalAdapt();
+    }
+
+    /// <summary>
+    /// Метод для добавления рельсы
+    /// </summary>
+    public void AddRail(Rail rail){
+        Buffer.Enqueue(rail);
     }
 }

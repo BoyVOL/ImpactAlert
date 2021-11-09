@@ -1,9 +1,9 @@
 using Godot;
-using RailSystem;
-using ForceProjection;
 using System;
+using RailSystem;
 
-public class GravityCenter : Node2D
+
+public class GravityCenter2 : Node2D
 {
     Rail Rail = new Rail();
 
@@ -35,7 +35,7 @@ public class GravityCenter : Node2D
     public override void _Ready()
     {
         Scene = GetParent<TestScene>();
-        Updater = Scene.Updater;
+        Updater = Scene.Updater2;
         ForceSetup();
         RailSetup();
     }

@@ -19,6 +19,8 @@
     <Content Include="Source Code\PhysicsControll.cs" />
     <Content Include="TestObjectRes.cs" />
     <Content Include="Source Code\Colliders.cs" />
-    <Content Include="GravityCenter.cs" />
+    <Content Include="TestScenes\TestObjectRes.cs" />
+    <Content Include="TestScenes\GravityCenter.cs" />
+    <Content Include="TestScenes\TestArrow.cs" />
   </ItemGroup>
 </Project>

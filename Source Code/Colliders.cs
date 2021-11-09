@@ -15,11 +15,12 @@
             return Result;
         }
 
-        public override void ApplyResults(CollisionResults Results)
+        public override bool ApplyResults(CollisionResults Results)
         {
             int CollId = Current.IDFromTime(Results.T);
             AccelPoint Point = (AccelPoint)Current.GetPoint(CollId);
             Point.SimSpeed = Results.NewSpeed;
+            return true;
             //GD.Print(Results.T);
         }
     }
