@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/Arrow.png-34808ad679b7b9f485d79fcad1371a41.stex"
+path="res://.import/EnemyMiner.png-ee1e8857850c8a4b4e86ab37dd2bc6c8.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://TestScenes/Arrow.png"
-dest_files=[ "res://.import/Arrow.png-34808ad679b7b9f485d79fcad1371a41.stex" ]
+source_file="res://TestScenes/EnemyMiner.png"
+dest_files=[ "res://.import/EnemyMiner.png-ee1e8857850c8a4b4e86ab37dd2bc6c8.stex" ]
 
 [params]
 
