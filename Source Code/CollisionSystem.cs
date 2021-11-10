@@ -94,20 +94,15 @@ namespace CollisionCalculation{
         /// <summary>
         /// Метод, настраивающий размерность буфферных массивов
         /// </summary>
-        void BufferSetup(int Count){
-            ResultsArray = new Queue[Count];
+        public void BufferSetup(){
+            ResultsArray = new Queue[Colliders.Count];
             for (int i = 0; i < ResultsArray.Length; i++)
             {
                 ResultsArray[i] = new Queue();
             }
         }
 
-        /// <summary>
-        /// Метод для глобальной обработки коллизий на указанном индексе
-        /// </summary>
-        /// <param name="From"></param>
-        public void GlobalCollProcess(int From, int To){ 
-            BufferSetup(Colliders.Count);
+        public void GlobalCalcResults(int From, int To){
             for (int k = From; k <= To; k++)
             {
                 AllStepsCompleted = new CountdownEvent(Colliders.Count);
@@ -119,6 +114,12 @@ namespace CollisionCalculation{
                     ThreadPool.QueueUserWorkItem(CalcResMultAsync,Data);
                 }
                 AllStepsCompleted.Wait();
+            }
+        }
+
+        public void GlobalApplyResults(int From, int To){
+            for (int k = From; k <= To; k++)
+            {
                 AllStepsCompleted = new CountdownEvent(Colliders.Count);
                 for (int i = 0; i < Colliders.Count; i++)
                 {

@@ -55,7 +55,9 @@ public class GlobalPhysUpdater{
         for (int i = 0; i < Count; i++)
         {
             int ID = RailController.GetGlobalCount()-RailController.MaxChange()-1;
-            Collider.GlobalCollProcess(ID,ID);
+            Collider.BufferSetup();
+            Collider.GlobalCalcResults(ID,ID);
+            Collider.GlobalApplyResults(ID,ID);
             RailController.GlobalAdapt(1);
         }
     }
@@ -93,7 +95,9 @@ public class GlobalPhysUpdater{
     /// </summary>
     /// <param name="ID"></param>
     void CheckCollision(int ID){
-        Collider.GlobalCollProcess(ID,ID);
+        Collider.BufferSetup();
+        Collider.GlobalCalcResults(ID,ID);
+        Collider.GlobalApplyResults(ID,ID);
         RailController.GlobalAdapt();
     }
 
