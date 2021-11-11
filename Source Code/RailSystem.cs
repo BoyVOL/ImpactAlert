@@ -208,6 +208,9 @@ namespace RailSystem{
 			ShiftT += Interval*Count;
 		}
 
+		/// <summary>
+		/// Одна итерация подстройки рельс под общую численность
+		/// </summary>
 		public void GlobalAdapt(){
 				AllStepsCompleted = new CountdownEvent(Rails.Count);
 				foreach (Rail rail in Rails)
