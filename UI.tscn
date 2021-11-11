@@ -9,7 +9,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="RichTextLabel" type="RichTextLabel" parent="."]
+[node name="Description" type="RichTextLabel" parent="."]
 margin_right = 386.0
 margin_bottom = 102.0
 text = "Mouse wheel - zoom
@@ -18,6 +18,17 @@ Cross reprezents main center of gravity
 Lines represent trajectories of objects
 Each one of them is able to attract every other object
 Collision results in simple exchange of their speed vectors"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Impact alert" type="Label" parent="."]
+visible = false
+margin_left = 431.789
+margin_top = 3.5499
+margin_right = 522.789
+margin_bottom = 17.5499
+text = "IMPACT ALERT"
 __meta__ = {
 "_edit_use_anchors_": false
 }

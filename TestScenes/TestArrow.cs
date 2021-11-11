@@ -7,6 +7,8 @@ public class TestArrow : Node2D
 {
     TestScene Scene;
 
+    
+
     GlobalPhysUpdater Updater;
 
     Line2D DebugPath;

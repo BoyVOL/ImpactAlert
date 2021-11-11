@@ -15,6 +15,9 @@ public class TestScene : Node2D
     
     System.Threading.Thread Thread2;
 
+    
+    TestObjectRes[] Array = new TestObjectRes[10];
+
     public GlobalPhysUpdater Updater2 = new GlobalPhysUpdater();
 
     Node2D FocusObject = null;
@@ -154,10 +157,9 @@ public class TestScene : Node2D
     }
 
     void AddObjects(){
-        Node2D[] Array = new Node2D[2];
         for (int i = 0; i < Array.Length; i++)
         {
-            Array[i] = (Node2D)NewObject.Instance();
+            Array[i] = (TestObjectRes)NewObject.Instance();
             this.AddChild(Array[i]);
         }
     }

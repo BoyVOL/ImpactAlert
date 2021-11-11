@@ -32,6 +32,14 @@ namespace RailSystem{
 		int GlobalCount = 2;
 
 		/// <summary>
+		/// Возвращает текущее количество рельс в данном контроллере
+		/// </summary>
+		/// <returns></returns>
+		public int GetRailCount(){
+			return Rails.Count;
+		}
+
+		/// <summary>
 		/// Метод, возвращающий RailFollower для выбранной рельсы
 		/// </summary>
 		/// <param name="rail">выбранная рельса</param>

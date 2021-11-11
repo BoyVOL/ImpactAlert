@@ -87,6 +87,12 @@ public class TestObjectRes : Node2D
         InitLine();
     }
 
+    public void Reinitialise(){
+        ForceSetup();
+        CollisionSetup();
+        RailSetup();
+    }
+
     public override void _Process(float delta)
     {
         updateLine();

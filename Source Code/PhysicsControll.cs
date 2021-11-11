@@ -106,6 +106,10 @@ public class GlobalPhysUpdater{
         CheckCollision(RailController.GetGlobalCount()-1);
     }
 
+    public int GetRailCount(){
+        return RailController.GetRailCount();
+    }
+
     /// <summary>
     /// Метод для добавления рельсы
     /// </summary>
