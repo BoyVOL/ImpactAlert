@@ -223,7 +223,7 @@ namespace RailSystem{
 				AllStepsCompleted.Wait();
 		}
 	}
-		
+
 	/// <summary>
 	/// Класс точек рельсы, который имеет абстрактный метод для порождения дочерних экземпляров для экстраполяции
 	/// </summary>
@@ -419,6 +419,15 @@ namespace RailSystem{
 		/// </summary>
 		/// <param name="Other">другая рельса, которую надо скопировать</param>
 		public Rail(Rail Other){
+			Copy(Other);
+		}
+
+		/// <summary>
+		/// Метод глубокого копирования рельсы на основе другой рельсы.
+		/// </summary>
+		/// <param name="Other">другая рельса, данные которой надо скопировать в текущую</param>
+		public void Copy(Rail Other){
+			Points = new ArrayList();
 			for (int i = 0; i < Other.Points.Count; i++)
 			{
 				Points.Add(new RailPoint((RailPoint)Other.Points[i]));
@@ -766,6 +775,34 @@ namespace RailSystem{
 		/// <returns></returns>
 		public bool TIsOnRail(float T){
 			return (T > 0 && T <= TimeInterval*Points.Count);
+		}
+	}
+
+	/// <summary>
+	/// Рельса с дополнительным буффером точек
+	/// </summary>
+	public class ProxyRail : Rail {
+
+		/// <summary>
+		/// Дополнительный массив точек, который может быть синхронизирован с изначальным.
+		/// </summary>
+		ArrayList ProxyPoints = new ArrayList();
+
+		public ProxyRail(){}
+
+		/// <summary>
+		/// Конструктор для глубокого копирования рельсы
+		/// </summary>
+		/// <param name="Other">другая рельса, которую надо скопировать</param>
+		public ProxyRail(Rail Other){
+			Copy(Other);
+		}
+
+		public void SyncBuffer(){
+			for (int i = 0; i < ProxyPoints.Count; i++)
+			{
+				
+			}
 		}
 	}
 

@@ -22,5 +22,6 @@
     <Content Include="TestScenes\TestObjectRes.cs" />
     <Content Include="TestScenes\GravityCenter.cs" />
     <Content Include="TestScenes\TestArrow.cs" />
+    <Content Include="Source Code\Control.cs" />
   </ItemGroup>
 </Project>

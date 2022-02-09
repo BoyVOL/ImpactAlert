@@ -68,7 +68,7 @@ public class AccelPoint : KineticPoint{
 /// <summary>
 /// Дочерний класс рельсы для работы с различными механизмами влияния на её просчёт
 /// </summary>
-public class InfluencedRail : Rail{
+public class InfluencedRail : ProxyRail{
     
     /// <summary>
     /// Список классов, способных изменять моделирование точек относительно времени
