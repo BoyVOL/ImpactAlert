@@ -33,7 +33,24 @@ namespace Physics
         /// <summary>
         /// Поле, отвечающее за ускорение в данной точке
         /// </summary>
-        public Vector2 Acceleration;
+        public Vector2 Acceleration;        
+
+        /// <summary>
+        /// Метод, возвращающий новую точку, основываясь на данных старой.
+        /// </summary>
+        /// <param name="Point">Предыдущая точка</param>
+        /// <param name="T">интервал времени, на котором проходит симуляция</param>
+        /// <returns></returns>
+        public RailPoint GetNextPoint(float T){
+            RailPoint Result = new RailPoint();
+            Result.Position = Position+Speed*T+(Acceleration*T*T)/2;
+            Result.Rotation = Rotation+RotSpeed*T;
+            Result.Speed = Speed+Acceleration*T;
+            Result.RotSpeed = RotSpeed;
+            Result.Acceleration = Acceleration;
+            return Result;
+        }
+
     }
 
     /// <summary>
@@ -44,33 +61,62 @@ namespace Physics
         /// <summary>
         /// Словарь массивов, отображающих рельсы
         /// </summary>
-        Dictionary<Guid,RailPoint[]> Rails = new Dictionary<Guid, RailPoint[]>();
-
-        int Size = 1;
+        Dictionary<Guid,List<RailPoint>> Rails = new Dictionary<Guid, List<RailPoint>>();
 
         /// <summary>
-        /// Метод, возвращающий новую точку, основываясь на данных старой.
+        /// Размер рельс в данном классе
         /// </summary>
-        /// <param name="Point">Предыдущая точка</param>
-        /// <param name="T">интервал времени, на котором проходит симуляция</param>
-        /// <returns></returns>
-        public RailPoint GetNextPoint(RailPoint Point,float T){
-            RailPoint Result = new RailPoint();
-            Result.Position = Point.Position+Point.Speed*T+(Point.Acceleration*T*T)/2;
-            Result.Rotation = Point.Rotation+Point.RotSpeed*T;
-            Result.Speed = Point.Speed+Point.Acceleration*T;
-            Result.RotSpeed = Point.RotSpeed;
-            Result.Acceleration = Point.Acceleration;
-            return Result;
+        public readonly int RailSize;
+
+        /// <summary>
+        /// Временной интервал моделирования
+        /// </summary>
+        public readonly float TimeInterval;
+
+        /// <summary>
+        /// Конструктор с параметрами
+        /// </summary>
+        /// <param name="size">Размер рельс</param>
+        /// <param name="TimeInterval">Интервал интерполяции</param>
+        public RailArray(int size, float timeInterval){
+            RailSize = size;
+            TimeInterval = timeInterval;
         }
 
-        public RailPoint[] ConstructRail(RailPoint Start){
-            RailPoint[] Result = new RailPoint[Size];
-            for (int i = 0; i < Result.Length; i++)
-            {
-                Result[i]
-            }
-            return Result;
+        /// <summary>
+        /// Метод для Удаления с конца рельсы нужного количества элементов
+        /// </summary>
+        /// <param name="ID"></param>
+        void RemoveFromEnd(Guid ID, int Count){
+            int LastID = Rails[ID].Count - 1;
+            Rails[ID].RemoveRange(LastID,Count);
+        }
+
+        /// <summary>
+        /// Метод для подстройки количества элементов в рельсе по указанному индексу под общее число элементов 
+        /// </summary>
+        /// <param name="ID"></param>
+        void AdaptCount(Guid ID){
+            int CountDiff = Rails[ID].Count - RailSize;
+            if(CountDiff)
+        }
+
+        /// <summary>
+        /// Метод для добавления нового элемента рельсы
+        /// </summary>
+        /// <param name="ID"></param>
+        void Expand(Guid ID){
+            int LastID = Rails.Count - 1;
+            Rails[ID].Add(Rails[ID][LastID].GetNextPoint(TimeInterval));
+        }
+
+        /// <summary>
+        /// Метод для обновления рельсы на один элемент вперёд
+        /// </summary>
+        /// <param name="ID"></param>
+        void MoveForward(Guid ID){
+            Expand(ID);
+            Rails[ID].RemoveAt(0);
         }
 
         /// <summary>
@@ -78,13 +124,21 @@ namespace Physics
         /// </summary>
         /// <param name="Data">Данные по рельсе</param>
         /// <returns></returns>
-        public Guid AddRail(RailPoint[] Data){
+        public Guid AddRail(List<RailPoint> Data){
             Guid ID = Guid.NewGuid();
             while(Rails.ContainsKey(ID)){
                 ID = Guid.NewGuid();
             }
             Rails.Add(ID,Data);
             return ID;
+        }
+
+        /// <summary>
+        /// Метод удаления рельсы из общего массива
+        /// </summary>
+        /// <param name="ID"></param>
+        public void RemoveRail(Guid ID){
+            Rails.Remove(ID);
         }
     }
 }
