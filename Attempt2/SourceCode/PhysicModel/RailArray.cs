@@ -1,9 +1,9 @@
 using Godot;
 using System;
 using System.Collections.Generic;
-using Physics;
+using CustomPhysics;
 
-namespace Physics
+namespace CustomPhysics
 {
     /// <summary>
     /// Структура, отвечающая за состояние точки в каждый момент времени
@@ -51,6 +51,16 @@ namespace Physics
             return Result;
         }
 
+        /// <summary>
+        /// Метод для преобразования контента в стринг
+        /// </summary>
+        /// <returns></returns>
+        public string Stringify(){
+            string Result = "";
+            Result += "Position = ("+Position.x+";"+Position.y+")";
+            return Result;
+        }
+
     }
 
     /// <summary>
@@ -83,6 +93,15 @@ namespace Physics
             TimeInterval = timeInterval;
         }
 
+        public string StringifyRail(Guid ID){
+            string Result = "";
+            foreach (var item in Rails[ID])
+            {
+                Result += item.Stringify()+"\n";
+            }
+            return Result;
+        }
+
         /// <summary>
         /// Метод для Удаления с конца рельсы нужного количества элементов
         /// </summary>
@@ -98,7 +117,18 @@ namespace Physics
         /// <param name="ID"></param>
         void AdaptCount(Guid ID){
             int CountDiff = Rails[ID].Count - RailSize;
-            if(CountDiff)
+            if(CountDiff == 0){
+                return;
+            } else if (CountDiff > 0){
+                RemoveFromEnd(ID,CountDiff);
+            } else {
+                //CountDiff < 0
+                int CD = Math.Abs(CountDiff);
+                for (int i = 0; i < CD; i++)
+                {
+                    Expand(ID);
+                }
+            }
         }
 
         /// <summary>
@@ -106,7 +136,7 @@ namespace Physics
         /// </summary>
         /// <param name="ID"></param>
         void Expand(Guid ID){
-            int LastID = Rails.Count - 1;
+            int LastID = Rails[ID].Count - 1;
             Rails[ID].Add(Rails[ID][LastID].GetNextPoint(TimeInterval));
         }
 
@@ -130,7 +160,20 @@ namespace Physics
                 ID = Guid.NewGuid();
             }
             Rails.Add(ID,Data);
+            AdaptCount(ID);
             return ID;
+        }
+
+        /// <summary>
+        /// Метод добавления новой рельсы
+        /// Перегрузка для добавления рельсы из одной точки
+        /// </summary>
+        /// <param name="Start">Эта самая одна точка</param>
+        /// <returns></returns>
+        public Guid AddRail(RailPoint Start){
+            List<RailPoint> Rail = new List<RailPoint>();
+            Rail.Add(Start);
+            return AddRail(Rail);
         }
 
         /// <summary>
