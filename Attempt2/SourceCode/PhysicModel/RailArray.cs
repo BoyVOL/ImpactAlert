@@ -97,6 +97,10 @@ namespace CustomPhysics
     /// </summary>
     public class RailArray{
 
+        /// <summary>
+        /// Объект для случайной генерации идентификаторов
+        /// </summary>
+        /// <returns></returns>
         Random IDGen = new Random();
 
         /// <summary>
@@ -115,7 +119,7 @@ namespace CustomPhysics
         public readonly int RailSize;
 
         /// <summary>
-        /// Временной интервал моделирования
+        /// Временной интервал между точками
         /// </summary>
         public readonly float TimeInterval;
 
