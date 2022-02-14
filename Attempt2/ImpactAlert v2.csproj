@@ -6,5 +6,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Content Include="SourceCode\PhysicModel\RailArray.cs" />
+    <Content Include="SourceCode\PhysicModel\ForceHandlers.cs" />
+    <Content Include="SourceCode\MathExtra.cs" />
   </ItemGroup>
 </Project>

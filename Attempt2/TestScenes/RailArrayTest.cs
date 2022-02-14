@@ -20,6 +20,9 @@ public class RailArrayTest : Node2D
         Start1.Acceleration = new Vector2(1,0);
         Guid ID = Test.AddRail(Start1);
         GD.Print(Test.StringifyRail(ID));
+        Test.MoveForwardAll();
+        GD.Print("________________");
+        GD.Print(Test.StringifyRail(ID));
     }
 
 //  // Called every frame. 'delta' is the elapsed time since the previous frame.

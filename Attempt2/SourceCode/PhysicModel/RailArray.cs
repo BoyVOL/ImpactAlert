@@ -1,7 +1,6 @@
 using Godot;
 using System;
 using System.Collections.Generic;
-using CustomPhysics;
 
 namespace CustomPhysics
 {
@@ -50,6 +49,37 @@ namespace CustomPhysics
             Result.Acceleration = Acceleration;
             return Result;
         }
+        
+        /// <summary>
+		/// Метод, возвращающий точку, интерполированную на заданном моменте времени
+		/// </summary>
+		/// <param name="T">Момент времени, данные в котором надо вернуть</param>
+		/// <returns></returns>
+		public RailPoint Interpolate(float T){
+            RailPoint Result = new RailPoint();
+            Result.Rotation = RotSpeed*T;
+            Result.Position = Speed*T;
+            return Result;
+		}
+
+		/// <summary>
+		/// Возвращает значение времени пересечения с указанной точкой, начиная от текущей точки.
+		/// </summary>
+		/// <param name="Target">Вторая точка, с которой просчитывается пересечение путей</param>
+		/// <returns></returns>
+		public float CPA(RailPoint Target){
+			return MathExtra.cpaTime(Position,Target.Position,Speed,Target.Speed);
+		}
+
+		/// <summary>
+		/// Возвращает значение времени пересечения с указанной точкой, начиная от текущей точки.
+		/// Перегрузка для 2д вектора
+		/// </summary>
+		/// <param name="Vector">2Д вектор, с которым просчитывается пересечение путей</param>
+		/// <returns></returns>
+		public float CPA(Vector2 Vector){
+			return MathExtra.cpaTime(Position,Vector,Speed,new Vector2(0,0));
+		}
 
         /// <summary>
         /// Метод для преобразования контента в стринг
@@ -60,7 +90,6 @@ namespace CustomPhysics
             Result += "Position = ("+Position.x+";"+Position.y+")";
             return Result;
         }
-
     }
 
     /// <summary>
@@ -150,6 +179,16 @@ namespace CustomPhysics
         }
 
         /// <summary>
+        /// Метод для движения разом всех рельс
+        /// </summary>
+        public void MoveForwardAll(){
+            foreach (var ID in Rails.Keys)
+            {
+                MoveForward(ID);
+            }
+        }
+
+        /// <summary>
         /// Метод добавления новой рельсы
         /// </summary>
         /// <param name="Data">Данные по рельсе</param>
@@ -183,5 +222,7 @@ namespace CustomPhysics
         public void RemoveRail(Guid ID){
             Rails.Remove(ID);
         }
+    
+        
     }
 }
