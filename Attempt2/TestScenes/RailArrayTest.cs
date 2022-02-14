@@ -18,11 +18,22 @@ public class RailArrayTest : Node2D
         RailPoint Start1 = new RailPoint();
         Start1.Position = new Vector2(10,10);
         Start1.Acceleration = new Vector2(1,0);
-        Guid ID = Test.AddRail(Start1);
+        int ID = Test.AddRail(Start1);
+        Start1.Position = new Vector2(11,11);
+        Start1.Acceleration = new Vector2(1,0);
+        int ID2 = Test.AddRail(Start1);
+        GD.Print(ID);
+        GD.Print(ID2);
+        GD.Print("Рельса 1:");
         GD.Print(Test.StringifyRail(ID));
+        GD.Print("Рельса 2:");
+        GD.Print(Test.StringifyRail(ID2));
         Test.MoveForwardAll();
         GD.Print("________________");
+        GD.Print("Рельса 1:");
         GD.Print(Test.StringifyRail(ID));
+        GD.Print("Рельса 2:");
+        GD.Print(Test.StringifyRail(ID2));
     }
 
 //  // Called every frame. 'delta' is the elapsed time since the previous frame.

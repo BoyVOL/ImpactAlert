@@ -97,10 +97,17 @@ namespace CustomPhysics
     /// </summary>
     public class RailArray{
 
+        Random IDGen = new Random();
+
         /// <summary>
         /// Словарь массивов, отображающих рельсы
         /// </summary>
-        Dictionary<Guid,List<RailPoint>> Rails = new Dictionary<Guid, List<RailPoint>>();
+        Dictionary<int,List<RailPoint>> Rails = new Dictionary<int, List<RailPoint>>();
+
+        /// <summary>
+        /// Класс, отвечающий за обработку гравитационного взаимодействия
+        /// </summary>
+        public readonly GravityHandler Gravity;
 
         /// <summary>
         /// Размер рельс в данном классе
@@ -120,9 +127,10 @@ namespace CustomPhysics
         public RailArray(int size, float timeInterval){
             RailSize = size;
             TimeInterval = timeInterval;
+            Gravity = new GravityHandler(Rails);
         }
 
-        public string StringifyRail(Guid ID){
+        public string StringifyRail(int ID){
             string Result = "";
             foreach (var item in Rails[ID])
             {
@@ -135,16 +143,20 @@ namespace CustomPhysics
         /// Метод для Удаления с конца рельсы нужного количества элементов
         /// </summary>
         /// <param name="ID"></param>
-        void RemoveFromEnd(Guid ID, int Count){
+        void RemoveFromEnd(int ID, int Count){
             int LastID = Rails[ID].Count - 1;
             Rails[ID].RemoveRange(LastID,Count);
+        }
+
+        public bool RailExists(int ID){
+            return Rails.ContainsKey(ID);
         }
 
         /// <summary>
         /// Метод для подстройки количества элементов в рельсе по указанному индексу под общее число элементов 
         /// </summary>
         /// <param name="ID"></param>
-        void AdaptCount(Guid ID){
+        void AdaptCount(int ID){
             int CountDiff = Rails[ID].Count - RailSize;
             if(CountDiff == 0){
                 return;
@@ -164,7 +176,7 @@ namespace CustomPhysics
         /// Метод для добавления нового элемента рельсы
         /// </summary>
         /// <param name="ID"></param>
-        void Expand(Guid ID){
+        void Expand(int ID){
             int LastID = Rails[ID].Count - 1;
             Rails[ID].Add(Rails[ID][LastID].GetNextPoint(TimeInterval));
         }
@@ -173,7 +185,7 @@ namespace CustomPhysics
         /// Метод для обновления рельсы на один элемент вперёд
         /// </summary>
         /// <param name="ID"></param>
-        void MoveForward(Guid ID){
+        void MoveForward(int ID){
             Expand(ID);
             Rails[ID].RemoveAt(0);
         }
@@ -189,17 +201,25 @@ namespace CustomPhysics
         }
 
         /// <summary>
+        /// Метод, который возвращает случайный свободный айди в словаре
+        /// </summary>
+        /// <returns></returns>
+        public int GetFreeID(){
+            int ID = IDGen.Next();
+            while(Rails.ContainsKey(ID)){
+                ID = IDGen.Next();
+            }
+            return ID;
+        }
+
+        /// <summary>
         /// Метод добавления новой рельсы
         /// </summary>
         /// <param name="Data">Данные по рельсе</param>
         /// <returns></returns>
-        public Guid AddRail(List<RailPoint> Data){
-            Guid ID = Guid.NewGuid();
-            while(Rails.ContainsKey(ID)){
-                ID = Guid.NewGuid();
-            }
-            Rails.Add(ID,Data);
-            AdaptCount(ID);
+        public int AddRail(List<RailPoint> Data){
+            int ID = GetFreeID();
+            AddRail(ID,Data);
             return ID;
         }
 
@@ -209,20 +229,46 @@ namespace CustomPhysics
         /// </summary>
         /// <param name="Start">Эта самая одна точка</param>
         /// <returns></returns>
-        public Guid AddRail(RailPoint Start){
+        public int AddRail(RailPoint Start){
             List<RailPoint> Rail = new List<RailPoint>();
             Rail.Add(Start);
             return AddRail(Rail);
         }
 
         /// <summary>
+        /// Метод добавления новой рельсы
+        /// Перегрузка для добавления с заданным айди. Возвращает, была ли добавлена рельса
+        /// </summary>
+        /// <returns></returns>
+        public bool AddRail(int ID, List<RailPoint> Data){
+            bool result = RailExists(ID);
+            if(!result){
+                Rails.Add(ID,Data);
+                AdaptCount(ID);
+            }
+            return !result;
+        }
+
+        /// <summary>
+        /// Метод добавления новой рельсы
+        /// Перегрузка для добавления рельсы из одной точки с заданным айди
+        /// возвращает, была ли добавлена рельса
+        /// </summary>
+        /// <param name="Start">Эта самая одна точка</param>
+        /// <returns></returns>
+        public bool AddRail(int ID, RailPoint Start){
+            List<RailPoint> Rail = new List<RailPoint>();
+            Rail.Add(Start);
+            return AddRail(ID,Rail);
+        }
+
+        /// <summary>
         /// Метод удаления рельсы из общего массива
         /// </summary>
         /// <param name="ID"></param>
-        public void RemoveRail(Guid ID){
+        public void RemoveRail(int ID){
             Rails.Remove(ID);
         }
     
-        
     }
 }
