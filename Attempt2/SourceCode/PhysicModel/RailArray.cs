@@ -157,6 +157,24 @@ namespace CustomPhysics
         }
 
         /// <summary>
+        /// Метод для обрезки количества элементов отдельно взятой рельсы к максимальному числу элементов
+        /// </summary>
+        /// <param name="ID"></param>
+        void CutToMax(int ID){
+            int CountDiff = Rails[ID].Count - RailSize;
+            if(CountDiff > 0){
+                RemoveFromEnd(ID,CountDiff);
+            }
+        }
+
+        /// <summary>
+        /// Метод для одновременного расширения рельс до общего количество поэтапно
+        /// </summary>
+        void ExpandAll(){
+            
+        }
+
+        /// <summary>
         /// Метод для подстройки количества элементов в рельсе по указанному индексу под общее число элементов 
         /// </summary>
         /// <param name="ID"></param>
@@ -202,6 +220,24 @@ namespace CustomPhysics
             {
                 MoveForward(ID);
             }
+        }
+
+        /// <summary>
+        /// Метод для общей подстройки всех новых рельс под обчую длину
+        /// </summary>
+        public void AdaptAll(){
+            foreach (var ID in Rails.Keys)
+            {
+                AdaptCount(ID);
+            }
+        }
+
+        /// <summary>
+        /// Метод для единичного глобального обновления рельс
+        /// </summary>
+        public void GlobalUpdate(){
+            AdaptAll();
+            MoveForwardAll();
         }
 
         /// <summary>
@@ -273,6 +309,5 @@ namespace CustomPhysics
         public void RemoveRail(int ID){
             Rails.Remove(ID);
         }
-    
     }
 }
