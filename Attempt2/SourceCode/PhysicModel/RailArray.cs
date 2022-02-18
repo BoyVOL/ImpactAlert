@@ -98,6 +98,15 @@ namespace CustomPhysics
     /// </summary>
     public class RailArray{
 
+        /// <summary>
+        /// Объект для блокировки последующих вызовов обновления рельс, пока текущее обновление не завершится
+        /// </summary>
+        /// <returns></returns>
+        CountdownEvent UpdateLock = new CountdownEvent(0);
+
+        /// <summary>
+        /// Поток для выполнения обновления рельс
+        /// </summary>
         System.Threading.Thread UpdateThread;
 
         /// <summary>
@@ -160,6 +169,11 @@ namespace CustomPhysics
         /// </summary>
         void AsyncUpdate(){
             GD.Print("Update function has been started");
+            System.Threading.Thread.Sleep(5000);
+            AdaptCount();
+            MoveForwardAll();
+            GD.Print("Update function has been Finished");
+            UpdateLock.Signal();
         }
 
         public bool RailExists(int ID){
@@ -240,13 +254,20 @@ namespace CustomPhysics
         }
 
         /// <summary>
+        /// Метод, позволяющий вызывающему потоку подождать, пока не закончится поток обновления данного массива
+        /// </summary>
+        public void WaitForUpdate(){
+            UpdateLock.Wait();
+        }
+
+        /// <summary>
         /// Метод для обновления состояния рельсы
         /// </summary>
         public void Update(){
+            WaitForUpdate();
             UpdateThread = new System.Threading.Thread(AsyncUpdate);
             UpdateThread.Start();
-            AdaptCount();
-            MoveForwardAll();
+            UpdateLock = new CountdownEvent(1);
         }
 
         /// <summary>
@@ -318,4 +339,5 @@ namespace CustomPhysics
             Rails.Remove(ID);
         }
     }
+
 }
