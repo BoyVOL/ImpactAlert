@@ -28,7 +28,7 @@ public class RailArrayTest : Node2D
         GD.Print(Test.StringifyRail(ID));
         GD.Print("Рельса 2:");
         GD.Print(Test.StringifyRail(ID2));
-        Test.MoveForwardAll();
+        Test.Update();
         GD.Print("________________");
         GD.Print("Рельса 1:");
         GD.Print(Test.StringifyRail(ID));

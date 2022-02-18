@@ -168,75 +168,73 @@ namespace CustomPhysics
         }
 
         /// <summary>
-        /// Метод для одновременного расширения рельс до общего количество поэтапно
+        /// Метод для обрезки всех рельс до максимального значения
+        /// </summary>
+        void CutToMaxAll(){
+            foreach (var ID in Rails.Keys)
+            {
+                CutToMax(ID);
+            }
+        }
+
+        /// <summary>
+        /// Метод для расширения рельс до общего количество поэтапно
         /// </summary>
         void ExpandAll(){
-            
+            for (int i = 0; i < RailSize; i++)
+            {
+                AddAtIndex(i);
+            }
         }
 
         /// <summary>
         /// Метод для подстройки количества элементов в рельсе по указанному индексу под общее число элементов 
         /// </summary>
         /// <param name="ID"></param>
-        void AdaptCount(int ID){
-            int CountDiff = Rails[ID].Count - RailSize;
-            if(CountDiff == 0){
-                return;
-            } else if (CountDiff > 0){
-                RemoveFromEnd(ID,CountDiff);
-            } else {
-                //CountDiff < 0
-                int CD = Math.Abs(CountDiff);
-                for (int i = 0; i < CD; i++)
-                {
-                    Expand(ID);
+        void AdaptCount(){
+            CutToMaxAll();
+            ExpandAll();
+        }
+
+        /// <summary>
+        /// Метод для добавления нового элемента на выбранном местоположении
+        /// </summary>
+        /// <param name="Position">Порядковый индекс точки, которую надо добавить</param>
+        void AddAtIndex(int Position){
+            foreach (var ID in Rails.Keys)
+            {
+                GD.Print(Rails[ID].Count,Position);
+                //Проверка, чтобы индекс последнего элемента рельсы строго был на один ниже нового индекса
+                if(Rails[ID].Count == Position){   
+                    Rails[ID].Add(Rails[ID][Position-1].GetNextPoint(TimeInterval));
                 }
             }
         }
 
         /// <summary>
-        /// Метод для добавления нового элемента рельсы
+        /// Метод для удаления одного начального элемента всех рельс
         /// </summary>
-        /// <param name="ID"></param>
-        void Expand(int ID){
-            int LastID = Rails[ID].Count - 1;
-            Rails[ID].Add(Rails[ID][LastID].GetNextPoint(TimeInterval));
+        void DeleteStart(){
+            foreach (var ID in Rails.Keys)
+            {
+                Rails[ID].RemoveAt(0);
+            }
         }
-
-        /// <summary>
-        /// Метод для обновления рельсы на один элемент вперёд
-        /// </summary>
-        /// <param name="ID"></param>
-        void MoveForward(int ID){
-            Expand(ID);
-            Rails[ID].RemoveAt(0);
-        }
-
+        
         /// <summary>
         /// Метод для движения разом всех рельс
         /// </summary>
-        public void MoveForwardAll(){
-            foreach (var ID in Rails.Keys)
-            {
-                MoveForward(ID);
-            }
+        void MoveForwardAll(){
+            int NewID = RailSize-1;
+            DeleteStart();
+            AddAtIndex(NewID);
         }
 
         /// <summary>
-        /// Метод для общей подстройки всех новых рельс под обчую длину
+        /// Метод для обновления состояния рельсы
         /// </summary>
-        public void AdaptAll(){
-            foreach (var ID in Rails.Keys)
-            {
-                AdaptCount(ID);
-            }
-        }
-
-        /// <summary>
-        /// Метод для единичного глобального обновления рельс
-        /// </summary>
-        public void GlobalUpdate(){
-            AdaptAll();
+        public void Update(){
+            AdaptCount();
             MoveForwardAll();
         }
 
@@ -284,7 +282,6 @@ namespace CustomPhysics
             bool result = RailExists(ID);
             if(!result){
                 Rails.Add(ID,Data);
-                AdaptCount(ID);
             }
             return !result;
         }
