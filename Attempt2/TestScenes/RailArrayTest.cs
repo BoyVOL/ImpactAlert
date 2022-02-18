@@ -34,6 +34,9 @@ public class RailArrayTest : Node2D
         GD.Print(Test.StringifyRail(ID));
         GD.Print("Рельса 2:");
         GD.Print(Test.StringifyRail(ID2));
+        Test.Update();
+        Test.Update();
+        Test.Update();
     }
 
 //  // Called every frame. 'delta' is the elapsed time since the previous frame.

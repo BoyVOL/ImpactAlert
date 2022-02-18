@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace CustomPhysics
 {
@@ -97,6 +98,8 @@ namespace CustomPhysics
     /// </summary>
     public class RailArray{
 
+        System.Threading.Thread UpdateThread;
+
         /// <summary>
         /// Объект для случайной генерации идентификаторов
         /// </summary>
@@ -152,6 +155,13 @@ namespace CustomPhysics
             Rails[ID].RemoveRange(LastID,Count);
         }
 
+        /// <summary>
+        /// Метод для ассинхронного обновления массива рельс
+        /// </summary>
+        void AsyncUpdate(){
+            GD.Print("Update function has been started");
+        }
+
         public bool RailExists(int ID){
             return Rails.ContainsKey(ID);
         }
@@ -203,7 +213,6 @@ namespace CustomPhysics
         void AddAtIndex(int Position){
             foreach (var ID in Rails.Keys)
             {
-                GD.Print(Rails[ID].Count,Position);
                 //Проверка, чтобы индекс последнего элемента рельсы строго был на один ниже нового индекса
                 if(Rails[ID].Count == Position){   
                     Rails[ID].Add(Rails[ID][Position-1].GetNextPoint(TimeInterval));
@@ -220,7 +229,7 @@ namespace CustomPhysics
                 Rails[ID].RemoveAt(0);
             }
         }
-        
+
         /// <summary>
         /// Метод для движения разом всех рельс
         /// </summary>
@@ -234,6 +243,8 @@ namespace CustomPhysics
         /// Метод для обновления состояния рельсы
         /// </summary>
         public void Update(){
+            UpdateThread = new System.Threading.Thread(AsyncUpdate);
+            UpdateThread.Start();
             AdaptCount();
             MoveForwardAll();
         }
