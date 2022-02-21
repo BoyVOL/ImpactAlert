@@ -33,7 +33,12 @@ namespace CustomPhysics
         /// <summary>
         /// Поле, отвечающее за ускорение в данной точке
         /// </summary>
-        public Vector2 Acceleration;        
+        public Vector2 Acceleration;
+
+        /// <summary>
+        /// Поле, ответственное за угловое ускорение в данной точке рельсы
+        /// </summary>
+        public float RotAccel;        
 
         /// <summary>
         /// Метод, возвращающий новую точку, основываясь на данных старой.
@@ -44,10 +49,11 @@ namespace CustomPhysics
         public RailPoint GetNextPoint(float T){
             RailPoint Result = new RailPoint();
             Result.Position = Position+Speed*T+(Acceleration*T*T)/2;
-            Result.Rotation = Rotation+RotSpeed*T;
+            Result.Rotation = Rotation+RotSpeed*T+(RotAccel*T*T)/2;
             Result.Speed = Speed+Acceleration*T;
-            Result.RotSpeed = RotSpeed;
+            Result.RotSpeed = RotSpeed+RotAccel*T;
             Result.Acceleration = Acceleration;
+            Result.RotAccel = RotAccel;
             return Result;
         }
         
@@ -81,6 +87,15 @@ namespace CustomPhysics
 		public float CPA(Vector2 Vector){
 			return MathExtra.cpaTime(Position,Vector,Speed,new Vector2(0,0));
 		}
+
+        public RailPoint(RailPoint Other){
+            Position = Other.Position;
+            Rotation = Other.Rotation;
+            Speed = Other.Speed;
+            RotSpeed = Other.RotSpeed;
+            Acceleration = Other.Acceleration;
+            RotAccel = Other.RotAccel;
+        }
 
         /// <summary>
         /// Метод для преобразования контента в стринг
@@ -121,6 +136,11 @@ namespace CustomPhysics
         Dictionary<int,List<RailPoint>> Rails = new Dictionary<int, List<RailPoint>>();
 
         /// <summary>
+        /// Словарь массивов, отображающих копии рельс для чтения, который копируется из основного при каждом обновлении
+        /// </summary>
+        Dictionary<int,List<RailPoint>> RailBuff = new Dictionary<int, List<RailPoint>>();
+
+        /// <summary>
         /// Класс, отвечающий за обработку гравитационного взаимодействия
         /// </summary>
         public readonly GravityHandler Gravity;
@@ -149,6 +169,11 @@ namespace CustomPhysics
         public string StringifyRail(int ID){
             string Result = "";
             foreach (var item in Rails[ID])
+            {
+                Result += item.Stringify()+"\n";
+            }
+            Result += "Buffer rail = \n";
+            foreach (var item in RailBuff[ID])
             {
                 Result += item.Stringify()+"\n";
             }
@@ -235,6 +260,31 @@ namespace CustomPhysics
         }
 
         /// <summary>
+        /// Метод для копирования рельсы с выбранным индексом полностью в массив чтения
+        /// </summary>
+        /// <param name="ID"></param>
+        void CopyRailToRead(int ID){
+            RailBuff.Add(ID,new List<RailPoint>());
+            foreach (var item in Rails[ID])
+            {
+                //Для каждого элемента родительского списка добавляем новый элемент
+                RailBuff[ID].Add(new RailPoint(item));
+            }
+        }
+
+        /// <summary>
+        /// Метод для обновления буффера чтения данных рельс
+        /// </summary>
+        void UpdateReadBuffer(){
+            //Очищаем массив
+            RailBuff = new Dictionary<int, List<RailPoint>>();
+            foreach (var ID in Rails.Keys)
+            {
+                CopyRailToRead(ID);
+            }
+        }
+
+        /// <summary>
         /// Метод для удаления одного начального элемента всех рельс
         /// </summary>
         void DeleteStart(){
@@ -265,6 +315,7 @@ namespace CustomPhysics
         /// </summary>
         public void Update(){
             WaitForUpdate();
+            UpdateReadBuffer();
             UpdateThread = new System.Threading.Thread(AsyncUpdate);
             UpdateThread.Start();
             UpdateLock = new CountdownEvent(1);
@@ -314,6 +365,7 @@ namespace CustomPhysics
             bool result = RailExists(ID);
             if(!result){
                 Rails.Add(ID,Data);
+                CopyRailToRead(ID);
             }
             return !result;
         }
