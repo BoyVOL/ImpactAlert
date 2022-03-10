@@ -109,6 +109,193 @@ namespace CustomPhysics
     }
 
     /// <summary>
+    /// Родительский класс для серии классов, обрабатывающих рельсовый массив
+    /// </summary>
+    public class RailDictOperator{
+        
+        /// <summary>
+        /// Ссылка на словарь рельс, с которым класс работает
+        /// </summary>
+        protected readonly Dictionary<int,List<RailPoint>> Rails;
+
+        public RailDictOperator(Dictionary<int,List<RailPoint>> Orig){
+            Rails = Orig;
+        }
+    }
+
+    /// <summary>
+    /// Класс для обработки запросов на удаление и добавление рельс
+    /// </summary>
+    public class DictBatchEditor: RailDictOperator{
+
+        /// <summary>
+        /// Объект для случайной генерации идентификаторов
+        /// </summary>
+        /// <returns></returns>
+        Random IDGen = new Random();
+
+        /// <summary>
+        /// Словарь для добавления новых рельс
+        /// </summary>
+        Dictionary<int,List<RailPoint>> RailsToAdd = new Dictionary<int, List<RailPoint>>();
+
+        /// <summary>
+        /// Очередь для удаления рельс из словаря
+        /// </summary>
+        /// <typeparam name="int"></typeparam>
+        /// <returns></returns>
+        Queue<int> DeleteQueue = new Queue<int>();
+
+        /// <summary>
+        /// Конструктор для данного класса
+        /// </summary>
+        /// <param name="OrigArray">Массив, который требуется изменять</param>
+        public DictBatchEditor(Dictionary<int,List<RailPoint>> Orig) : base(Orig){
+        }
+
+        /// <summary>
+        /// Метод, который возвращает случайный свободный айди в словаре
+        /// </summary>
+        /// <returns></returns>
+        public int GetFreeID(){
+            int ID = IDGen.Next();
+            while(RailExists(ID)){
+                ID = IDGen.Next();
+            }
+            return ID;
+        }
+
+        /// <summary>
+        /// Метод добавления новой рельсы
+        /// </summary>
+        /// <param name="Data">Данные по рельсе</param>
+        /// <returns></returns>
+        public int AddRail(List<RailPoint> Data){
+            int ID = GetFreeID();
+            AddRail(ID,Data);
+            return ID;
+        }
+
+        /// <summary>
+        /// Метод добавления новой рельсы
+        /// Перегрузка для добавления рельсы из одной точки
+        /// </summary>
+        /// <param name="Start">Эта самая одна точка</param>
+        /// <returns></returns>
+        public int AddRail(RailPoint Start){
+            List<RailPoint> Rail = new List<RailPoint>();
+            Rail.Add(Start);
+            return AddRail(Rail);
+        }
+        
+        /// <summary>
+        /// Метод для проверки рельсы на наличие в системе
+        /// </summary>
+        /// <param name="ID"></param>
+        /// <returns></returns>
+        public bool RailExists(int ID){
+            return Rails.ContainsKey(ID) || RailsToAdd.ContainsKey(ID);
+        }
+
+
+        /// <summary>
+        /// Метод добавления новой рельсы
+        /// Перегрузка для добавления с заданным айди. Возвращает, была ли добавлена рельса
+        /// </summary>
+        /// <returns></returns>
+        public bool AddRail(int ID, List<RailPoint> Data){
+            bool result = RailExists(ID);
+            if(!result){
+                RailsToAdd.Add(ID,Data);
+            }
+            return !result;
+        }
+
+        /// <summary>
+        /// Метод добавления новой рельсы
+        /// Перегрузка для добавления рельсы из одной точки с заданным айди
+        /// возвращает, была ли добавлена рельса
+        /// </summary>
+        /// <param name="Start">Эта самая одна точка</param>
+        /// <returns></returns>
+        public bool AddRail(int ID, RailPoint Start){
+            List<RailPoint> Rail = new List<RailPoint>();
+            Rail.Add(Start);
+            return AddRail(ID,Rail);
+        }
+
+        /// <summary>
+        /// Метод удаления рельсы из общего массива
+        /// </summary>
+        /// <param name="ID"></param>
+        public void RemoveRail(int ID){
+            DeleteQueue.Enqueue(ID);
+        }
+
+        /// <summary>
+        /// Метод для применения изменений
+        /// </summary>
+        public void Sync(){
+            GD.Print("Sync");
+            while (DeleteQueue.Count > 0)
+            {
+                Rails.Remove(DeleteQueue.Dequeue());
+            }
+            foreach (var Key in RailsToAdd.Keys)
+            {
+                Rails.Add(Key,RailsToAdd[Key]);
+            }
+            RailsToAdd.Clear();
+        }
+    }
+
+    /// <summary>
+    /// Класс для буффера чтения рельс
+    /// </summary>
+    public class ReadBuffer: RailDictOperator{
+
+        /// <summary>
+        /// Словарь массивов, отображающих копии рельс для чтения, который копируется из основного при каждом обновлении
+        /// </summary>
+        public readonly Dictionary<int,List<RailPoint>> RailBuff = new Dictionary<int, List<RailPoint>>();
+
+        public ReadBuffer(Dictionary<int,List<RailPoint>> rails): base(rails){
+        }
+        
+        /// <summary>
+        /// Метод для копирования рельсы с выбранным индексом полностью в массив чтения
+        /// </summary>
+        /// <param name="ID"></param>
+        void CopyRail(int ID){
+            RailBuff.Add(ID,new List<RailPoint>());
+            foreach (var item in Rails[ID])
+            {
+                //Для каждого элемента родительского списка добавляем новый элемент
+                RailBuff[ID].Add(new RailPoint(item));
+            }
+        }
+
+        /// <summary>
+        /// Метод для обновления буффера чтения данных рельс
+        /// </summary>
+        void UpdateReadBuffer(){
+            //Очищаем массив
+            RailBuff.Clear();
+            foreach (var ID in Rails.Keys)
+            {
+                CopyRail(ID);
+            }
+        }
+
+        /// <summary>
+        /// Метод для синхронизации данного буфера и основного массива
+        /// </summary>
+        public void Sync(){
+            UpdateReadBuffer();
+        }
+    }
+
+    /// <summary>
     /// Класс для хранения и обработки рельс
     /// </summary>
     public class RailArray{
@@ -136,9 +323,11 @@ namespace CustomPhysics
         Dictionary<int,List<RailPoint>> Rails = new Dictionary<int, List<RailPoint>>();
 
         /// <summary>
-        /// Словарь массивов, отображающих копии рельс для чтения, который копируется из основного при каждом обновлении
+        /// Класс для обработки запросов на изменение списка рельс
         /// </summary>
-        Dictionary<int,List<RailPoint>> RailBuff = new Dictionary<int, List<RailPoint>>();
+        public readonly DictBatchEditor Edit;
+
+        public readonly ReadBuffer RBuffer;
 
         /// <summary>
         /// Класс, отвечающий за обработку гравитационного взаимодействия
@@ -163,6 +352,8 @@ namespace CustomPhysics
         public RailArray(int size, float timeInterval){
             RailSize = size;
             TimeInterval = timeInterval;
+            RBuffer = new ReadBuffer(Rails);
+            Edit = new DictBatchEditor(Rails);
             Gravity = new GravityHandler(Rails);
         }
 
@@ -173,7 +364,7 @@ namespace CustomPhysics
                 Result += item.Stringify()+"\n";
             }
             Result += "Buffer rail = \n";
-            foreach (var item in RailBuff[ID])
+            foreach (var item in RBuffer.RailBuff[ID])
             {
                 Result += item.Stringify()+"\n";
             }
@@ -195,14 +386,11 @@ namespace CustomPhysics
         void AsyncUpdate(){
             GD.Print("Update function has been started");
             System.Threading.Thread.Sleep(5000);
+            Edit.Sync();
             AdaptCount();
             MoveForwardAll();
             GD.Print("Update function has been Finished");
             UpdateLock.Signal();
-        }
-
-        public bool RailExists(int ID){
-            return Rails.ContainsKey(ID);
         }
 
         /// <summary>
@@ -259,30 +447,6 @@ namespace CustomPhysics
             }
         }
 
-        /// <summary>
-        /// Метод для копирования рельсы с выбранным индексом полностью в массив чтения
-        /// </summary>
-        /// <param name="ID"></param>
-        void CopyRailToRead(int ID){
-            RailBuff.Add(ID,new List<RailPoint>());
-            foreach (var item in Rails[ID])
-            {
-                //Для каждого элемента родительского списка добавляем новый элемент
-                RailBuff[ID].Add(new RailPoint(item));
-            }
-        }
-
-        /// <summary>
-        /// Метод для обновления буффера чтения данных рельс
-        /// </summary>
-        void UpdateReadBuffer(){
-            //Очищаем массив
-            RailBuff = new Dictionary<int, List<RailPoint>>();
-            foreach (var ID in Rails.Keys)
-            {
-                CopyRailToRead(ID);
-            }
-        }
 
         /// <summary>
         /// Метод для удаления одного начального элемента всех рельс
@@ -315,80 +479,10 @@ namespace CustomPhysics
         /// </summary>
         public void Update(){
             WaitForUpdate();
-            UpdateReadBuffer();
+            RBuffer.Sync();
             UpdateThread = new System.Threading.Thread(AsyncUpdate);
             UpdateThread.Start();
             UpdateLock = new CountdownEvent(1);
-        }
-
-        /// <summary>
-        /// Метод, который возвращает случайный свободный айди в словаре
-        /// </summary>
-        /// <returns></returns>
-        public int GetFreeID(){
-            int ID = IDGen.Next();
-            while(Rails.ContainsKey(ID)){
-                ID = IDGen.Next();
-            }
-            return ID;
-        }
-
-        /// <summary>
-        /// Метод добавления новой рельсы
-        /// </summary>
-        /// <param name="Data">Данные по рельсе</param>
-        /// <returns></returns>
-        public int AddRail(List<RailPoint> Data){
-            int ID = GetFreeID();
-            AddRail(ID,Data);
-            return ID;
-        }
-
-        /// <summary>
-        /// Метод добавления новой рельсы
-        /// Перегрузка для добавления рельсы из одной точки
-        /// </summary>
-        /// <param name="Start">Эта самая одна точка</param>
-        /// <returns></returns>
-        public int AddRail(RailPoint Start){
-            List<RailPoint> Rail = new List<RailPoint>();
-            Rail.Add(Start);
-            return AddRail(Rail);
-        }
-
-        /// <summary>
-        /// Метод добавления новой рельсы
-        /// Перегрузка для добавления с заданным айди. Возвращает, была ли добавлена рельса
-        /// </summary>
-        /// <returns></returns>
-        public bool AddRail(int ID, List<RailPoint> Data){
-            bool result = RailExists(ID);
-            if(!result){
-                Rails.Add(ID,Data);
-                CopyRailToRead(ID);
-            }
-            return !result;
-        }
-
-        /// <summary>
-        /// Метод добавления новой рельсы
-        /// Перегрузка для добавления рельсы из одной точки с заданным айди
-        /// возвращает, была ли добавлена рельса
-        /// </summary>
-        /// <param name="Start">Эта самая одна точка</param>
-        /// <returns></returns>
-        public bool AddRail(int ID, RailPoint Start){
-            List<RailPoint> Rail = new List<RailPoint>();
-            Rail.Add(Start);
-            return AddRail(ID,Rail);
-        }
-
-        /// <summary>
-        /// Метод удаления рельсы из общего массива
-        /// </summary>
-        /// <param name="ID"></param>
-        public void RemoveRail(int ID){
-            Rails.Remove(ID);
         }
     }
 
