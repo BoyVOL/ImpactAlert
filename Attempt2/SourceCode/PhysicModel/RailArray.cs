@@ -270,7 +270,16 @@ namespace CustomPhysics
 
         public ReadBuffer(Dictionary<int,List<RailPoint>> Orig) : base(Orig){
         }
-        
+                
+        /// <summary>
+        /// Метод для проверки рельсы на наличие в буффере
+        /// </summary>
+        /// <param name="ID"></param>
+        /// <returns></returns>
+        public bool RailBuffered(int ID){
+            return RailBuff.ContainsKey(ID);
+        }
+
         /// <summary>
         /// Метод для копирования рельсы с выбранным индексом полностью в массив чтения
         /// </summary>
@@ -365,15 +374,23 @@ namespace CustomPhysics
         }
 
         public string StringifyRail(int ID){
-            string Result = "";
-            foreach (var item in Rails[ID])
-            {
-                Result += item.Stringify()+"\n";
+            string Result = "Rail = \n";
+            if(RailExists(ID)){
+                foreach (var item in Rails[ID])
+                {
+                    Result += item.Stringify()+"\n";
+                }
+            } else {
+                Result += "Does ont exist";
             }
             Result += "Buffer rail = \n";
-            foreach (var item in RBuffer.RailBuff[ID])
-            {
-                Result += item.Stringify()+"\n";
+            if(RBuffer.RailBuffered(ID)){
+                foreach (var item in RBuffer.RailBuff[ID])
+                {
+                    Result += item.Stringify()+"\n";
+                }
+            } else {
+                Result += "Is not buffered";
             }
             return Result;
         }
@@ -453,7 +470,6 @@ namespace CustomPhysics
                 }
             }
         }
-
 
         /// <summary>
         /// Метод для удаления одного начального элемента всех рельс
