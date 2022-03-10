@@ -14,7 +14,7 @@ namespace CustomPhysics{
         /// </summary>
         readonly Dictionary<int,List<T>> ForceData = new Dictionary<int,List<T>>();
 
-        public PhysProperty(Dictionary<int,List<RailPoint>> rails, RailArray Orig) : base(rails, Orig){
+        public PhysProperty(Dictionary<int,List<RailPoint>> rails) : base(rails){
         }
 
     }
@@ -27,7 +27,7 @@ namespace CustomPhysics{
     }
 
     public class GravityHandler: PhysProperty<GravityData>{
-        public GravityHandler(Dictionary<int,List<RailPoint>> rails,RailArray Orig) : base(rails,Orig){
+        public GravityHandler(Dictionary<int,List<RailPoint>> rails) : base(rails){
 
         }
     }

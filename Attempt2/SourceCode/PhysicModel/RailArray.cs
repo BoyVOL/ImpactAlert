@@ -112,18 +112,22 @@ namespace CustomPhysics
     /// Родительский класс для серии классов, обрабатывающих рельсовый массив
     /// </summary>
     public class RailDictOperator{
-
-        /// <summary>
-        /// Ссылка на вышестоящий класс
-        /// </summary>
-        protected readonly RailArray Parent;
         
         /// <summary>
         /// Ссылка на словарь рельс, с которым класс работает
         /// </summary>
         protected readonly Dictionary<int,List<RailPoint>> Rails;
+                
+        /// <summary>
+        /// Метод для проверки рельсы на наличие в системе
+        /// </summary>
+        /// <param name="ID"></param>
+        /// <returns></returns>
+        public bool RailExists(int ID){
+            return Rails.ContainsKey(ID);
+        }
 
-        public RailDictOperator(Dictionary<int,List<RailPoint>> Orig, RailArray Parent){
+        public RailDictOperator(Dictionary<int,List<RailPoint>> Orig){
             Rails = Orig;
         }
     }
@@ -155,7 +159,7 @@ namespace CustomPhysics
         /// Конструктор для данного класса
         /// </summary>
         /// <param name="OrigArray">Массив, который требуется изменять</param>
-        public DictBatchEditor(Dictionary<int,List<RailPoint>> Orig, RailArray Parent) : base(Orig,Parent){
+        public DictBatchEditor(Dictionary<int,List<RailPoint>> Orig) : base(Orig){
         }
 
         /// <summary>
@@ -198,8 +202,8 @@ namespace CustomPhysics
         /// </summary>
         /// <param name="ID"></param>
         /// <returns></returns>
-        public bool RailExists(int ID){
-            return Rails.ContainsKey(ID) || RailsToAdd.ContainsKey(ID);
+        new public bool RailExists(int ID){
+            return base.RailExists(ID) || RailsToAdd.ContainsKey(ID);
         }
 
 
@@ -264,7 +268,7 @@ namespace CustomPhysics
         /// </summary>
         public readonly Dictionary<int,List<RailPoint>> RailBuff = new Dictionary<int, List<RailPoint>>();
 
-        public ReadBuffer(Dictionary<int,List<RailPoint>> Orig, RailArray Parent) : base(Orig,Parent){
+        public ReadBuffer(Dictionary<int,List<RailPoint>> Orig) : base(Orig){
         }
         
         /// <summary>
@@ -303,7 +307,7 @@ namespace CustomPhysics
     /// <summary>
     /// Класс для хранения и обработки рельс
     /// </summary>
-    public class RailArray{
+    public class MainRailArray: RailDictOperator{
 
         /// <summary>
         /// Объект для блокировки последующих вызовов обновления рельс, пока текущее обновление не завершится
@@ -321,11 +325,6 @@ namespace CustomPhysics
         /// </summary>
         /// <returns></returns>
         Random IDGen = new Random();
-
-        /// <summary>
-        /// Словарь массивов, отображающих рельсы
-        /// </summary>
-        Dictionary<int,List<RailPoint>> Rails = new Dictionary<int, List<RailPoint>>();
 
         /// <summary>
         /// Класс для обработки запросов на изменение списка рельс
@@ -357,12 +356,12 @@ namespace CustomPhysics
         /// </summary>
         /// <param name="size">Размер рельс</param>
         /// <param name="TimeInterval">Интервал интерполяции</param>
-        public RailArray(int size, float timeInterval){
+        public MainRailArray(int size, float timeInterval): base(new Dictionary<int, List<RailPoint>>()){
             RailSize = size;
             TimeInterval = timeInterval;
-            RBuffer = new ReadBuffer(Rails,this);
-            Edit = new DictBatchEditor(Rails,this);
-            Gravity = new GravityHandler(Rails,this);
+            RBuffer = new ReadBuffer(Rails);
+            Edit = new DictBatchEditor(Rails);
+            Gravity = new GravityHandler(Rails);
         }
 
         public string StringifyRail(int ID){
