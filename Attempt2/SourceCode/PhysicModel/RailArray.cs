@@ -112,13 +112,18 @@ namespace CustomPhysics
     /// Родительский класс для серии классов, обрабатывающих рельсовый массив
     /// </summary>
     public class RailDictOperator{
+
+        /// <summary>
+        /// Ссылка на вышестоящий класс
+        /// </summary>
+        protected readonly RailArray Parent;
         
         /// <summary>
         /// Ссылка на словарь рельс, с которым класс работает
         /// </summary>
         protected readonly Dictionary<int,List<RailPoint>> Rails;
 
-        public RailDictOperator(Dictionary<int,List<RailPoint>> Orig){
+        public RailDictOperator(Dictionary<int,List<RailPoint>> Orig, RailArray Parent){
             Rails = Orig;
         }
     }
@@ -150,7 +155,7 @@ namespace CustomPhysics
         /// Конструктор для данного класса
         /// </summary>
         /// <param name="OrigArray">Массив, который требуется изменять</param>
-        public DictBatchEditor(Dictionary<int,List<RailPoint>> Orig) : base(Orig){
+        public DictBatchEditor(Dictionary<int,List<RailPoint>> Orig, RailArray Parent) : base(Orig,Parent){
         }
 
         /// <summary>
@@ -259,7 +264,7 @@ namespace CustomPhysics
         /// </summary>
         public readonly Dictionary<int,List<RailPoint>> RailBuff = new Dictionary<int, List<RailPoint>>();
 
-        public ReadBuffer(Dictionary<int,List<RailPoint>> rails): base(rails){
+        public ReadBuffer(Dictionary<int,List<RailPoint>> Orig, RailArray Parent) : base(Orig,Parent){
         }
         
         /// <summary>
@@ -327,6 +332,9 @@ namespace CustomPhysics
         /// </summary>
         public readonly DictBatchEditor Edit;
 
+        /// <summary>
+        /// Объект, содержащий буффер чтения для массива рельс
+        /// </summary>
         public readonly ReadBuffer RBuffer;
 
         /// <summary>
@@ -352,9 +360,9 @@ namespace CustomPhysics
         public RailArray(int size, float timeInterval){
             RailSize = size;
             TimeInterval = timeInterval;
-            RBuffer = new ReadBuffer(Rails);
-            Edit = new DictBatchEditor(Rails);
-            Gravity = new GravityHandler(Rails);
+            RBuffer = new ReadBuffer(Rails,this);
+            Edit = new DictBatchEditor(Rails,this);
+            Gravity = new GravityHandler(Rails,this);
         }
 
         public string StringifyRail(int ID){

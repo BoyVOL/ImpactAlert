@@ -7,20 +7,14 @@ namespace CustomPhysics{
     /// <summary>
     /// Базовый класс для обработки физических взаимодействий
     /// </summary>
-    public class PhysProperty<T> where T: struct{
-
-        /// <summary>
-        /// ссылка на данные, с которыми класс будет работать
-        /// </summary>
-        readonly Dictionary<int,List<RailPoint>> Rails;
+    public class PhysProperty<T> : RailDictOperator where T: struct{
 
         /// <summary>
         /// Словарь, связывающий айди рельсы и данный для нужной силы
         /// </summary>
         readonly Dictionary<int,List<T>> ForceData = new Dictionary<int,List<T>>();
 
-        public PhysProperty(Dictionary<int,List<RailPoint>> rails){
-            Rails = rails;
+        public PhysProperty(Dictionary<int,List<RailPoint>> rails, RailArray Orig) : base(rails, Orig){
         }
 
     }
@@ -33,7 +27,7 @@ namespace CustomPhysics{
     }
 
     public class GravityHandler: PhysProperty<GravityData>{
-        public GravityHandler(Dictionary<int,List<RailPoint>> rails):base(rails){
+        public GravityHandler(Dictionary<int,List<RailPoint>> rails,RailArray Orig) : base(rails,Orig){
 
         }
     }
