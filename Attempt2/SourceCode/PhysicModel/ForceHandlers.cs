@@ -7,14 +7,14 @@ namespace CustomPhysics{
     /// <summary>
     /// Базовый класс для обработки физических взаимодействий
     /// </summary>
-    public class PhysProperty<T> : RailDictOperator where T: struct{
+    public class ForceModifier<T> : UpdateModifier where T: struct{
 
         /// <summary>
         /// Словарь, связывающий айди рельсы и данный для нужной силы
         /// </summary>
         readonly Dictionary<int,List<T>> ForceData = new Dictionary<int,List<T>>();
 
-        public PhysProperty(Dictionary<int,List<RailPoint>> rails) : base(rails){
+        public ForceModifier(Dictionary<int,List<RailPoint>> rails) : base(rails){
         }
 
     }
@@ -26,7 +26,7 @@ namespace CustomPhysics{
 
     }
 
-    public class GravityHandler: PhysProperty<GravityData>{
+    public class GravityHandler: ForceModifier<GravityData>{
         public GravityHandler(Dictionary<int,List<RailPoint>> rails) : base(rails){
 
         }

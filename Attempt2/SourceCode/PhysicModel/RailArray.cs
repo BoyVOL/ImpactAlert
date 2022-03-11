@@ -8,7 +8,7 @@ namespace CustomPhysics
     /// <summary>
     /// Структура, отвечающая за состояние точки в каждый момент времени
     /// </summary>
-    public struct RailPoint
+    public class RailPoint
     {
         /// <summary>
         /// Положение точки в пространстве
@@ -88,6 +88,10 @@ namespace CustomPhysics
 			return MathExtra.cpaTime(Position,Vector,Speed,new Vector2(0,0));
 		}
 
+        public RailPoint(){
+            
+        }
+
         public RailPoint(RailPoint Other){
             Position = Other.Position;
             Rotation = Other.Rotation;
@@ -159,6 +163,28 @@ namespace CustomPhysics
                 GD.Print("Rail ID = ",ID);
                 GD.Print(StringifyRail(ID));
             }
+        }
+    }
+
+    public class UpdateModifier: RailDictOperator{
+
+        public UpdateModifier(Dictionary<int,List<RailPoint>> rails) : base(rails){
+        }
+
+        /// <summary>
+        /// Метод для вычисления изменений
+        /// </summary>
+        /// <param name="Position"></param>
+        public void CalculateChanges(int Position){
+
+        }
+
+        /// <summary>
+        /// Метод для применения изменений рельсы
+        /// </summary>
+        /// <param name="Position"></param>
+        public void ApplyChanges(int Position){
+
         }
     }
 
@@ -357,6 +383,8 @@ namespace CustomPhysics
         /// </summary>
         public readonly float TimeInterval;
 
+        public readonly List<UpdateModifier> Modifiers = new List<UpdateModifier>();
+
         /// <summary>
         /// Конструктор с параметрами
         /// </summary>
@@ -403,9 +431,9 @@ namespace CustomPhysics
         /// Метод для расширения рельс до общего количество поэтапно
         /// </summary>
         void ExpandAll(){
-            for (int i = 0; i < RailSize; i++)
+            for (int i = 1; i < RailSize; i++)
             {
-                AddAtIndex(i);
+                AddAllAtIndex(i);
             }
         }
 
@@ -419,16 +447,25 @@ namespace CustomPhysics
         }
 
         /// <summary>
+        /// Метод для добавления элемента рельсы по указанному индексу, если есть предыдущий
+        /// </summary>
+        /// <param name="ID"></param>
+        /// <param name="Position"></param>
+        void AddAtIndex(int ID, int Position){
+            //Проверка, чтобы индекс последнего элемента рельсы строго был на один ниже нового индекса
+            if(Rails[ID].Count == Position){   
+                Rails[ID].Add(Rails[ID][Position-1].GetNextPoint(TimeInterval));
+            }
+        }
+
+        /// <summary>
         /// Метод для добавления нового элемента на выбранном местоположении всех рельс, у которых на данном индексе нет элемента, но есть предыдущий
         /// </summary>
         /// <param name="Position">Порядковый индекс точки, которую надо добавить</param>
-        void AddAtIndex(int Position){
-            foreach (var ID in Rails.Keys)
+        void AddAllAtIndex(int Position){
+            foreach (int ID in Rails.Keys)
             {
-                //Проверка, чтобы индекс последнего элемента рельсы строго был на один ниже нового индекса
-                if(Rails[ID].Count == Position){   
-                    Rails[ID].Add(Rails[ID][Position-1].GetNextPoint(TimeInterval));
-                }
+                AddAtIndex(ID,Position);
             }
         }
 
@@ -438,7 +475,6 @@ namespace CustomPhysics
         void DeleteStart(){
             foreach (var ID in Rails.Keys)
             {
-                GD.Print("RAIL");
                 Rails[ID].RemoveAt(0);
             }
         }
@@ -449,7 +485,7 @@ namespace CustomPhysics
         public void MoveForwardAll(){
             int NewID = RailSize-1;
             DeleteStart();
-            AddAtIndex(NewID);
+            AddAllAtIndex(NewID);
         }
     }
 
@@ -484,12 +520,6 @@ namespace CustomPhysics
         /// Объект, содержащий буффер чтения для массива рельс
         /// </summary>
         public readonly ReadBuffer RBuffer;
-
-        /// <summary>
-        /// Класс, отвечающий за обработку гравитационного взаимодействия
-        /// </summary>
-        public readonly GravityHandler Gravity;
-
         public readonly RailLengthAdapter RLAdapter;
 
         /// <summary>
@@ -500,8 +530,8 @@ namespace CustomPhysics
         public MainRailArray(int size, float timeInterval): base(new Dictionary<int, List<RailPoint>>()){
             RBuffer = new ReadBuffer(Rails);
             Edit = new DictBatchLoader(Rails);
-            Gravity = new GravityHandler(Rails);
             RLAdapter = new RailLengthAdapter(Rails,size,timeInterval);
+            RLAdapter.Modifiers.Add(new UpdateModifier(Rails));
         }
 
         new public string StringifyRail(int ID){
