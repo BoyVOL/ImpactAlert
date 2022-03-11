@@ -130,12 +130,42 @@ namespace CustomPhysics
         public RailDictOperator(Dictionary<int,List<RailPoint>> Orig){
             Rails = Orig;
         }
+        
+        /// <summary>
+        /// Метод для отображения рельсы с выбранным индексом
+        /// </summary>
+        /// <param name="ID"></param>
+        /// <returns></returns>
+        public string StringifyRail(int ID){
+            string Result = "Rail = \n";
+            if(RailExists(ID)){
+                foreach (var item in Rails[ID])
+                {
+                    Result += item.Stringify()+"\n";
+                }
+            } else {
+                Result += "Does ont exist";
+            }
+            Result += "Buffer rail = \n";
+            return Result;
+        }
+
+        /// <summary>
+        /// Отображение всех рельс в массиве
+        /// </summary>
+        public void StringifyAllRails(){
+            foreach (var ID in Rails.Keys)
+            {
+                GD.Print("Rail ID = ",ID);
+                GD.Print(StringifyRail(ID));
+            }
+        }
     }
 
     /// <summary>
     /// Класс для обработки запросов на удаление и добавление рельс
     /// </summary>
-    public class DictBatchEditor: RailDictOperator{
+    public class DictBatchLoader: RailDictOperator{
 
         /// <summary>
         /// Объект для случайной генерации идентификаторов
@@ -159,7 +189,7 @@ namespace CustomPhysics
         /// Конструктор для данного класса
         /// </summary>
         /// <param name="OrigArray">Массив, который требуется изменять</param>
-        public DictBatchEditor(Dictionary<int,List<RailPoint>> Orig) : base(Orig){
+        public DictBatchLoader(Dictionary<int,List<RailPoint>> Orig) : base(Orig){
         }
 
         /// <summary>
@@ -205,7 +235,6 @@ namespace CustomPhysics
         new public bool RailExists(int ID){
             return base.RailExists(ID) || RailsToAdd.ContainsKey(ID);
         }
-
 
         /// <summary>
         /// Метод добавления новой рельсы
@@ -314,42 +343,10 @@ namespace CustomPhysics
     }
 
     /// <summary>
-    /// Класс для хранения и обработки рельс
+    /// Класс для хранения размера рельсы
     /// </summary>
-    public class MainRailArray: RailDictOperator{
-
-        /// <summary>
-        /// Объект для блокировки последующих вызовов обновления рельс, пока текущее обновление не завершится
-        /// </summary>
-        /// <returns></returns>
-        CountdownEvent UpdateLock = new CountdownEvent(0);
-
-        /// <summary>
-        /// Поток для выполнения обновления рельс
-        /// </summary>
-        System.Threading.Thread UpdateThread;
-
-        /// <summary>
-        /// Объект для случайной генерации идентификаторов
-        /// </summary>
-        /// <returns></returns>
-        Random IDGen = new Random();
-
-        /// <summary>
-        /// Класс для обработки запросов на изменение списка рельс
-        /// </summary>
-        public readonly DictBatchEditor Edit;
-
-        /// <summary>
-        /// Объект, содержащий буффер чтения для массива рельс
-        /// </summary>
-        public readonly ReadBuffer RBuffer;
-
-        /// <summary>
-        /// Класс, отвечающий за обработку гравитационного взаимодействия
-        /// </summary>
-        public readonly GravityHandler Gravity;
-
+    public class RailLengthAdapter: RailDictOperator{
+                
         /// <summary>
         /// Размер рельс в данном классе
         /// </summary>
@@ -363,38 +360,15 @@ namespace CustomPhysics
         /// <summary>
         /// Конструктор с параметрами
         /// </summary>
-        /// <param name="size">Размер рельс</param>
-        /// <param name="TimeInterval">Интервал интерполяции</param>
-        public MainRailArray(int size, float timeInterval): base(new Dictionary<int, List<RailPoint>>()){
+        /// <param name="Orig">Словарь, который надо обрабатывать</param>
+        /// <param name="size">размер рельсы</param>
+        /// <param name="timeInterval">временной интервал обработки рельсы</param>
+        /// <returns></returns>
+        public RailLengthAdapter(Dictionary<int,List<RailPoint>> Orig, int size, float timeInterval) : base(Orig){
             RailSize = size;
             TimeInterval = timeInterval;
-            RBuffer = new ReadBuffer(Rails);
-            Edit = new DictBatchEditor(Rails);
-            Gravity = new GravityHandler(Rails);
         }
-
-        public string StringifyRail(int ID){
-            string Result = "Rail = \n";
-            if(RailExists(ID)){
-                foreach (var item in Rails[ID])
-                {
-                    Result += item.Stringify()+"\n";
-                }
-            } else {
-                Result += "Does ont exist";
-            }
-            Result += "Buffer rail = \n";
-            if(RBuffer.RailBuffered(ID)){
-                foreach (var item in RBuffer.RailBuff[ID])
-                {
-                    Result += item.Stringify()+"\n";
-                }
-            } else {
-                Result += "Is not buffered";
-            }
-            return Result;
-        }
-
+        
         /// <summary>
         /// Метод для Удаления с конца рельсы нужного количества элементов
         /// </summary>
@@ -403,20 +377,7 @@ namespace CustomPhysics
             int LastID = Rails[ID].Count - 1;
             Rails[ID].RemoveRange(LastID,Count);
         }
-
-        /// <summary>
-        /// Метод для ассинхронного обновления массива рельс
-        /// </summary>
-        void AsyncUpdate(){
-            GD.Print("Update function has been started");
-            System.Threading.Thread.Sleep(5000);
-            Edit.Sync();
-            AdaptCount();
-            MoveForwardAll();
-            GD.Print("Update function has been Finished");
-            UpdateLock.Signal();
-        }
-
+        
         /// <summary>
         /// Метод для обрезки количества элементов отдельно взятой рельсы к максимальному числу элементов
         /// </summary>
@@ -452,13 +413,13 @@ namespace CustomPhysics
         /// Метод для подстройки количества элементов в рельсе по указанному индексу под общее число элементов 
         /// </summary>
         /// <param name="ID"></param>
-        void AdaptCount(){
+        public void AdaptCount(){
             CutToMaxAll();
             ExpandAll();
         }
 
         /// <summary>
-        /// Метод для добавления нового элемента на выбранном местоположении
+        /// Метод для добавления нового элемента на выбранном местоположении всех рельс, у которых на данном индексе нет элемента, но есть предыдущий
         /// </summary>
         /// <param name="Position">Порядковый индекс точки, которую надо добавить</param>
         void AddAtIndex(int Position){
@@ -477,6 +438,7 @@ namespace CustomPhysics
         void DeleteStart(){
             foreach (var ID in Rails.Keys)
             {
+                GD.Print("RAIL");
                 Rails[ID].RemoveAt(0);
             }
         }
@@ -484,10 +446,97 @@ namespace CustomPhysics
         /// <summary>
         /// Метод для движения разом всех рельс
         /// </summary>
-        void MoveForwardAll(){
+        public void MoveForwardAll(){
             int NewID = RailSize-1;
             DeleteStart();
             AddAtIndex(NewID);
+        }
+    }
+
+    /// <summary>
+    /// Класс для хранения и обработки рельс
+    /// </summary>
+    public class MainRailArray: RailDictOperator{
+
+        /// <summary>
+        /// Объект для блокировки последующих вызовов обновления рельс, пока текущее обновление не завершится
+        /// </summary>
+        /// <returns></returns>
+        CountdownEvent UpdateLock = new CountdownEvent(0);
+
+        /// <summary>
+        /// Поток для выполнения обновления рельс
+        /// </summary>
+        System.Threading.Thread UpdateThread;
+
+        /// <summary>
+        /// Объект для случайной генерации идентификаторов
+        /// </summary>
+        /// <returns></returns>
+        Random IDGen = new Random();
+
+        /// <summary>
+        /// Класс для обработки запросов на изменение списка рельс
+        /// </summary>
+        public readonly DictBatchLoader Edit;
+
+        /// <summary>
+        /// Объект, содержащий буффер чтения для массива рельс
+        /// </summary>
+        public readonly ReadBuffer RBuffer;
+
+        /// <summary>
+        /// Класс, отвечающий за обработку гравитационного взаимодействия
+        /// </summary>
+        public readonly GravityHandler Gravity;
+
+        public readonly RailLengthAdapter RLAdapter;
+
+        /// <summary>
+        /// Конструктор с параметрами
+        /// </summary>
+        /// <param name="size">Размер рельс</param>
+        /// <param name="TimeInterval">Интервал интерполяции</param>
+        public MainRailArray(int size, float timeInterval): base(new Dictionary<int, List<RailPoint>>()){
+            RBuffer = new ReadBuffer(Rails);
+            Edit = new DictBatchLoader(Rails);
+            Gravity = new GravityHandler(Rails);
+            RLAdapter = new RailLengthAdapter(Rails,size,timeInterval);
+        }
+
+        new public string StringifyRail(int ID){
+            string Result = "Rail = \n";
+            if(RailExists(ID)){
+                foreach (var item in Rails[ID])
+                {
+                    Result += item.Stringify()+"\n";
+                }
+            } else {
+                Result += "Does ont exist";
+            }
+            Result += "Buffer rail = \n";
+            if(RBuffer.RailBuffered(ID)){
+                foreach (var item in RBuffer.RailBuff[ID])
+                {
+                    Result += item.Stringify()+"\n";
+                }
+            } else {
+                Result += "Is not buffered";
+            }
+            return Result;
+        }
+
+        /// <summary>
+        /// Метод для ассинхронного обновления массива рельс
+        /// </summary>
+        void AsyncUpdate(){
+            GD.Print("Update function has been started");
+            System.Threading.Thread.Sleep(5000);
+            Edit.Sync();
+            RLAdapter.AdaptCount();
+            RLAdapter.MoveForwardAll();
+            GD.Print("Update function has been Finished");
+            UpdateLock.Signal();
         }
 
         /// <summary>
