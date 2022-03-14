@@ -56,7 +56,7 @@ namespace CustomPhysics
             Result.RotAccel = RotAccel;
             return Result;
         }
-
+        
 		/// <summary>
 		/// Возвращает значение времени максимального с указанной точкой. За ноль взят момент времени в текущей точке.
 		/// </summary>
