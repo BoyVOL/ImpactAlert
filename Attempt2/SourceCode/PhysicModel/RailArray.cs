@@ -56,18 +56,6 @@ namespace CustomPhysics
             Result.RotAccel = RotAccel;
             return Result;
         }
-        
-        /// <summary>
-		/// Метод, возвращающий точку, интерполированную на заданном моменте времени
-		/// </summary>
-		/// <param name="T">Момент времени, данные в котором надо вернуть</param>
-		/// <returns></returns>
-		public RailPoint Interpolate(float T){
-            RailPoint Result = new RailPoint();
-            Result.Rotation = RotSpeed*T;
-            Result.Position = Speed*T;
-            return Result;
-		}
 
 		/// <summary>
 		/// Возвращает значение времени максимального с указанной точкой. За ноль взят момент времени в текущей точке.
@@ -110,6 +98,14 @@ namespace CustomPhysics
             Result += "Position = ("+Position.x+";"+Position.y+")";
             return Result;
         }
+
+        public string Stringify(float T){
+            string Result = "";
+            Result += "Position = ("+Position.x+";"+Position.y+")";
+            return Result;
+        }
+
+        
     }
 
     /// <summary>
@@ -171,7 +167,13 @@ namespace CustomPhysics
     /// </summary>
     public class UpdateModifier: RailDictOperator{
 
-        public UpdateModifier(Dictionary<int,List<RailPoint>> rails) : base(rails){
+        /// <summary>
+        /// Временной интервал между точками
+        /// </summary>
+        public readonly float TimeInterval;
+
+        public UpdateModifier(Dictionary<int,List<RailPoint>> rails, float timeInterval) : base(rails){
+            TimeInterval = timeInterval;
         }
 
         /// <summary>
@@ -201,7 +203,7 @@ namespace CustomPhysics
         /// </summary>
         readonly Dictionary<int,List<T>> ForceData = new Dictionary<int,List<T>>();
 
-        public ParamModifier(Dictionary<int,List<RailPoint>> rails) : base(rails){
+        public ParamModifier(Dictionary<int,List<RailPoint>> rails,float timeInterval) : base(rails, timeInterval){
         }
         
         /// <summary>
@@ -584,7 +586,7 @@ namespace CustomPhysics
 
         protected override void AddAllAtIndex(int Position)
         {
-            CalcModifiers(Position);
+            CalcModifiers(Position-1);
             ApplyModifiers(Position);
             base.AddAllAtIndex(Position);
         }
@@ -632,8 +634,8 @@ namespace CustomPhysics
             RBuffer = new ReadBuffer(Rails);
             Edit = new DictBatchLoader(Rails);
             MLAdapter = new ModLengthAdapter(Rails,size,timeInterval);
-            MLAdapter.ModList.Add(new UpdateModifier(Rails));
-            MLAdapter.ModList.Add(new CollisionCalculator(Rails));
+            MLAdapter.ModList.Add(new UpdateModifier(Rails,timeInterval));
+            MLAdapter.ModList.Add(new CollisionCalculator(Rails,timeInterval));
         }
 
         new public string StringifyRail(int ID){
