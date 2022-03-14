@@ -175,16 +175,16 @@ namespace CustomPhysics
         /// Метод для вычисления изменений
         /// </summary>
         /// <param name="Position"></param>
-        public void CalculateChanges(int Position){
-
+        public virtual void CalculateChanges(int Position){
+            GD.Print("Calculating Modifier +++++");
         }
 
         /// <summary>
         /// Метод для применения изменений рельсы
         /// </summary>
         /// <param name="Position"></param>
-        public void ApplyChanges(int Position){
-
+        public virtual void ApplyChanges(int Position){
+            GD.Print("Applying Modifier -----");
         }
     }
 
@@ -383,8 +383,6 @@ namespace CustomPhysics
         /// </summary>
         public readonly float TimeInterval;
 
-        public readonly List<UpdateModifier> Modifiers = new List<UpdateModifier>();
-
         /// <summary>
         /// Конструктор с параметрами
         /// </summary>
@@ -433,7 +431,9 @@ namespace CustomPhysics
         void ExpandAll(){
             for (int i = 1; i < RailSize; i++)
             {
-                AddAllAtIndex(i);
+                if(CheckAdapt(i)){
+                    AddAllAtIndex(i);
+                }
             }
         }
 
@@ -444,6 +444,21 @@ namespace CustomPhysics
         public void AdaptCount(){
             CutToMaxAll();
             ExpandAll();
+        }
+
+        /// <summary>
+        /// Метод для проверки, если есть рельсы, требующие корректировки на заданной позиции
+        /// </summary>
+        /// <param name="Position">Индекс, на котором надо провести проверку</param>
+        /// <returns></returns>
+        bool CheckAdapt(int Position){
+            bool Result = false; 
+            foreach (int ID in Rails.Keys)
+            {
+                // Логическое сложение, если выбранный индекс меньше последнего индекса рельсы
+                Result |= Rails[ID].Count <= Position;
+            }
+            return Result;
         }
 
         /// <summary>
@@ -462,7 +477,7 @@ namespace CustomPhysics
         /// Метод для добавления нового элемента на выбранном местоположении всех рельс, у которых на данном индексе нет элемента, но есть предыдущий
         /// </summary>
         /// <param name="Position">Порядковый индекс точки, которую надо добавить</param>
-        void AddAllAtIndex(int Position){
+        protected virtual void AddAllAtIndex(int Position){
             foreach (int ID in Rails.Keys)
             {
                 AddAtIndex(ID,Position);
@@ -486,6 +501,58 @@ namespace CustomPhysics
             int NewID = RailSize-1;
             DeleteStart();
             AddAllAtIndex(NewID);
+        }
+    }
+
+    /// <summary>
+    /// Дочерний класс, содержащий свойства для изменения длины массива
+    /// </summary>
+    public class ModLengthAdapter: RailLengthAdapter{
+
+        /// <summary>
+        /// Список модификаторов, которые надо использовать при обновлении рельс
+        /// </summary>
+        /// <typeparam name="UpdateModifier">Объекты-модификаторы, которые при каждом обновлении корректируют точки</typeparam>
+        /// <returns></returns>
+        public readonly List<UpdateModifier> ModList = new List<UpdateModifier>();
+        
+        /// <summary>
+        /// Конструктор с параметрами
+        /// </summary>
+        /// <param name="Orig">Словарь, который надо обрабатывать</param>
+        /// <param name="size">размер рельсы</param>
+        /// <param name="timeInterval">временной интервал обработки рельсы</param>
+        /// <returns></returns>
+        public ModLengthAdapter(Dictionary<int,List<RailPoint>> Orig, int size, float timeInterval) : base(Orig,size,timeInterval){
+        }
+        
+        /// <summary>
+        /// Метод для вычисления необходимых модификаций на заданном индексе
+        /// </summary>
+        /// <param name="Position">индекс, на котором надо вычислить модификации</param>
+        void CalcModifiers(int Position){
+            foreach (UpdateModifier Mod in ModList)
+            {
+                Mod.CalculateChanges(Position);
+            }
+        }
+
+        /// <summary>
+        /// Метод для применения необходимых модификаций на заданном индексе
+        /// </summary>
+        /// <param name="Position">Индекс, на котором надо применить изменения</param>
+        void ApplyModifiers(int Position){
+            foreach (UpdateModifier Mod in ModList)
+            {
+                Mod.ApplyChanges(Position);
+            }
+        }
+
+        protected override void AddAllAtIndex(int Position)
+        {
+            CalcModifiers(Position);
+            ApplyModifiers(Position);
+            base.AddAllAtIndex(Position);
         }
     }
 
@@ -520,7 +587,7 @@ namespace CustomPhysics
         /// Объект, содержащий буффер чтения для массива рельс
         /// </summary>
         public readonly ReadBuffer RBuffer;
-        public readonly RailLengthAdapter RLAdapter;
+        public readonly ModLengthAdapter MLAdapter;
 
         /// <summary>
         /// Конструктор с параметрами
@@ -530,8 +597,8 @@ namespace CustomPhysics
         public MainRailArray(int size, float timeInterval): base(new Dictionary<int, List<RailPoint>>()){
             RBuffer = new ReadBuffer(Rails);
             Edit = new DictBatchLoader(Rails);
-            RLAdapter = new RailLengthAdapter(Rails,size,timeInterval);
-            RLAdapter.Modifiers.Add(new UpdateModifier(Rails));
+            MLAdapter = new ModLengthAdapter(Rails,size,timeInterval);
+            MLAdapter.ModList.Add(new UpdateModifier(Rails));
         }
 
         new public string StringifyRail(int ID){
@@ -563,8 +630,8 @@ namespace CustomPhysics
             GD.Print("Update function has been started");
             System.Threading.Thread.Sleep(5000);
             Edit.Sync();
-            RLAdapter.AdaptCount();
-            RLAdapter.MoveForwardAll();
+            MLAdapter.AdaptCount();
+            MLAdapter.MoveForwardAll();
             GD.Print("Update function has been Finished");
             UpdateLock.Signal();
         }
