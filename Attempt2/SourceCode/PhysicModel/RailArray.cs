@@ -70,7 +70,7 @@ namespace CustomPhysics
 		}
 
 		/// <summary>
-		/// Возвращает значение времени пересечения с указанной точкой, начиная от текущей точки.
+		/// Возвращает значение времени максимального с указанной точкой. За ноль взят момент времени в текущей точке.
 		/// </summary>
 		/// <param name="Target">Вторая точка, с которой просчитывается пересечение путей</param>
 		/// <returns></returns>
@@ -79,7 +79,7 @@ namespace CustomPhysics
 		}
 
 		/// <summary>
-		/// Возвращает значение времени пересечения с указанной точкой, начиная от текущей точки.
+		/// Возвращает значение времени пересечения с указанной точкой. За ноль взят момент времени в текущей точке.
 		/// Перегрузка для 2д вектора
 		/// </summary>
 		/// <param name="Vector">2Д вектор, с которым просчитывается пересечение путей</param>
@@ -166,6 +166,9 @@ namespace CustomPhysics
         }
     }
 
+    /// <summary>
+    /// Базовый класс для модификаторов точек рельсы
+    /// </summary>
     public class UpdateModifier: RailDictOperator{
 
         public UpdateModifier(Dictionary<int,List<RailPoint>> rails) : base(rails){
@@ -186,6 +189,37 @@ namespace CustomPhysics
         public virtual void ApplyChanges(int Position){
             GD.Print("Applying Modifier -----");
         }
+    }
+
+    /// <summary>
+    /// Базовый класс для модификации рельсы с параметрами
+    /// </summary>
+    public class ParamModifier<T> : UpdateModifier where T: struct{
+
+        /// <summary>
+        /// Словарь, связывающий айди рельсы и данный для нужной силы
+        /// </summary>
+        readonly Dictionary<int,List<T>> ForceData = new Dictionary<int,List<T>>();
+
+        public ParamModifier(Dictionary<int,List<RailPoint>> rails) : base(rails){
+        }
+        
+        /// <summary>
+        /// Метод для вычисления изменений
+        /// </summary>
+        /// <param name="Position"></param>
+        public override void CalculateChanges(int Position){
+            GD.Print("Calculating Param Modifier +++++");
+        }
+
+        /// <summary>
+        /// Метод для применения изменений рельсы
+        /// </summary>
+        /// <param name="Position"></param>
+        public override void ApplyChanges(int Position){
+            GD.Print("Applying Param Modifier -----");
+        }
+    
     }
 
     /// <summary>
@@ -599,6 +633,7 @@ namespace CustomPhysics
             Edit = new DictBatchLoader(Rails);
             MLAdapter = new ModLengthAdapter(Rails,size,timeInterval);
             MLAdapter.ModList.Add(new UpdateModifier(Rails));
+            MLAdapter.ModList.Add(new CollisionCalculator(Rails));
         }
 
         new public string StringifyRail(int ID){
