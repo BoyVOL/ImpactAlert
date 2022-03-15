@@ -56,25 +56,77 @@ namespace CustomPhysics
             Result.RotAccel = RotAccel;
             return Result;
         }
-        
+
 		/// <summary>
 		/// Возвращает значение времени максимального с указанной точкой. За ноль взят момент времени в текущей точке.
+        /// Если время выходит за границы отрезка времени - берётся ближайшая точка на этом отрезке.
 		/// </summary>
 		/// <param name="Target">Вторая точка, с которой просчитывается пересечение путей</param>
+        /// <param name="T">интервал времени, на котором проходит проверка</param>
 		/// <returns></returns>
-		public float CPA(RailPoint Target){
-			return MathExtra.cpaTime(Position,Target.Position,Speed,Target.Speed);
+		public float CPA(RailPoint Target, float T){
+            float Result = MathExtra.cpaTime(Position,Target.Position,GetInterSpeed(T),Target.GetInterSpeed(T));
+            if(Result < 0) Result = 0;
+            if(Result > T) Result = T;
+			return Result;
 		}
 
 		/// <summary>
 		/// Возвращает значение времени пересечения с указанной точкой. За ноль взят момент времени в текущей точке.
+        /// Если время выходит за границы отрезка времени - берётся ближайшая точка на этом отрезке.
 		/// Перегрузка для 2д вектора
 		/// </summary>
 		/// <param name="Vector">2Д вектор, с которым просчитывается пересечение путей</param>
+        /// <param name="T">интервал времени, на котором проходит проверка</param>
 		/// <returns></returns>
-		public float CPA(Vector2 Vector){
-			return MathExtra.cpaTime(Position,Vector,Speed,new Vector2(0,0));
+		public float CPA(Vector2 Vector, float T){
+			float Result = MathExtra.cpaTime(Position,Vector,GetInterSpeed(T),new Vector2(0,0));
+            if(Result < 0) Result = 0;
+            if(Result > T) Result = T;
+			return Result;
 		}
+
+        /// <summary>
+        /// Метод, который возвращает среднюю скорость от начала точки до участка времени Т
+        /// </summary>
+        /// <param name="T"></param>
+        /// <returns></returns>
+        public Vector2 GetInterSpeed(float T){
+            Vector2 Speed2 = Speed+Acceleration*T;
+            return (Speed+Speed2)/2;
+        }
+
+        /// <summary>
+        /// Метод, который возвращает среднюю скорость вращения от начала точки до участка времени Т
+        /// </summary>
+        /// <param name="T"></param>
+        /// <returns></returns>
+        public float GetInterRotSpeed(float T){
+            float RotSpeed2 = RotSpeed+RotAccel*T;
+            return (RotSpeed+RotSpeed2)/2;
+        }
+
+        /// <summary>
+        /// Метод, возвращающий положение в пространстве на отрезке времени от 0 до maxT, равную T
+        /// </summary>
+        /// <param name="T"></param>
+        /// <param name="maxT"></param>
+        /// <returns></returns>
+        public Vector2 GetInterPos(float T, float maxT){
+            Vector2 InterSp = GetInterSpeed(maxT);
+            return Position+InterSp*T;
+        }
+        
+        /// <summary>
+        /// Метод, возвращающий вращение на отрезке времени от 0 до maxT, равную T
+        /// </summary>
+        /// <param name="T"></param>
+        /// <param name="maxT"></param>
+        /// <returns></returns>
+        public float GetInterRot(float T, float maxT){
+            float InterRt = GetInterRotSpeed(maxT);
+            return Rotation+InterRt*T;
+        }
 
         public RailPoint(){
             
@@ -94,12 +146,6 @@ namespace CustomPhysics
         /// </summary>
         /// <returns></returns>
         public string Stringify(){
-            string Result = "";
-            Result += "Position = ("+Position.x+";"+Position.y+")";
-            return Result;
-        }
-
-        public string Stringify(float T){
             string Result = "";
             Result += "Position = ("+Position.x+";"+Position.y+")";
             return Result;

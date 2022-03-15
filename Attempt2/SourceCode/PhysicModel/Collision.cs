@@ -34,7 +34,7 @@ namespace CustomPhysics
         /// <param name="Position">положение индекса, на котором надо произвести проверку</param>
         /// <returns></returns>
         float CheckDistance(int ID1, int ID2, int Position){
-            float CPA = Rails[ID1][Position].CPA(Rails[ID2][Position]);
+            float CPA = Rails[ID1][Position].CPA(Rails[ID2][Position],TimeInterval);
             return CPA;            
         }
 
