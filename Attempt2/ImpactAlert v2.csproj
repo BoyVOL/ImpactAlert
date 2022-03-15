@@ -10,5 +10,6 @@
     <Content Include="SourceCode\MathExtra.cs" />
     <Content Include="TestScenes\RailArrayTest.cs" />
     <Content Include="SourceCode\PhysicModel\Collision.cs" />
+    <Content Include="TestScenes\RailVisualise1.cs" />
   </ItemGroup>
 </Project>

@@ -25,9 +25,14 @@ public class RailArrayTest : Node2D
         GD.Print(Test.StringifyRail(ID));
         Test.Update();
         Test.WaitForUpdate();
-        Start1.Position = new Vector2(11,11);
-        Start1.Acceleration = new Vector2(1,0);
+        Start1 = new RailPoint();
+        Start1.Position = new Vector2(14,10);
+        Start1.Acceleration = new Vector2(-1,0);
         int ID2 = Test.Edit.AddRail(Start1);
+        Start1 = new RailPoint();
+        Start1.Position = new Vector2(14,11);
+        Start1.Acceleration = new Vector2(-1,0);
+        int ID3 = Test.Edit.AddRail(Start1);
         GD.Print(ID2);
         GD.Print("________________");
         GD.Print("Рельса 1:");

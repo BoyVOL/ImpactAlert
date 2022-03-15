@@ -257,7 +257,7 @@ namespace CustomPhysics
         /// </summary>
         /// <param name="Position"></param>
         public override void CalculateChanges(int Position){
-            GD.Print("Calculating Param Modifier +++++");
+            //GD.Print("Calculating Param Modifier +++++");
         }
 
         /// <summary>
@@ -265,7 +265,7 @@ namespace CustomPhysics
         /// </summary>
         /// <param name="Position"></param>
         public override void ApplyChanges(int Position){
-            GD.Print("Applying Param Modifier -----");
+            //GD.Print("Applying Param Modifier -----");
         }
     
     }
@@ -382,7 +382,7 @@ namespace CustomPhysics
         /// Метод для применения изменений
         /// </summary>
         public void Sync(){
-            GD.Print("Sync");
+            //GD.Print("Sync");
             while (DeleteQueue.Count > 0)
             {
                 Rails.Remove(DeleteQueue.Dequeue());
@@ -710,12 +710,12 @@ namespace CustomPhysics
         /// Метод для ассинхронного обновления массива рельс
         /// </summary>
         void AsyncUpdate(){
-            GD.Print("Update function has been started");
-            System.Threading.Thread.Sleep(5000);
+            //GD.Print("Update function has been started");
+            //System.Threading.Thread.Sleep(5000);
             Edit.Sync();
             MLAdapter.AdaptCount();
             MLAdapter.MoveForwardAll();
-            GD.Print("Update function has been Finished");
+            //GD.Print("Update function has been Finished");
             UpdateLock.Signal();
         }
 

@@ -35,7 +35,8 @@ namespace CustomPhysics
         /// <returns></returns>
         float CheckDistance(int ID1, int ID2, int Position){
             float CPA = Rails[ID1][Position].CPA(Rails[ID2][Position],TimeInterval);
-            return CPA;            
+            float Distance = Rails[ID1][Position].GetInterPos(CPA,TimeInterval).DistanceTo(Rails[ID2][Position].GetInterPos(CPA,TimeInterval));
+            return Distance;            
         }
 
         public override void CalculateChanges(int Position)
@@ -45,7 +46,7 @@ namespace CustomPhysics
                 foreach (int ID2 in Rails.Keys)
                 {
                     if(ID1<ID2){
-                        GD.Print("Distance "+Position+" = "+CheckDistance(ID1,ID2,Position));
+                        //GD.Print("Distance "+Position+" = "+CheckDistance(ID1,ID2,Position));
                     }
                 }
             }
