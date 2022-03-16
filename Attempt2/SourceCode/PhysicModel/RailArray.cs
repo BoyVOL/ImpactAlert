@@ -227,7 +227,7 @@ namespace CustomPhysics
         /// </summary>
         /// <param name="Position"></param>
         public virtual void CalculateChanges(int Position){
-            GD.Print("Calculating Modifier +++++");
+            //GD.Print("Calculating Modifier +++++");
         }
 
         /// <summary>
@@ -235,7 +235,7 @@ namespace CustomPhysics
         /// </summary>
         /// <param name="Position"></param>
         public virtual void ApplyChanges(int Position){
-            GD.Print("Applying Modifier -----");
+            //GD.Print("Applying Modifier -----");
         }
     }
 
@@ -247,7 +247,7 @@ namespace CustomPhysics
         /// <summary>
         /// Словарь, связывающий айди рельсы и данный для нужной силы
         /// </summary>
-        readonly Dictionary<int,List<T>> ForceData = new Dictionary<int,List<T>>();
+        protected readonly Dictionary<int,List<T>> ForceData = new Dictionary<int,List<T>>();
 
         public ParamModifier(Dictionary<int,List<RailPoint>> rails,float timeInterval) : base(rails, timeInterval){
         }
@@ -275,11 +275,18 @@ namespace CustomPhysics
         public RailDraw(Dictionary<int,List<RailPoint>> rails) : base(rails){
         }
 
+        public virtual void Redraw(int ID){
+
+        }
+
         /// <summary>
         /// Метод для перерисовки графических объектов в соответствии с рельсой
         /// </summary>
         public virtual void Redraw(){
-
+            foreach (int ID in Rails.Keys)
+            {
+                Redraw(ID);
+            }
         }
     }
 
@@ -296,9 +303,9 @@ namespace CustomPhysics
         /// <typeparam name="int">индекс рельсы</typeparam>
         /// <typeparam name="N">Графический элемент</typeparam>
         /// <returns></returns>
-        readonly Dictionary<int,N> DrawElem = new Dictionary<int,N>();
+        protected readonly Dictionary<int,N> DrawElem = new Dictionary<int,N>();
 
-        readonly Dictionary<int,T> DrawParams = new Dictionary<int,T>();
+        protected readonly Dictionary<int,T> DrawParams = new Dictionary<int,T>();
 
         public RailDraw(Dictionary<int,List<RailPoint>> rails) : base(rails){
         }
@@ -749,6 +756,7 @@ namespace CustomPhysics
         /// <param name="TimeInterval">Интервал интерполяции</param>
         public MainRailArray(int size, float timeInterval): base(new Dictionary<int, List<RailPoint>>()){
             RBuffer = new DrawBuffer(Rails);
+            RBuffer.DrawList.Add(new SpriteDraw(Rails));
             Edit = new DictBatchLoader(Rails);
             MLAdapter = new ModLengthAdapter(Rails,size,timeInterval);
             MLAdapter.ModList.Add(new UpdateModifier(Rails,timeInterval));
@@ -803,9 +811,9 @@ namespace CustomPhysics
         public void Update(){
             WaitForUpdate();
             RBuffer.Sync();
+            UpdateLock = new CountdownEvent(1);
             UpdateThread = new System.Threading.Thread(AsyncUpdate);
             UpdateThread.Start();
-            UpdateLock = new CountdownEvent(1);
         }
     }
 
