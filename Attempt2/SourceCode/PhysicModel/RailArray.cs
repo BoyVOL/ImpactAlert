@@ -271,6 +271,33 @@ namespace CustomPhysics
     }
 
     /// <summary>
+    /// Родительский класс для семейства классов, отрисовывающих в соответствии с рельсами информацию на экране
+    /// </summary>
+    /// <typeparam name="T">структура параметров отрисовки</typeparam>
+    /// <typeparam name="N">класс типа Node2D, который требуется отрисовывать с рельсой</typeparam>
+    public class RailDraw<T,N>: ParamModifier<T> where T: struct where N: Node2D{
+
+        /// <summary>
+        /// Словарь графических объектов, которые надо отрисовывать в соответствии с данными рельсы
+        /// </summary>
+        /// <typeparam name="int">индекс рельсы</typeparam>
+        /// <typeparam name="N">Графический элемент</typeparam>
+        /// <returns></returns>
+        readonly Dictionary<int,N> Elements = new System.Collections.Generic.Dictionary<int,N>();
+
+        public RailDraw(Dictionary<int,List<RailPoint>> rails, float timeInterval) : base(rails, timeInterval){
+        }
+
+        /// <summary>
+        /// Метод для перерисовки графических объектов в соответствии с рельсой
+        /// </summary>
+        public virtual void Redraw(){
+
+        }
+    
+    }
+
+    /// <summary>
     /// Класс для обработки запросов на удаление и добавление рельс
     /// </summary>
     public class DictBatchLoader: RailDictOperator{
@@ -577,7 +604,7 @@ namespace CustomPhysics
         }
 
         /// <summary>
-        /// Метод для движения разом всех рельс
+        /// Метод для движения разом всех рельс вперёд на 1
         /// </summary>
         public void MoveForwardAll(){
             int NewID = RailSize-1;
