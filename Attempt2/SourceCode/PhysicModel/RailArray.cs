@@ -270,22 +270,9 @@ namespace CustomPhysics
     
     }
 
-    /// <summary>
-    /// Родительский класс для семейства классов, отрисовывающих в соответствии с рельсами информацию на экране
-    /// </summary>
-    /// <typeparam name="T">структура параметров отрисовки</typeparam>
-    /// <typeparam name="N">класс типа Node2D, который требуется отрисовывать с рельсой</typeparam>
-    public class RailDraw<T,N>: ParamModifier<T> where T: struct where N: Node2D{
-
-        /// <summary>
-        /// Словарь графических объектов, которые надо отрисовывать в соответствии с данными рельсы
-        /// </summary>
-        /// <typeparam name="int">индекс рельсы</typeparam>
-        /// <typeparam name="N">Графический элемент</typeparam>
-        /// <returns></returns>
-        readonly Dictionary<int,N> Elements = new System.Collections.Generic.Dictionary<int,N>();
-
-        public RailDraw(Dictionary<int,List<RailPoint>> rails, float timeInterval) : base(rails, timeInterval){
+    public class RailDraw: RailDictOperator{
+        
+        public RailDraw(Dictionary<int,List<RailPoint>> rails) : base(rails){
         }
 
         /// <summary>
@@ -294,7 +281,28 @@ namespace CustomPhysics
         public virtual void Redraw(){
 
         }
-    
+    }
+
+    /// <summary>
+    /// Родительский класс для семейства классов, отрисовывающих в соответствии с рельсами информацию на экране
+    /// </summary>
+    /// <typeparam name="T">структура параметров отрисовки</typeparam>
+    /// <typeparam name="N">класс типа Node2D, который требуется отрисовывать с рельсой</typeparam>
+    public class RailDraw<T,N>: RailDraw where T: struct where N: Node2D{
+
+        /// <summary>
+        /// Словарь графических объектов, которые надо отрисовывать в соответствии с данными рельсы
+        /// </summary>
+        /// <typeparam name="int">индекс рельсы</typeparam>
+        /// <typeparam name="N">Графический элемент</typeparam>
+        /// <returns></returns>
+        readonly Dictionary<int,N> DrawElem = new Dictionary<int,N>();
+
+        readonly Dictionary<int,T> DrawParams = new Dictionary<int,T>();
+
+        public RailDraw(Dictionary<int,List<RailPoint>> rails) : base(rails){
+        }
+   
     }
 
     /// <summary>
@@ -472,8 +480,40 @@ namespace CustomPhysics
         /// <summary>
         /// Метод для синхронизации данного буфера и основного массива
         /// </summary>
-        public void Sync(){
+        public virtual void Sync(){
             UpdateReadBuffer();
+        }
+    }
+    
+    /// <summary>
+    /// Новый буффер со списком отрисовщиков, которые автоматически обновляются
+    /// </summary>
+    public class DrawBuffer: ReadBuffer{
+
+        /// <summary>
+        /// Список классов отрисовки элементов в соответствии с данными рельс
+        /// </summary>
+        /// <typeparam name="CustomPhysics.RailDraw"></typeparam>
+        /// <returns></returns>
+        public readonly List<RailDraw> DrawList = new List<CustomPhysics.RailDraw>();
+        
+        public DrawBuffer(Dictionary<int,List<RailPoint>> Orig) : base(Orig){
+        }
+
+        /// <summary>
+        /// Метод для перерисовки всех отрисовщиков в списке
+        /// </summary>
+        void RedrawAll(){
+            foreach (RailDraw Draw in DrawList)
+            {
+                Draw.Redraw();
+            }
+        }
+
+        public override void Sync()
+        {
+            base.Sync();
+            RedrawAll();
         }
     }
 
@@ -695,7 +735,11 @@ namespace CustomPhysics
         /// <summary>
         /// Объект, содержащий буффер чтения для массива рельс
         /// </summary>
-        public readonly ReadBuffer RBuffer;
+        public readonly DrawBuffer RBuffer;
+
+        /// <summary>
+        /// Класс для адаптирования и продвижения рельс
+        /// </summary>
         public readonly ModLengthAdapter MLAdapter;
 
         /// <summary>
@@ -704,7 +748,7 @@ namespace CustomPhysics
         /// <param name="size">Размер рельс</param>
         /// <param name="TimeInterval">Интервал интерполяции</param>
         public MainRailArray(int size, float timeInterval): base(new Dictionary<int, List<RailPoint>>()){
-            RBuffer = new ReadBuffer(Rails);
+            RBuffer = new DrawBuffer(Rails);
             Edit = new DictBatchLoader(Rails);
             MLAdapter = new ModLengthAdapter(Rails,size,timeInterval);
             MLAdapter.ModList.Add(new UpdateModifier(Rails,timeInterval));
