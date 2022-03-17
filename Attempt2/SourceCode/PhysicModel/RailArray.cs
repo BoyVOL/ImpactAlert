@@ -267,7 +267,6 @@ namespace CustomPhysics
         public override void ApplyChanges(int Position){
             //GD.Print("Applying Param Modifier -----");
         }
-    
     }
 
     public class RailDraw: RailDictOperator{
