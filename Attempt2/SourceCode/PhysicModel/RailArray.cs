@@ -38,7 +38,21 @@ namespace CustomPhysics
         /// <summary>
         /// Поле, ответственное за угловое ускорение в данной точке рельсы
         /// </summary>
-        public float RotAccel;        
+        public float RotAccel;
+
+        /// <summary>
+        /// Массив изменяемых параметров, который является 
+        /// </summary>
+        public float[] ChangableParams = new float[0];        
+
+        public void ClearArray(){
+            ChangableParams = new float[0];
+        }
+
+        public void CopyDynamicParams(RailPoint Other){
+            ChangableParams = new float[Other.ChangableParams.Length];
+            Other.ChangableParams.CopyTo(ChangableParams,0);
+        }
 
         /// <summary>
         /// Метод, возвращающий новую точку, основываясь на данных старой.
@@ -54,6 +68,7 @@ namespace CustomPhysics
             Result.RotSpeed = RotSpeed+RotAccel*T;
             Result.Acceleration = Acceleration;
             Result.RotAccel = RotAccel;
+            Result.CopyDynamicParams(this);
             return Result;
         }
 
@@ -139,6 +154,7 @@ namespace CustomPhysics
             RotSpeed = Other.RotSpeed;
             Acceleration = Other.Acceleration;
             RotAccel = Other.RotAccel;
+            CopyDynamicParams(Other);
         }
 
         /// <summary>
