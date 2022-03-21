@@ -49,6 +49,17 @@ namespace CustomPhysics
             ChangableParams = new float[0];
         }
 
+        /// <summary>
+        /// Расширение массива до заданной величины, если он уже не больше
+        /// </summary>
+        /// <param name="Count">количество элементов в массиве</param>
+        public void ExtendArray(int Count){
+            if (ChangableParams.Length < Count)
+            {
+                ChangableParams = new float[Count];
+            }
+        }
+
         public void CopyDynamicParams(RailPoint Other){
             ChangableParams = new float[Other.ChangableParams.Length];
             Other.ChangableParams.CopyTo(ChangableParams,0);
