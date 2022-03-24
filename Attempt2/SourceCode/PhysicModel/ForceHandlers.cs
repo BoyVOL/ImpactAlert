@@ -7,7 +7,7 @@ namespace CustomPhysics{
     /// <summary>
     /// Структура, отвечающая за передачу параметров силы гравитации
     /// </summary>
-    public struct GravityData{
+    public class GravityData{
 
     }
 

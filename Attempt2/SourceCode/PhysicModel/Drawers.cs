@@ -7,7 +7,7 @@ namespace CustomPhysics{
     /// <summary>
     /// Структура, содержащая параметры отрисовки спрайта
     /// </summary>
-    public struct SpriteParams{
+    public class SpriteParams{
 
     }
 

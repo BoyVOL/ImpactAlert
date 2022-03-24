@@ -41,37 +41,12 @@ namespace CustomPhysics
         public float RotAccel;
 
         /// <summary>
-        /// Массив изменяемых параметров, который является 
-        /// </summary>
-        public float[] ChangableParams = new float[0];        
-
-        public void ClearArray(){
-            ChangableParams = new float[0];
-        }
-
-        /// <summary>
-        /// Расширение массива до заданной величины, если он уже не больше
-        /// </summary>
-        /// <param name="Count">количество элементов в массиве</param>
-        public void ExtendArray(int Count){
-            if (ChangableParams.Length < Count)
-            {
-                ChangableParams = new float[Count];
-            }
-        }
-
-        public void CopyDynamicParams(RailPoint Other){
-            ChangableParams = new float[Other.ChangableParams.Length];
-            Other.ChangableParams.CopyTo(ChangableParams,0);
-        }
-
-        /// <summary>
         /// Метод, возвращающий новую точку, основываясь на данных старой.
         /// </summary>
         /// <param name="Point">Предыдущая точка</param>
         /// <param name="T">интервал времени, на котором проходит симуляция</param>
         /// <returns></returns>
-        public RailPoint GetNextPoint(float T){
+        public RailPoint GetNext(float T){
             RailPoint Result = new RailPoint();
             Result.Position = Position+Speed*T+(Acceleration*T*T)/2;
             Result.Rotation = Rotation+RotSpeed*T+(RotAccel*T*T)/2;
@@ -79,7 +54,6 @@ namespace CustomPhysics
             Result.RotSpeed = RotSpeed+RotAccel*T;
             Result.Acceleration = Acceleration;
             Result.RotAccel = RotAccel;
-            Result.CopyDynamicParams(this);
             return Result;
         }
 
@@ -165,7 +139,6 @@ namespace CustomPhysics
             RotSpeed = Other.RotSpeed;
             Acceleration = Other.Acceleration;
             RotAccel = Other.RotAccel;
-            CopyDynamicParams(Other);
         }
 
         /// <summary>
@@ -177,8 +150,7 @@ namespace CustomPhysics
             Result += "Position = ("+Position.x+";"+Position.y+")";
             return Result;
         }
-
-        
+     
     }
 
     /// <summary>
@@ -269,16 +241,26 @@ namespace CustomPhysics
     /// <summary>
     /// Базовый класс для модификации рельсы с параметрами
     /// </summary>
-    public class ParamModifier<T> : UpdateModifier where T: struct{
+    public class ParamModifier<T> : UpdateModifier where T: class{
 
         /// <summary>
         /// Словарь, связывающий айди рельсы и данный для нужной силы
         /// </summary>
-        protected readonly Dictionary<int,List<T>> ForceData = new Dictionary<int,List<T>>();
+        protected readonly Dictionary<int,List<T>> Params = new Dictionary<int,List<T>>();
 
         public ParamModifier(Dictionary<int,List<RailPoint>> rails,float timeInterval) : base(rails, timeInterval){
         }
-        
+
+                
+        /// <summary>
+        /// Метод для определения, имеется ли для заданного объекта запись параметров взаимодействия
+        /// </summary>
+        /// <param name="ID">индекс рельсы, которую надо проверить</param>
+        /// <returns></returns>
+        public bool HasParams(int ID){
+            return Params.ContainsKey(ID);
+        }
+
         /// <summary>
         /// Метод для вычисления изменений
         /// </summary>
@@ -321,7 +303,7 @@ namespace CustomPhysics
     /// </summary>
     /// <typeparam name="T">структура параметров отрисовки</typeparam>
     /// <typeparam name="N">класс типа Node2D, который требуется отрисовывать с рельсой</typeparam>
-    public class RailDraw<T,N>: RailDraw where T: struct where N: Node2D{
+    public class RailDraw<T,N>: RailDraw where T: class where N: Node2D{
 
         /// <summary>
         /// Словарь графических объектов, которые надо отрисовывать в соответствии с данными рельсы
@@ -651,7 +633,7 @@ namespace CustomPhysics
         void AddAtIndex(int ID, int Position){
             //Проверка, чтобы индекс последнего элемента рельсы строго был на один ниже нового индекса
             if(Rails[ID].Count == Position){   
-                Rails[ID].Add(Rails[ID][Position-1].GetNextPoint(TimeInterval));
+                Rails[ID].Add(Rails[ID][Position-1].GetNext(TimeInterval));
             }
         }
 

@@ -6,7 +6,7 @@ using System.Threading;
 namespace CustomPhysics
 {
 
-    public struct CollisionParams{
+    public class CollisionParams{
         public float Radius;
     }
     
@@ -45,8 +45,8 @@ namespace CustomPhysics
             {
                 foreach (int ID2 in Rails.Keys)
                 {
-                    if(ID1<ID2){
-                        //GD.Print("Distance "+Position+" = "+CheckDistance(ID1,ID2,Position));
+                    if(ID1<ID2 && HasParams(ID1) && HasParams(ID2)){
+                        GD.Print("Distance "+Position+" = "+CheckDistance(ID1,ID2,Position));
                     }
                 }
             }
