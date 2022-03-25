@@ -9,7 +9,12 @@ namespace CustomPhysics
     /// Структура, отвечающая за состояние точки в каждый момент времени
     /// </summary>
     public class RailPoint
-    {
+    {   
+        /// <summary>
+        /// Переменная, отвечающая за время
+        /// </summary>
+        public float time = 0;
+
         /// <summary>
         /// Положение точки в пространстве
         /// </summary>
@@ -54,6 +59,7 @@ namespace CustomPhysics
             Result.RotSpeed = RotSpeed+RotAccel*T;
             Result.Acceleration = Acceleration;
             Result.RotAccel = RotAccel;
+            Result.time = time + T;
             return Result;
         }
 
@@ -139,6 +145,7 @@ namespace CustomPhysics
             RotSpeed = Other.RotSpeed;
             Acceleration = Other.Acceleration;
             RotAccel = Other.RotAccel;
+            time = Other.time;
         }
 
         /// <summary>
@@ -208,25 +215,31 @@ namespace CustomPhysics
     }
 
     /// <summary>
-    /// Базовый класс для модификаторов точек рельсы
+    /// Базовый класс для модификации рельсы с параметрами
     /// </summary>
-    public class UpdateModifier: RailDictOperator{
+    public class ParamModifier<T> : RailDictOperator where T: class{
 
+        /// <summary>
+        /// Словарь, связывающий айди рельсы и данный для нужной силы
+        /// </summary>
+        protected readonly Dictionary<int,List<T>> Params = new Dictionary<int,List<T>>();
+
+        public ParamModifier(Dictionary<int,List<RailPoint>> rails,float timeInterval) : base(rails){
+            TimeInterval = timeInterval;
+        }
+
+        
         /// <summary>
         /// Временной интервал между точками
         /// </summary>
         public readonly float TimeInterval;
-
-        public UpdateModifier(Dictionary<int,List<RailPoint>> rails, float timeInterval) : base(rails){
-            TimeInterval = timeInterval;
-        }
 
         /// <summary>
         /// Метод для вычисления изменений
         /// </summary>
         /// <param name="Position"></param>
         public virtual void CalculateChanges(int Position){
-            //GD.Print("Calculating Modifier +++++");
+            GD.Print("Calculating Modifier +++++");
         }
 
         /// <summary>
@@ -234,23 +247,8 @@ namespace CustomPhysics
         /// </summary>
         /// <param name="Position"></param>
         public virtual void ApplyChanges(int Position){
-            //GD.Print("Applying Modifier -----");
+            GD.Print("Applying Modifier -----");
         }
-    }
-
-    /// <summary>
-    /// Базовый класс для модификации рельсы с параметрами
-    /// </summary>
-    public class ParamModifier<T> : UpdateModifier where T: class{
-
-        /// <summary>
-        /// Словарь, связывающий айди рельсы и данный для нужной силы
-        /// </summary>
-        protected readonly Dictionary<int,List<T>> Params = new Dictionary<int,List<T>>();
-
-        public ParamModifier(Dictionary<int,List<RailPoint>> rails,float timeInterval) : base(rails, timeInterval){
-        }
-
                 
         /// <summary>
         /// Метод для определения, имеется ли для заданного объекта запись параметров взаимодействия
@@ -261,28 +259,20 @@ namespace CustomPhysics
             return Params.ContainsKey(ID);
         }
 
-        /// <summary>
-        /// Метод для вычисления изменений
-        /// </summary>
-        /// <param name="Position"></param>
-        public override void CalculateChanges(int Position){
-            //GD.Print("Calculating Param Modifier +++++");
-        }
-
-        /// <summary>
-        /// Метод для применения изменений рельсы
-        /// </summary>
-        /// <param name="Position"></param>
-        public override void ApplyChanges(int Position){
-            //GD.Print("Applying Param Modifier -----");
-        }
     }
 
-    public class RailDraw: RailDictOperator{
-        
+    /// <summary>
+    /// Родительский класс для семейства классов, отрисовывающих в соответствии с рельсами информацию на экране
+    /// </summary>
+    /// <typeparam name="T">структура параметров отрисовки</typeparam>
+    /// <typeparam name="N">класс типа Node2D, который требуется отрисовывать с рельсой</typeparam>
+    public class RailDraw<T>: RailDictOperator where T: class{
+
+        public readonly Dictionary<int,T> DrawParams = new Dictionary<int,T>();
+
         public RailDraw(Dictionary<int,List<RailPoint>> rails) : base(rails){
         }
-
+        
         public virtual void Redraw(int ID){
 
         }
@@ -296,28 +286,6 @@ namespace CustomPhysics
                 Redraw(ID);
             }
         }
-    }
-
-    /// <summary>
-    /// Родительский класс для семейства классов, отрисовывающих в соответствии с рельсами информацию на экране
-    /// </summary>
-    /// <typeparam name="T">структура параметров отрисовки</typeparam>
-    /// <typeparam name="N">класс типа Node2D, который требуется отрисовывать с рельсой</typeparam>
-    public class RailDraw<T,N>: RailDraw where T: class where N: Node2D{
-
-        /// <summary>
-        /// Словарь графических объектов, которые надо отрисовывать в соответствии с данными рельсы
-        /// </summary>
-        /// <typeparam name="int">индекс рельсы</typeparam>
-        /// <typeparam name="N">Графический элемент</typeparam>
-        /// <returns></returns>
-        protected readonly Dictionary<int,N> DrawElem = new Dictionary<int,N>();
-
-        protected readonly Dictionary<int,T> DrawParams = new Dictionary<int,T>();
-
-        public RailDraw(Dictionary<int,List<RailPoint>> rails) : base(rails){
-        }
-   
     }
 
     /// <summary>
@@ -499,30 +467,23 @@ namespace CustomPhysics
             UpdateReadBuffer();
         }
     }
-    
+
     /// <summary>
     /// Новый буффер со списком отрисовщиков, которые автоматически обновляются
     /// </summary>
     public class DrawBuffer: ReadBuffer{
 
-        /// <summary>
-        /// Список классов отрисовки элементов в соответствии с данными рельс
-        /// </summary>
-        /// <typeparam name="CustomPhysics.RailDraw"></typeparam>
-        /// <returns></returns>
-        public readonly List<RailDraw> DrawList = new List<CustomPhysics.RailDraw>();
+        public readonly SpriteDraw SpriteDraw;
         
         public DrawBuffer(Dictionary<int,List<RailPoint>> Orig) : base(Orig){
+            SpriteDraw = new SpriteDraw(Orig);
         }
 
         /// <summary>
         /// Метод для перерисовки всех отрисовщиков в списке
         /// </summary>
         void RedrawAll(){
-            foreach (RailDraw Draw in DrawList)
-            {
-                Draw.Redraw();
-            }
+            SpriteDraw.Redraw();
         }
 
         public override void Sync()
@@ -673,12 +634,7 @@ namespace CustomPhysics
     /// </summary>
     public class ModLengthAdapter: RailLengthAdapter{
 
-        /// <summary>
-        /// Список модификаторов, которые надо использовать при обновлении рельс
-        /// </summary>
-        /// <typeparam name="UpdateModifier">Объекты-модификаторы, которые при каждом обновлении корректируют точки</typeparam>
-        /// <returns></returns>
-        public readonly List<UpdateModifier> ModList = new List<UpdateModifier>();
+        public readonly CollisionCalculator CollMod;
         
         /// <summary>
         /// Конструктор с параметрами
@@ -688,6 +644,7 @@ namespace CustomPhysics
         /// <param name="timeInterval">временной интервал обработки рельсы</param>
         /// <returns></returns>
         public ModLengthAdapter(Dictionary<int,List<RailPoint>> Orig, int size, float timeInterval) : base(Orig,size,timeInterval){
+            CollMod = new CollisionCalculator(Orig,timeInterval);
         }
         
         /// <summary>
@@ -695,10 +652,7 @@ namespace CustomPhysics
         /// </summary>
         /// <param name="Position">индекс, на котором надо вычислить модификации</param>
         void CalcModifiers(int Position){
-            foreach (UpdateModifier Mod in ModList)
-            {
-                Mod.CalculateChanges(Position);
-            }
+            CollMod.CalculateChanges(Position);
         }
 
         /// <summary>
@@ -706,10 +660,7 @@ namespace CustomPhysics
         /// </summary>
         /// <param name="Position">Индекс, на котором надо применить изменения</param>
         void ApplyModifiers(int Position){
-            foreach (UpdateModifier Mod in ModList)
-            {
-                Mod.ApplyChanges(Position);
-            }
+            CollMod.ApplyChanges(Position);
         }
 
         protected override void AddAllAtIndex(int Position)
@@ -764,11 +715,8 @@ namespace CustomPhysics
         /// <param name="TimeInterval">Интервал интерполяции</param>
         public MainRailArray(int size, float timeInterval): base(new Dictionary<int, List<RailPoint>>()){
             RBuffer = new DrawBuffer(Rails);
-            RBuffer.DrawList.Add(new SpriteDraw(Rails));
             Edit = new DictBatchLoader(Rails);
             MLAdapter = new ModLengthAdapter(Rails,size,timeInterval);
-            MLAdapter.ModList.Add(new UpdateModifier(Rails,timeInterval));
-            MLAdapter.ModList.Add(new CollisionCalculator(Rails,timeInterval));
         }
 
         new public string StringifyRail(int ID){

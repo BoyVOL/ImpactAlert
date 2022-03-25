@@ -11,7 +11,7 @@ config_version=4
 [application]
 
 config/name="ImpactAlert v2"
-run/main_scene="res://TestScenes/RailArrayTest.tscn"
+run/main_scene="res://TestScenes/RailVisualise1.tscn"
 config/icon="res://icon.png"
 
 [physics]

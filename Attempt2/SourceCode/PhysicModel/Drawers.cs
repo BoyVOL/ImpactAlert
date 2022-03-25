@@ -8,23 +8,24 @@ namespace CustomPhysics{
     /// Структура, содержащая параметры отрисовки спрайта
     /// </summary>
     public class SpriteParams{
-
+        public Sprite Sprite;
     }
 
     /// <summary>
     /// Класс для отрисовки спрайтов
     /// </summary>
-    public class SpriteDraw: RailDraw<SpriteParams,Sprite>{
+    public class SpriteDraw: RailDraw<SpriteParams>{
 
         public SpriteDraw(Dictionary<int,List<RailPoint>> rails) : base(rails){
         }
 
         public override void Redraw(int ID)
         {
-            if (DrawElem.ContainsKey(ID))
+            if (DrawParams.ContainsKey(ID))
             {
-                DrawElem[ID].Position = Rails[ID][0].Position;
-                DrawElem[ID].Rotation = Rails[ID][0].Rotation;
+                DrawParams[ID].Sprite.Position = Rails[ID][0].Position;
+                GD.Print(DrawParams[ID].Sprite.Position);
+                DrawParams[ID].Sprite.Rotation = Rails[ID][0].Rotation;
             }
         }
     }
