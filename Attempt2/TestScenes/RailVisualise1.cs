@@ -8,6 +8,7 @@ public class RailVisualise1 : Node2D
     MainRailArray Test = new MainRailArray(10,1);
     
     SpriteParams Params1 = new SpriteParams();
+    SpriteParams Params2 = new SpriteParams();
 
     int MainRailID = 0;
     // Declare member variables here. Examples:
@@ -19,12 +20,16 @@ public class RailVisualise1 : Node2D
     {
         RailPoint Start1 = new RailPoint();
         Start1.Position = new Vector2(14,10);
-        Start1.Acceleration = new Vector2(001,0);
+        Start1.Acceleration = new Vector2(1,0);
         MainRailID = Test.Edit.AddRail(Start1);
-        
         Params1.Sprite = GetNode<Sprite>("Ship");
-        Test.Edit.AddRail(Start1);
         Test.RBuffer.SpriteDraw.DrawParams.Add(MainRailID,Params1);
+        RailPoint Start2 = new RailPoint();
+        Start2.Position = new Vector2(500,500);
+        Start2.Acceleration = new Vector2(0,-1);
+        MainRailID = Test.Edit.AddRail(Start2);
+        Params2.Sprite = GetNode<Sprite>("Ship2");
+        Test.RBuffer.SpriteDraw.DrawParams.Add(MainRailID,Params2);
     }
 
     public override void _PhysicsProcess(float delta){
