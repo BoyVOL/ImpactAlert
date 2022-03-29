@@ -4,7 +4,23 @@ using System.Collections.Generic;
 using System.Threading;
 
 namespace CustomPhysics
-{
+{   
+    /// <summary>
+    /// Структура для промежуточных опциональных точек для доп обработки
+    /// </summary>
+    public struct MidPoint{
+
+        /// <summary>
+        /// смещение во времени от начального момента точки
+        /// </summary>
+        float T;
+
+        /// <summary>
+        /// Промежуточные координаты
+        /// </summary>
+        Vector2 Coords;
+    }
+
     /// <summary>
     /// Структура, отвечающая за состояние точки в каждый момент времени
     /// </summary>
@@ -44,6 +60,13 @@ namespace CustomPhysics
         /// Поле, ответственное за угловое ускорение в данной точке рельсы
         /// </summary>
         public float RotAccel;
+
+        /// <summary>
+        /// Список промежуточных точек, который опционально может использоваться для интерполяции
+        /// </summary>
+        /// <typeparam name="MidPoint"></typeparam>
+        /// <returns></returns>
+        public readonly List<MidPoint> Midpoints = new List<MidPoint>();
 
         /// <summary>
         /// Метод, возвращающий новую точку, основываясь на данных старой.
