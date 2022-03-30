@@ -12,5 +12,9 @@
     <Content Include="SourceCode\PhysicModel\Collision.cs" />
     <Content Include="TestScenes\RailVisualise1.cs" />
     <Content Include="SourceCode\PhysicModel\Drawers.cs" />
+    <Content Include="SourceCode\PhysicModel\Rail Modifier Base Classes.cs" />
+    <Content Include="SourceCode\PhysicModel\RailModBaseClasses.cs" />
+    <Content Include="SourceCode\PhysicModel\RailPoint.cs" />
+    <Content Include="SourceCode\PhysicModel\RailEndpointClasses.cs" />
   </ItemGroup>
 </Project>

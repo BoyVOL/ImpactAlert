@@ -91,7 +91,7 @@ public class MathExtra
     }
 
     /// <summary>
-    /// Возвращает 
+    /// Возвращает обмен импуьсами между объектами 
     /// </summary>
     /// <param name="mass"></param>
     /// <param name="Speed2"></param>
@@ -100,5 +100,17 @@ public class MathExtra
     public static Vector2 SpeedExchange(float mass, Vector2 Speed2, float mass2){
         Vector2 Impulse2 = Speed2*mass2;
         return Impulse2/mass;
+    }
+
+    /// <summary>
+    /// Функция для нахождения вектора скорости, необходимой для перемещения из точки 1 в точку 2 за заданное время
+    /// </summary>
+    /// <param name="Point1">Начальная точка</param>
+    /// <param name="Point2">Конечная точка</param>
+    /// <param name="T">Период времени для вычисления</param>
+    /// <returns></returns>
+    public static Vector2 SpeedBetweenPoints(Vector2 Point1, Vector2 Point2, float T){
+        Vector2 Result = (Point2-Point1)/T;
+        return Result;
     }
 }
