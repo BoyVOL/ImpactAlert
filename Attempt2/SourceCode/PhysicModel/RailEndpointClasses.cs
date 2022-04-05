@@ -32,7 +32,7 @@ namespace CustomPhysics
         /// Конструктор для данного класса
         /// </summary>
         /// <param name="OrigArray">Массив, который требуется изменять</param>
-        public DictBatchLoader(Dictionary<int,List<RailPoint>> Orig) : base(Orig){
+        public DictBatchLoader(Dictionary<int,List<RailPoint>> Orig,float timeInterval) : base(Orig,timeInterval){
         }
 
         /// <summary>
@@ -140,7 +140,7 @@ namespace CustomPhysics
         /// </summary>
         public readonly Dictionary<int,List<RailPoint>> RailBuff = new Dictionary<int, List<RailPoint>>();
 
-        public ReadBuffer(Dictionary<int,List<RailPoint>> Orig) : base(Orig){
+        public ReadBuffer(Dictionary<int,List<RailPoint>> Orig, float timeInterval) : base(Orig,timeInterval){
         }
                 
         /// <summary>
@@ -192,8 +192,8 @@ namespace CustomPhysics
 
         public readonly SpriteDraw SpriteDraw;
         
-        public DrawBuffer(Dictionary<int,List<RailPoint>> Orig) : base(Orig){
-            SpriteDraw = new SpriteDraw(Orig);
+        public DrawBuffer(Dictionary<int,List<RailPoint>> Orig,float timeInterval) : base(Orig,timeInterval){
+            SpriteDraw = new SpriteDraw(RailBuff,timeInterval);
         }
 
         /// <summary>
@@ -221,20 +221,14 @@ namespace CustomPhysics
         public readonly int RailSize;
 
         /// <summary>
-        /// Временной интервал между точками
-        /// </summary>
-        public readonly float TimeInterval;
-
-        /// <summary>
         /// Конструктор с параметрами
         /// </summary>
         /// <param name="Orig">Словарь, который надо обрабатывать</param>
         /// <param name="size">размер рельсы</param>
         /// <param name="timeInterval">временной интервал обработки рельсы</param>
         /// <returns></returns>
-        public RailLengthAdapter(Dictionary<int,List<RailPoint>> Orig, int size, float timeInterval) : base(Orig){
+        public RailLengthAdapter(Dictionary<int,List<RailPoint>> Orig, int size, float timeInterval) : base(Orig,timeInterval){
             RailSize = size;
-            TimeInterval = timeInterval;
         }
         
         /// <summary>
@@ -430,9 +424,9 @@ namespace CustomPhysics
         /// </summary>
         /// <param name="size">Размер рельс</param>
         /// <param name="TimeInterval">Интервал интерполяции</param>
-        public MainRailArray(int size, float timeInterval): base(new Dictionary<int, List<RailPoint>>()){
-            RBuffer = new DrawBuffer(Rails);
-            Edit = new DictBatchLoader(Rails);
+        public MainRailArray(int size, float timeInterval): base(new Dictionary<int, List<RailPoint>>(),timeInterval){
+            RBuffer = new DrawBuffer(Rails,timeInterval);
+            Edit = new DictBatchLoader(Rails,timeInterval);
             MLAdapter = new ModLengthAdapter(Rails,size,timeInterval);
         }
 

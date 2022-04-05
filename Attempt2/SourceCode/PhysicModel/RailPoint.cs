@@ -138,13 +138,23 @@ namespace CustomPhysics
 
         /// <summary>
         /// Метод, возвращающий положение в пространстве на отрезке времени от 0 до maxT, равную T
+        /// Если выбран просчёт с учётом промежуточных точек, в рассчёт входят они
         /// </summary>
         /// <param name="T"></param>
         /// <param name="maxT"></param>
+        /// <param name="usePoints">если true, учитываются точки в списке временных точек</param>
         /// <returns></returns>
-        public Vector2 GetInterPos(float T, float maxT){
-            Vector2 InterSp = GetInterSpeed(maxT);
-            return Position+InterSp*T;
+        public Vector2 GetInterPos(float T, float maxT, bool usePoints = false){
+            if(!usePoints || Midpoints.Count == 0){
+                Vector2 InterSp = GetInterSpeed(maxT);
+                return Position+InterSp*T;
+            } else {
+                for (int i = 0; i < Midpoints.Count; i++)
+                {
+
+                }
+                return GetInterPos(T,maxT);
+            }
         }
         
         /// <summary>

@@ -11,6 +11,11 @@ namespace CustomPhysics
     public class RailDictOperator{
         
         /// <summary>
+        /// Временной интервал между точками
+        /// </summary>
+        public readonly float TimeInterval;
+        
+        /// <summary>
         /// Ссылка на словарь рельс, с которым класс работает
         /// </summary>
         protected readonly Dictionary<int,List<RailPoint>> Rails;
@@ -24,7 +29,8 @@ namespace CustomPhysics
             return Rails.ContainsKey(ID);
         }
 
-        public RailDictOperator(Dictionary<int,List<RailPoint>> Orig){
+        public RailDictOperator(Dictionary<int,List<RailPoint>> Orig, float timeInterval){
+            TimeInterval = timeInterval;
             Rails = Orig;
         }
         
@@ -57,6 +63,15 @@ namespace CustomPhysics
                 GD.Print(StringifyRail(ID));
             }
         }
+            
+        /// <summary>
+        /// Метод, возвращающий индекс точки в выбранном моменте времени Т
+        /// </summary>
+        /// <param name="T"></param>
+        /// <returns></returns>
+        public int IDFromTime(float T){
+            return (int)(T/TimeInterval);
+        }
     }
 
     /// <summary>
@@ -69,15 +84,8 @@ namespace CustomPhysics
         /// </summary>
         protected readonly Dictionary<int,List<T>> Params = new Dictionary<int,List<T>>();
 
-        public ParamModifier(Dictionary<int,List<RailPoint>> rails,float timeInterval) : base(rails){
-            TimeInterval = timeInterval;
+        public ParamModifier(Dictionary<int,List<RailPoint>> rails,float timeInterval) : base(rails,timeInterval){
         }
-
-        
-        /// <summary>
-        /// Временной интервал между точками
-        /// </summary>
-        public readonly float TimeInterval;
 
         /// <summary>
         /// Метод для вычисления изменений
@@ -103,7 +111,6 @@ namespace CustomPhysics
         public bool HasParams(int ID){
             return Params.ContainsKey(ID);
         }
-
     }
 
     /// <summary>
@@ -115,7 +122,7 @@ namespace CustomPhysics
 
         public readonly Dictionary<int,T> DrawParams = new Dictionary<int,T>();
 
-        public RailDraw(Dictionary<int,List<RailPoint>> rails) : base(rails){
+        public RailDraw(Dictionary<int,List<RailPoint>> rails,float timeInterval) : base(rails,timeInterval){
         }
         
         public virtual void Redraw(int ID){
