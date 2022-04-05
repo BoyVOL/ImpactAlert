@@ -12,7 +12,7 @@ namespace CustomPhysics{
     }
 
     public class GravityHandler: ParamModifier<GravityData>{
-        public GravityHandler(Dictionary<int,List<RailPoint>> rails, float timeInterval) : base(rails, timeInterval){
+        public GravityHandler(Dictionary<int,List<RailPoint>> rails, RailTimeController timeController) : base(rails, timeController){
         }
     }
 }

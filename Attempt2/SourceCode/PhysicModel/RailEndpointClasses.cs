@@ -32,7 +32,7 @@ namespace CustomPhysics
         /// Конструктор для данного класса
         /// </summary>
         /// <param name="OrigArray">Массив, который требуется изменять</param>
-        public DictBatchLoader(Dictionary<int,List<RailPoint>> Orig,float timeInterval) : base(Orig,timeInterval){
+        public DictBatchLoader(Dictionary<int,List<RailPoint>> Orig,RailTimeController timeController) : base(Orig,timeController){
         }
 
         /// <summary>
@@ -140,7 +140,7 @@ namespace CustomPhysics
         /// </summary>
         public readonly Dictionary<int,List<RailPoint>> RailBuff = new Dictionary<int, List<RailPoint>>();
 
-        public ReadBuffer(Dictionary<int,List<RailPoint>> Orig, float timeInterval) : base(Orig,timeInterval){
+        public ReadBuffer(Dictionary<int,List<RailPoint>> Orig, RailTimeController timeController) : base(Orig,timeController){
         }
                 
         /// <summary>
@@ -192,8 +192,8 @@ namespace CustomPhysics
 
         public readonly SpriteDraw SpriteDraw;
         
-        public DrawBuffer(Dictionary<int,List<RailPoint>> Orig,float timeInterval) : base(Orig,timeInterval){
-            SpriteDraw = new SpriteDraw(RailBuff,timeInterval);
+        public DrawBuffer(Dictionary<int,List<RailPoint>> Orig,RailTimeController timeController) : base(Orig,timeController){
+            SpriteDraw = new SpriteDraw(RailBuff,timeController);
         }
 
         /// <summary>
@@ -227,7 +227,7 @@ namespace CustomPhysics
         /// <param name="size">размер рельсы</param>
         /// <param name="timeInterval">временной интервал обработки рельсы</param>
         /// <returns></returns>
-        public RailLengthAdapter(Dictionary<int,List<RailPoint>> Orig, int size, float timeInterval) : base(Orig,timeInterval){
+        public RailLengthAdapter(Dictionary<int,List<RailPoint>> Orig, int size, RailTimeController timeController) : base(Orig,timeController){
             RailSize = size;
         }
         
@@ -305,7 +305,7 @@ namespace CustomPhysics
         void AddAtIndex(int ID, int Position){
             //Проверка, чтобы индекс последнего элемента рельсы строго был на один ниже нового индекса
             if(Rails[ID].Count == Position){   
-                Rails[ID].Add(Rails[ID][Position-1].GetNext(TimeInterval));
+                Rails[ID].Add(Rails[ID][Position-1].GetNext(TimeControl.TimeInterval));
             }
         }
 
@@ -354,8 +354,8 @@ namespace CustomPhysics
         /// <param name="size">размер рельсы</param>
         /// <param name="timeInterval">временной интервал обработки рельсы</param>
         /// <returns></returns>
-        public ModLengthAdapter(Dictionary<int,List<RailPoint>> Orig, int size, float timeInterval) : base(Orig,size,timeInterval){
-            CollMod = new CollisionCalculator(Orig,timeInterval);
+        public ModLengthAdapter(Dictionary<int,List<RailPoint>> Orig, int size, RailTimeController timeController) : base(Orig,size,timeController){
+            CollMod = new CollisionCalculator(Orig,timeController);
         }
         
         /// <summary>
@@ -424,10 +424,10 @@ namespace CustomPhysics
         /// </summary>
         /// <param name="size">Размер рельс</param>
         /// <param name="TimeInterval">Интервал интерполяции</param>
-        public MainRailArray(int size, float timeInterval): base(new Dictionary<int, List<RailPoint>>(),timeInterval){
-            RBuffer = new DrawBuffer(Rails,timeInterval);
-            Edit = new DictBatchLoader(Rails,timeInterval);
-            MLAdapter = new ModLengthAdapter(Rails,size,timeInterval);
+        public MainRailArray(int size, RailTimeController timeController): base(new Dictionary<int, List<RailPoint>>(),timeController){
+            RBuffer = new DrawBuffer(Rails,timeController);
+            Edit = new DictBatchLoader(Rails,timeController);
+            MLAdapter = new ModLengthAdapter(Rails,size,timeController);
         }
 
         new public string StringifyRail(int ID){

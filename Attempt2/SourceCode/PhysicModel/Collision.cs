@@ -23,7 +23,7 @@ namespace CustomPhysics
         /// <returns></returns>
         readonly Dictionary<int,RailPoint> Results = new Dictionary<int, RailPoint>();
 
-        public CollisionCalculator(Dictionary<int,List<RailPoint>> rails, float timeInterval) : base(rails,timeInterval){
+        public CollisionCalculator(Dictionary<int,List<RailPoint>> rails, RailTimeController timeController) : base(rails,timeController){
         }
 
         /// <summary>
@@ -34,8 +34,8 @@ namespace CustomPhysics
         /// <param name="Position">положение индекса, на котором надо произвести проверку</param>
         /// <returns></returns>
         float CheckDistance(int ID1, int ID2, int Position){
-            float CPA = Rails[ID1][Position].CPA(Rails[ID2][Position],TimeInterval);
-            float Distance = Rails[ID1][Position].GetInterPos(CPA,TimeInterval).DistanceTo(Rails[ID2][Position].GetInterPos(CPA,TimeInterval));
+            float CPA = Rails[ID1][Position].CPA(Rails[ID2][Position],TimeControl.TimeInterval);
+            float Distance = Rails[ID1][Position].GetInterPos(CPA,TimeControl.TimeInterval).DistanceTo(Rails[ID2][Position].GetInterPos(CPA,TimeControl.TimeInterval));
             return Distance;            
         }
 

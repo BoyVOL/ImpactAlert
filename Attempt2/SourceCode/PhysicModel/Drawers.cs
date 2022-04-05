@@ -16,7 +16,7 @@ namespace CustomPhysics{
     /// </summary>
     public class SpriteDraw: RailDraw<SpriteParams>{
 
-        public SpriteDraw(Dictionary<int,List<RailPoint>> rails,float timeInterval) : base(rails,timeInterval){
+        public SpriteDraw(Dictionary<int,List<RailPoint>> rails,RailTimeController timeController) : base(rails,timeController){
         }
 
         public override void Redraw(int ID)

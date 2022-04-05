@@ -5,7 +5,7 @@ using CustomPhysics;
 public class RailVisualise1 : Node2D
 {
 
-    MainRailArray Test = new MainRailArray(10,1);
+    MainRailArray Test = new MainRailArray(10,new RailTimeController(1));
     
     SpriteParams Params1 = new SpriteParams();
     SpriteParams Params2 = new SpriteParams();

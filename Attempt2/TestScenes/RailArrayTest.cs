@@ -5,7 +5,7 @@ using CustomPhysics;
 public class RailArrayTest : Node2D
 {
 
-    MainRailArray Test = new MainRailArray(10,1);
+    MainRailArray Test = new MainRailArray(10,new RailTimeController(1));
     
     // Declare member variables here. Examples:
     // private int a = 2;
