@@ -38,9 +38,9 @@ public class RailVisualise1 : Node2D
         GD.Print(Params1.Sprite.Position);
     }
 
-//  // Called every frame. 'delta' is the elapsed time since the previous frame.
-//  public override void _Process(float delta)
-//  {
-//      
-//  }
+    // Called every frame. 'delta' is the elapsed time since the previous frame.
+    public override void _Process(float delta)
+    {
+        Test.SafeUpdate((int)Math.Round(delta*1000));
+    }
 }

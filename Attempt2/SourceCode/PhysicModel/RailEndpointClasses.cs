@@ -477,10 +477,21 @@ namespace CustomPhysics
         /// </summary>
         public void Update(){
             WaitForUpdate();
+            TimeControl.ServerTick();
             RBuffer.Sync();
             UpdateLock = new CountdownEvent(1);
             UpdateThread = new System.Threading.Thread(AsyncUpdate);
             UpdateThread.Start();
+        }
+
+        /// <summary>
+        /// Метод, отвечающий за обновление абстрагированных буффером элементов
+        /// </summary>
+        /// <param name="time">количество времени в миллисекундах, на которое продвинется вперёд обновление</param>
+        public void SafeUpdate(int time){
+            TimeControl.IncreaseBuffTime(time);
+            GD.Print("delta = ",time);
+            GD.Print(TimeControl.GetBufferTime());
         }
     }
 
