@@ -15,9 +15,9 @@ namespace CustomPhysics
         public readonly int TimeInterval;
 
         /// <summary>
-        /// Время в миллисекундах
+        /// Время начала рельсы в миллисекундах
         /// </summary>
-        long RailTime = 0;
+        long StartTime = 0;
 
         /// <summary>
         /// Время буффера рельсы в миллисекундах
@@ -31,12 +31,30 @@ namespace CustomPhysics
         public RailTimeController(int timeInterval){
             TimeInterval = timeInterval;
         }
+        
+        /// <summary>
+        /// Метод для получения индекса точки, которую надо взять на данном моменте времени начиная от нуля
+        /// </summary>
+        /// <param name="T">точка времени, в которой надо получить точку</param>
+        /// <returns></returns>
+        public int PointAtTime(long T){
+            return (int)T/TimeInterval;
+        }
+
+        /// <summary>
+        /// Метод, возвращающий 
+        /// </summary>
+        /// <param name="T"></param>
+        /// <returns></returns>
+        public int TimeInsidePoint(long T){
+            return (int)T%TimeInterval;
+        }
 
         /// <summary>
         /// Метод, увеличивающий серверное время на величину интервала
         /// </summary>
         public void ServerTick(){
-            RailTime += TimeInterval;
+            StartTime += TimeInterval;
         }
 
         /// <summary>
@@ -52,7 +70,7 @@ namespace CustomPhysics
         /// </summary>
         /// <returns></returns>
         public long GetServerTime(){
-            return RailTime;
+            return StartTime;
         }
 
         /// <summary>
@@ -62,7 +80,16 @@ namespace CustomPhysics
         public long GetBufferTime(){
             return BufferTime;
         }
-                  
+        
+        /// <summary>
+        /// Метод, возвращающий разницу между текущим временем и временем начала рельсы.
+        /// </summary>
+        /// <returns></returns>
+        public long GetTimeDiff(){
+            long result = BufferTime - StartTime;
+            return result;
+        }
+        
         /// <summary>
         /// Метод, возвращающий индекс точки в выбранном моменте времени Т
         /// </summary>

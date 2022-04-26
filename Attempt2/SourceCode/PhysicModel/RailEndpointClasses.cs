@@ -199,7 +199,7 @@ namespace CustomPhysics
         /// <summary>
         /// Метод для перерисовки всех отрисовщиков в списке
         /// </summary>
-        void RedrawAll(){
+        public void RedrawAll(){
             SpriteDraw.Redraw();
         }
 
@@ -490,6 +490,7 @@ namespace CustomPhysics
         /// <param name="time">количество времени в миллисекундах, на которое продвинется вперёд обновление</param>
         public void SafeUpdate(int time){
             TimeControl.IncreaseBuffTime(time);
+            RBuffer.RedrawAll();
             GD.Print("delta = ",time);
             GD.Print(TimeControl.GetBufferTime());
         }
