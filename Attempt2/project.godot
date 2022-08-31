@@ -11,8 +11,12 @@ config_version=4
 [application]
 
 config/name="ImpactAlert v2"
-run/main_scene="res://TestScenes/RailVisualise1.tscn"
+run/main_scene="res://TestScenes/TestScene2.tscn"
 config/icon="res://icon.png"
+
+[editor_plugins]
+
+enabled=PoolStringArray( "res://addons/OrbitalPhysics2D/plugin.cfg" )
 
 [physics]
 
