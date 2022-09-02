@@ -4,7 +4,7 @@ using System;
 [Tool]
 public class OrbitalPhysics2D : EditorPlugin
 {
-    string LibDir = "res://addons/OrbitalPhysics2D/";
+    public string LibDir = "res://addons/OrbitalPhysics2D/";
 
     public void AddCustomType(string Type, string parent){
         AddCustomType(Type,parent,GD.Load<Script>(LibDir+Type+"/"+Type+".cs"),
@@ -17,6 +17,7 @@ public class OrbitalPhysics2D : EditorPlugin
         AddCustomType("PhysicsControlNode","Node");
         AddCustomType("GravityInfluencer","Node2D");
         AddCustomType("GravityObject","Node2D");
+        
     }
 
     public override void _ExitTree()
