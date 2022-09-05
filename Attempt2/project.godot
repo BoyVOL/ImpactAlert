@@ -16,7 +16,7 @@ config/icon="res://icon.png"
 
 [autoload]
 
-GravityInfluencer="*res://addons/OrbitalPhysics2D/GravityInfluencer/GravityInfluencer.cs"
+Autoload="*res://addons/OrbitalPhysics2D//AutoloadScenes/Autoload.tscn"
 
 [editor_plugins]
 

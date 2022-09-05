@@ -1,5 +1,4 @@
 using Godot;
-using System;
 
 [Tool]
 public class OrbitalPhysics2D : EditorPlugin
@@ -11,21 +10,26 @@ public class OrbitalPhysics2D : EditorPlugin
         GD.Load<Texture>(LibDir+"/"+Type+"/icon.png"));
     }
 
+    public void AddAutoloadSingleton(string Name){
+        AddAutoloadSingleton(Name,LibDir+"/AutoloadScenes/"+Name+".tscn");
+    }
+
     public override void _EnterTree(){
         base._EnterTree();
         GD.Print("Plugin ready");
         AddCustomType("PhysicsControlNode","Node");
         AddCustomType("GravityInfluencer","Node2D");
         AddCustomType("GravityObject","Node2D");
-        
+        AddAutoloadSingleton("Autoload");
     }
 
     public override void _ExitTree()
     {
         base._ExitTree();
-        RemoveCustomType("PhysicsControlNode");
         RemoveCustomType("GravityInfluencer");
         RemoveCustomType("GravityObject");
+        RemoveCustomType("PhysicsControlNode");
+        RemoveAutoloadSingleton("Autoload");
     }
 
     public override void _Process(float delta)
