@@ -1,7 +1,4 @@
 using Godot;
-using System;
-using System.Collections.Generic;
-using System.Threading;
 
     /// <summary>
     /// Структура, отвечающая за состояние точки в каждый момент времени

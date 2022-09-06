@@ -10,6 +10,44 @@ public class PhysicsControlNode: Node{
 
     private List<GravityObject> Objects = new List<GravityObject>();
 
+    public void AddInfluencer(GravityInfluencer influencer){
+        Influencers.Add(influencer);
+    }
+
+    public void RemoveInfluencer(GravityInfluencer influencer){
+        Influencers.Remove(influencer);
+    }
+
+    public void AddObject(GravityObject Object){
+        Objects.Add(Object);
+    }
+    
+    public void RemoveObject(GravityObject Object){
+        Objects.Remove(Object);
+    }
+
+    public void Reset(){
+        foreach (var inf in Influencers)
+        {
+            inf.RailPoints.ResetToStart();
+        }
+        foreach (var obj in Objects)
+        {
+            obj.RailPoints.ResetToStart();
+        }
+    }
+
+    public void Update(float delta){
+        foreach (var inf in Influencers)
+        {
+            inf.RailPoints.GenEndPoint(delta);
+        }
+        foreach (var obj in Objects)
+        {
+            obj.RailPoints.GenEndPoint(delta);
+        }
+    }
+
     public override void _EnterTree()
     {
         base._EnterTree();
@@ -18,6 +56,8 @@ public class PhysicsControlNode: Node{
     public override void _PhysicsProcess(float delta)
     {
         base._PhysicsProcess(delta);
+        Reset();
+        Update(delta);
     }
 
 }

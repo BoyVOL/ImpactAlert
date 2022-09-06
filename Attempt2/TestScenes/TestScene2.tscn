@@ -1,12 +1,24 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://addons/OrbitalPhysics2D/GravityInfluencer/GravityInfluencer.cs" type="Script" id=1]
 [ext_resource path="res://addons/OrbitalPhysics2D/GravityObject/GravityObject.cs" type="Script" id=2]
+[ext_resource path="res://Sprites/Misc/GravityCenter.png" type="Texture" id=3]
+[ext_resource path="res://Sprites/Misc/Arrow.png" type="Texture" id=4]
 
 [node name="MainNode" type="Node2D"]
 
 [node name="GravityInfluencer" type="Node2D" parent="."]
+position = Vector2( 283, 107 )
 script = ExtResource( 1 )
+FirstPointAccel = Vector2( 0, 100 )
+
+[node name="Sprite" type="Sprite" parent="GravityInfluencer"]
+texture = ExtResource( 4 )
 
 [node name="GravityObject" type="Node2D" parent="."]
+position = Vector2( 175, 168 )
 script = ExtResource( 2 )
+FirstPointAccel = Vector2( 100, 0 )
+
+[node name="Sprite" type="Sprite" parent="GravityObject"]
+texture = ExtResource( 3 )
