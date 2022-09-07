@@ -20,6 +20,7 @@ public class OrbitalPhysics2D : EditorPlugin
         AddCustomType("PhysicsControlNode","Node");
         AddCustomType("GravityInfluencer","Node2D");
         AddCustomType("GravityObject","Node2D");
+        AddCustomType("RailInterpolator","Node2D");
         AddAutoloadSingleton("Autoload");
     }
 
@@ -29,6 +30,7 @@ public class OrbitalPhysics2D : EditorPlugin
         RemoveCustomType("GravityInfluencer");
         RemoveCustomType("GravityObject");
         RemoveCustomType("PhysicsControlNode");
+        RemoveCustomType("RailInterpolator");
         RemoveAutoloadSingleton("Autoload");
     }
 
