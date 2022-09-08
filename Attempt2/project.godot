@@ -18,6 +18,15 @@ config/icon="res://icon.png"
 
 Autoload="*res://addons/OrbitalPhysics2D//AutoloadScenes/Autoload.tscn"
 
+[editor_plugins]
+
+enabled=PoolStringArray( "res://addons/OrbitalPhysics2D/plugin.cfg" )
+
+[mono]
+
+unhandled_exception_policy=false
+export/include_scripts_content=true
+
 [physics]
 
 common/physics_fps=10

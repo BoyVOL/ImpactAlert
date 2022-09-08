@@ -1,3 +1,4 @@
+#if TOOLS
 using Godot;
 
 [Tool]
@@ -39,3 +40,4 @@ public class OrbitalPhysics2D : EditorPlugin
         base._Process(delta);
     }
 }
+#endif

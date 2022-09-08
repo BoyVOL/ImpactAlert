@@ -1,0 +1,9 @@
+C:\Users\limonovvo\Documents\GitHub\ImpactAlert\Attempt2\.mono\temp\bin\ExportRelease\ImpactAlertv2.dll
+C:\Users\limonovvo\Documents\GitHub\ImpactAlert\Attempt2\.mono\temp\bin\ExportRelease\ImpactAlertv2.pdb
+C:\Users\limonovvo\Documents\GitHub\ImpactAlert\Attempt2\.mono\temp\obj\ExportRelease\ImpactAlertv2.csproj.AssemblyReference.cache
+C:\Users\limonovvo\Documents\GitHub\ImpactAlert\Attempt2\.mono\temp\obj\ExportRelease\ImpactAlertv2.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\limonovvo\Documents\GitHub\ImpactAlert\Attempt2\.mono\temp\obj\ExportRelease\ImpactAlertv2.AssemblyInfoInputs.cache
+C:\Users\limonovvo\Documents\GitHub\ImpactAlert\Attempt2\.mono\temp\obj\ExportRelease\ImpactAlertv2.AssemblyInfo.cs
+C:\Users\limonovvo\Documents\GitHub\ImpactAlert\Attempt2\.mono\temp\obj\ExportRelease\ImpactAlertv2.csproj.CoreCompileInputs.cache
+C:\Users\limonovvo\Documents\GitHub\ImpactAlert\Attempt2\.mono\temp\obj\ExportRelease\ImpactAlertv2.dll
+C:\Users\limonovvo\Documents\GitHub\ImpactAlert\Attempt2\.mono\temp\obj\ExportRelease\ImpactAlertv2.pdb

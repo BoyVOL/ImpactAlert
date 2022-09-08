@@ -58,6 +58,14 @@ using Godot;
             return Result;
         }
 
+        public Vector2 GetInterPos(float T){
+            return Position+Speed*T+(Acceleration*T*T)/2;
+        }
+
+        public float GetInterRot(float T){
+            return Rotation+RotSpeed*T+(RotAccel*T*T)/2;
+        }
+
 		/// <summary>
 		/// Возвращает значение времени максимального с указанной точкой. За ноль взят момент времени в текущей точке.
         /// Если время выходит за границы отрезка времени - берётся ближайшая точка на этом отрезке.

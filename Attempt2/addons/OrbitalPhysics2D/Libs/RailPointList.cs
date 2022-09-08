@@ -30,6 +30,19 @@ public class RailPointList{
         Points.Add(Start.GetNext(delta));
     }
 
+    /// <summary>
+    /// Method for getting point before specified time
+    /// </summary>
+    /// <param name="T">specified time</param>
+    /// <returns></returns>
+    public int GetBeforeTime(float T){
+        for (int i = 0; i < Points.Count; i++)
+        {
+            if(Points[i].time>T) return i-1;
+        }
+        return Points.Count-1;
+    }
+
     public RailPoint this[int i]{
         get => Points[i];
     }

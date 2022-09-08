@@ -19,5 +19,8 @@ position = Vector2( 175, 168 )
 script = ExtResource( 2 )
 FirstPointAccel = Vector2( 100, 0 )
 
-[node name="Sprite" type="Sprite" parent="GravityObject"]
+[node name="RailInterpolator" type="Node2D" parent="GravityObject"]
+script = ExtResource( 4 )
+
+[node name="Sprite" type="Sprite" parent="GravityObject/RailInterpolator"]
 texture = ExtResource( 3 )
