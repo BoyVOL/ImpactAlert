@@ -10,17 +10,13 @@ config_version=4
 
 [application]
 
-config/name="ImpactAlert v2"
+config/name="ImpactAlertv2"
 run/main_scene="res://TestScenes/TestScene2.tscn"
 config/icon="res://icon.png"
 
 [autoload]
 
 Autoload="*res://addons/OrbitalPhysics2D//AutoloadScenes/Autoload.tscn"
-
-[editor_plugins]
-
-enabled=PoolStringArray( "res://addons/OrbitalPhysics2D/plugin.cfg" )
 
 [physics]
 

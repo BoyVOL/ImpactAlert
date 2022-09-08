@@ -14,9 +14,9 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\limonovvo\\Documents\\GitHub\\ImpactAlert\\Attempt2\\ImpactAlert v2.csproj",
-      "projectName": "ImpactAlert v2",
-      "projectPath": "C:\\Users\\limonovvo\\Documents\\GitHub\\ImpactAlert\\Attempt2\\ImpactAlert v2.csproj",
+      "projectUniqueName": "C:\\Users\\limonovvo\\Documents\\GitHub\\ImpactAlert\\Attempt2\\ImpactAlertv2.csproj",
+      "projectName": "ImpactAlertv2",
+      "projectPath": "C:\\Users\\limonovvo\\Documents\\GitHub\\ImpactAlert\\Attempt2\\ImpactAlertv2.csproj",
       "packagesPath": "C:\\Users\\limonovvo\\.nuget\\packages\\",
       "outputPath": "C:\\Users\\limonovvo\\Documents\\GitHub\\ImpactAlert\\Attempt2\\.mono\\temp\\obj\\",
       "projectStyle": "PackageReference",
