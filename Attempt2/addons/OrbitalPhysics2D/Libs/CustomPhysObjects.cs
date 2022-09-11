@@ -17,16 +17,16 @@ public class CustomPhysObject: Node2D{
     public RailPointList RailPoints = new RailPointList();
 
     [Export]
-    public Vector2 FirstPointSpeed = Vector2.Zero;
+    private Vector2 FirstPointSpeed = Vector2.Zero;
 
     [Export]
-    public float FirstPointRotSpeed = 0;
+    private float FirstPointRotSpeed = 0;
 
     [Export]
-    public Vector2 FirstPointAccel = Vector2.Zero;
+    private Vector2 FirstPointAccel = Vector2.Zero;
 
     [Export]
-    public float FirstPointRotAccel = 0;
+    private float FirstPointRotAccel = 0;
 
     /// <summary>
     /// Method for setting up first point of this rail
@@ -47,7 +47,6 @@ public class CustomPhysObject: Node2D{
     /// </summary>
     public void UpdatePos(){
         Position = RailPoints[0].Position;
-        Rotation = RailPoints[0].Rotation;
     }
 
     public void DrawPath(){
@@ -81,6 +80,8 @@ public class CustomPhysObject: Node2D{
     public override void _Draw()
     {
         base._Draw();
+        #if DEBUG
         DrawPath();
+        #endif
     }
 }

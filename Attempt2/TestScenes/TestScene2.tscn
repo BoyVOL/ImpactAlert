@@ -1,23 +1,29 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://addons/OrbitalPhysics2D/GravityInfluencer/GravityInfluencer.cs" type="Script" id=1]
 [ext_resource path="res://addons/OrbitalPhysics2D/GravityObject/GravityObject.cs" type="Script" id=2]
 [ext_resource path="res://Sprites/Misc/GravityCenter.png" type="Texture" id=3]
 [ext_resource path="res://addons/OrbitalPhysics2D/RailInterpolator/RailInterpolator.cs" type="Script" id=4]
+[ext_resource path="res://Sprites/Misc/Arrow.png" type="Texture" id=5]
 
 [node name="MainNode" type="Node2D"]
 
 [node name="GravityInfluencer" type="Node2D" parent="."]
-position = Vector2( 283, 107 )
+position = Vector2( 489, 318 )
 script = ExtResource( 1 )
+FirstPointRotAccel = -1.0
 
 [node name="RailInterpolator" type="Node2D" parent="GravityInfluencer"]
 script = ExtResource( 4 )
 
+[node name="Sprite" type="Sprite" parent="GravityInfluencer/RailInterpolator"]
+texture = ExtResource( 5 )
+
 [node name="GravityObject" type="Node2D" parent="."]
-position = Vector2( 175, 168 )
+position = Vector2( 271.141, 215.31 )
 script = ExtResource( 2 )
-FirstPointAccel = Vector2( 100, 0 )
+FirstPointAccel = Vector2( 10, 0 )
+FirstPointRotAccel = 1.0
 
 [node name="RailInterpolator" type="Node2D" parent="GravityObject"]
 script = ExtResource( 4 )

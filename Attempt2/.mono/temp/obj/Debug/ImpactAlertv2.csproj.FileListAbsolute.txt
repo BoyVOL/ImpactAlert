@@ -7,3 +7,12 @@ C:\Users\limonovvo\Documents\GitHub\ImpactAlert\Attempt2\.mono\temp\obj\Debug\Im
 C:\Users\limonovvo\Documents\GitHub\ImpactAlert\Attempt2\.mono\temp\obj\Debug\ImpactAlertv2.csproj.CoreCompileInputs.cache
 C:\Users\limonovvo\Documents\GitHub\ImpactAlert\Attempt2\.mono\temp\obj\Debug\ImpactAlertv2.dll
 C:\Users\limonovvo\Documents\GitHub\ImpactAlert\Attempt2\.mono\temp\obj\Debug\ImpactAlertv2.pdb
+D:\GitHub\ImpactAlert\Attempt2\.mono\temp\bin\Debug\ImpactAlertv2.dll
+D:\GitHub\ImpactAlert\Attempt2\.mono\temp\bin\Debug\ImpactAlertv2.pdb
+D:\GitHub\ImpactAlert\Attempt2\.mono\temp\obj\Debug\ImpactAlertv2.csproj.AssemblyReference.cache
+D:\GitHub\ImpactAlert\Attempt2\.mono\temp\obj\Debug\ImpactAlertv2.GeneratedMSBuildEditorConfig.editorconfig
+D:\GitHub\ImpactAlert\Attempt2\.mono\temp\obj\Debug\ImpactAlertv2.AssemblyInfoInputs.cache
+D:\GitHub\ImpactAlert\Attempt2\.mono\temp\obj\Debug\ImpactAlertv2.AssemblyInfo.cs
+D:\GitHub\ImpactAlert\Attempt2\.mono\temp\obj\Debug\ImpactAlertv2.csproj.CoreCompileInputs.cache
+D:\GitHub\ImpactAlert\Attempt2\.mono\temp\obj\Debug\ImpactAlertv2.dll
+D:\GitHub\ImpactAlert\Attempt2\.mono\temp\obj\Debug\ImpactAlertv2.pdb
