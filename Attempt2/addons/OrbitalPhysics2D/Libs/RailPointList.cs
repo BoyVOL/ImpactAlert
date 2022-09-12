@@ -22,12 +22,21 @@ public class RailPointList{
     }
 
     /// <summary>
-    /// Method wich creates end rail point
+    /// Method wich inserts new point at a specific time based on already existing ones
     /// </summary>
-    /// <param name="delta"></param>
-    public void GenEndPoint(float delta){
-        RailPoint Start = Points[0];
-        Points.Add(Start.GetNext(delta));
+    /// <param name="time"></param>
+    public void InsertPoint(float time){
+        RailPoint PointBefore = Points[GetBeforeTime(time)];
+        Points.Add(PointBefore.GetNext(time-PointBefore.time));
+    }
+
+    /// <summary>
+    /// Method which adds new point at the end of the list with a specific step
+    /// </summary>
+    /// <param name="step"></param>
+    public void AppendPoint(float step){
+        RailPoint Last = Points[Points.Count-1];
+        Points.Add(Last.GetNext(step));
     }
 
     /// <summary>

@@ -11,7 +11,7 @@
 position = Vector2( 271.141, 215.31 )
 script = ExtResource( 2 )
 DebugColor = Color( 1, 0, 0, 1 )
-FirstPointAccel = Vector2( 10, 0 )
+FirstPointAccel = Vector2( 100, 0 )
 FirstPointRotAccel = 1.0
 
 [node name="RailInterpolator" type="Node2D" parent="GravityObject"]

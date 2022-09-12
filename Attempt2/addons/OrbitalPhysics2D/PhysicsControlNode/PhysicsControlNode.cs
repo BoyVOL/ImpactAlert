@@ -26,7 +26,7 @@ public class PhysicsControlNode: Node{
     public void Update(float delta){
         foreach (var obj in Objects)
         {
-            obj.RailPoints.GenEndPoint(delta);
+            obj.RailPoints.AppendPoint(delta);
         }
     }
 
