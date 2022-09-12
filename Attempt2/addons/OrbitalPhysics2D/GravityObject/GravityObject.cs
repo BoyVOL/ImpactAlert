@@ -2,7 +2,7 @@ using Godot;
 using System.Collections.Generic;
 
 public class GravityObject: CustomPhysObject{
-        
+
     public override void _EnterTree(){
         base._EnterTree();
         PhysNode.AddObject(this);

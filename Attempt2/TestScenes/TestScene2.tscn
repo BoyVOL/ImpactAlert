@@ -1,17 +1,16 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://addons/OrbitalPhysics2D/GravityInfluencer/GravityInfluencer.cs" type="Script" id=1]
 [ext_resource path="res://addons/OrbitalPhysics2D/GravityObject/GravityObject.cs" type="Script" id=2]
 [ext_resource path="res://Sprites/Misc/GravityCenter.png" type="Texture" id=3]
 [ext_resource path="res://addons/OrbitalPhysics2D/RailInterpolator/RailInterpolator.cs" type="Script" id=4]
-[ext_resource path="res://addons/OrbitalPhysics2D/PredictionRail/PredictionRail.cs" type="Script" id=5]
 
 [node name="MainNode" type="Node2D"]
 
 [node name="GravityObject" type="Node2D" parent="."]
 position = Vector2( 271.141, 215.31 )
 script = ExtResource( 2 )
-DebugColor = Color( 0.360784, 1, 0, 0.835294 )
+DebugColor = Color( 1, 0, 0, 1 )
 FirstPointAccel = Vector2( 10, 0 )
 FirstPointRotAccel = 1.0
 
@@ -29,6 +28,3 @@ __meta__ = {
 }
 InfRad = 10.0
 DebugColor = Color( 0.054902, 0.882353, 0.764706, 1 )
-
-[node name="PredictionRail" type="Node2D" parent="GravityObject"]
-script = ExtResource( 5 )
