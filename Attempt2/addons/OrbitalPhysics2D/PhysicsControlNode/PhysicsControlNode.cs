@@ -5,18 +5,8 @@ using System.Collections.Generic;
 /// Класс, отвечающий за обработку физических взаимодействий 
 /// </summary>
 public class PhysicsControlNode: Node{
-    
-    private List<GravityInfluencer> Influencers = new List<GravityInfluencer>();
 
     private List<GravityObject> Objects = new List<GravityObject>();
-
-    public void AddInfluencer(GravityInfluencer influencer){
-        Influencers.Add(influencer);
-    }
-
-    public void RemoveInfluencer(GravityInfluencer influencer){
-        Influencers.Remove(influencer);
-    }
 
     public void AddObject(GravityObject Object){
         Objects.Add(Object);
@@ -27,10 +17,6 @@ public class PhysicsControlNode: Node{
     }
 
     public void Reset(){
-        foreach (var inf in Influencers)
-        {
-            inf.RailPoints.ResetToStart();
-        }
         foreach (var obj in Objects)
         {
             obj.RailPoints.ResetToStart();
@@ -38,10 +24,6 @@ public class PhysicsControlNode: Node{
     }
 
     public void Update(float delta){
-        foreach (var inf in Influencers)
-        {
-            inf.RailPoints.GenEndPoint(delta);
-        }
         foreach (var obj in Objects)
         {
             obj.RailPoints.GenEndPoint(delta);

@@ -19,9 +19,10 @@ public class OrbitalPhysics2D : EditorPlugin
         base._EnterTree();
         GD.Print("Plugin ready");
         AddCustomType("PhysicsControlNode","Node");
-        AddCustomType("GravityInfluencer","Node2D");
+        AddCustomType("GravityInfluencer","Node");
         AddCustomType("GravityObject","Node2D");
         AddCustomType("RailInterpolator","Node2D");
+        AddCustomType("PredictionRail","Node2D");
         AddAutoloadSingleton("Autoload");
     }
 
@@ -30,8 +31,9 @@ public class OrbitalPhysics2D : EditorPlugin
         base._ExitTree();
         RemoveCustomType("GravityInfluencer");
         RemoveCustomType("GravityObject");
-        RemoveCustomType("PhysicsControlNode");
         RemoveCustomType("RailInterpolator");
+        RemoveCustomType("PhysicsControlNode");
+        RemoveCustomType("PredictionRail");
         RemoveAutoloadSingleton("Autoload");
     }
 

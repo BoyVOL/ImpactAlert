@@ -8,6 +8,11 @@ public class CustomPhysObject: Node2D{
     /// Ref to controlling object
     /// </summary>
     protected PhysicsControlNode PhysNode = null;
+    
+    [Export]
+    public Color DebugColor;
+
+    public List<Influencer> InfList = new List<Influencer>();
 
     /// <summary>
     /// List of all simulation points of this object
@@ -55,7 +60,14 @@ public class CustomPhysObject: Node2D{
         {
             Points[i] = RailPoints[i].Position-RailPoints[0].Position;
         }
-        DrawMultiline(Points,Colors.Green,10);
+        DrawMultiline(Points,DebugColor,10);
+    }
+
+    public void DrawInfluencer(){
+        for (int i = 0; i < InfList.Count; i++)
+        {
+            DrawArc(Vector2.Zero,InfList[i].InfRad,0,(float)Math.PI*2,100,InfList[i].DebugColor);
+        }
     }
 
     public override void _EnterTree()
@@ -68,13 +80,15 @@ public class CustomPhysObject: Node2D{
     public override void _Process(float delta)
     {
         base._Process(delta);
-        Update();
     }
 
     public override void _PhysicsProcess(float delta)
     {
         base._PhysicsProcess(delta);
         UpdatePos();
+        #if DEBUG
+        Update();
+        #endif
     }
 
     public override void _Draw()
@@ -82,6 +96,7 @@ public class CustomPhysObject: Node2D{
         base._Draw();
         #if DEBUG
         DrawPath();
+        DrawInfluencer();
         #endif
     }
 }
