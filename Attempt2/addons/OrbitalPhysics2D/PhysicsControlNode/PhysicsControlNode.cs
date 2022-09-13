@@ -8,6 +8,10 @@ public class PhysicsControlNode: Node{
 
     private List<GravityObject> Objects = new List<GravityObject>();
 
+    public InfluenceController InfContr = null;
+
+    public CollisionController CollContr = null;
+
     public void AddObject(GravityObject Object){
         Objects.Add(Object);
     }
