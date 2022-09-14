@@ -22,9 +22,10 @@ public class OrbitalPhysics2D : EditorPlugin
         AddCustomType("GravityInfluencer","Node");
         AddCustomType("InfluenceController","Node");
         AddCustomType("CollisionController","Node");
-        AddCustomType("GravityObject","Node2D");
+        AddCustomType("CustomPhysObject","Node2D");
         AddCustomType("RailInterpolator","Node2D");
         AddCustomType("PredictionRailController","Node2D");
+        AddCustomType("RPListController","Node");
         AddAutoloadSingleton("Autoload");
     }
 
@@ -32,12 +33,13 @@ public class OrbitalPhysics2D : EditorPlugin
     {
         base._ExitTree();
         RemoveCustomType("GravityInfluencer");
-        RemoveCustomType("GravityObject");
+        RemoveCustomType("CustomPhysObject");
         RemoveCustomType("RailInterpolator");
         RemoveCustomType("InfluenceController");
         RemoveCustomType("CollisionController");
         RemoveCustomType("PhysicsControlNode");
         RemoveCustomType("PredictionRailController");
+        RemoveCustomType("RPListController");
         RemoveAutoloadSingleton("Autoload");
     }
 

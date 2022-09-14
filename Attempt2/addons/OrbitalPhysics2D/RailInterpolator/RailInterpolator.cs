@@ -16,17 +16,17 @@ public class RailInterpolator: Node2D{
     /// Snaps node pos to interpolated state
     /// </summary>
     public void SwitchToInterState(){
-        int PrevPointID = Parent.RailPoints.GetBeforeTime(Offset);
-        if(PrevPointID >= Parent.RailPoints.Count()-1){
-            Position = Parent.RailPoints[Parent.RailPoints.Count()-1].Position-Parent.Position;
-            Rotation = Parent.RailPoints[Parent.RailPoints.Count()-1].Rotation-Parent.Rotation;
+        int PrevPointID = Parent.PhysRail.GetBeforeTime(Offset);
+        if(PrevPointID >= Parent.PhysRail.Count()-1){
+            Position = Parent.PhysRail[Parent.PhysRail.Count()-1].Position-Parent.Position;
+            Rotation = Parent.PhysRail[Parent.PhysRail.Count()-1].Rotation-Parent.Rotation;
         } else {
             int NextPointID = PrevPointID + 1;
-            Vector2 InterSpeed = CalcInterpolSpeed(Parent.RailPoints[PrevPointID],Parent.RailPoints[NextPointID]);
-            float InterRotSpeed = CalcInterpolRot(Parent.RailPoints[PrevPointID],Parent.RailPoints[NextPointID]);
-            float LocalOffset = Offset-Parent.RailPoints[PrevPointID].time;
-            Position = (Parent.RailPoints[PrevPointID].Position + LocalOffset*InterSpeed)-Parent.Position;
-            Rotation = (Parent.RailPoints[PrevPointID].Rotation + LocalOffset*InterRotSpeed)-Parent.Rotation;
+            Vector2 InterSpeed = CalcInterpolSpeed(Parent.PhysRail[PrevPointID],Parent.PhysRail[NextPointID]);
+            float InterRotSpeed = CalcInterpolRot(Parent.PhysRail[PrevPointID],Parent.PhysRail[NextPointID]);
+            float LocalOffset = Offset-Parent.PhysRail[PrevPointID].time;
+            Position = (Parent.PhysRail[PrevPointID].Position + LocalOffset*InterSpeed)-Parent.Position;
+            Rotation = (Parent.PhysRail[PrevPointID].Rotation + LocalOffset*InterRotSpeed)-Parent.Rotation;
         }
 
     }

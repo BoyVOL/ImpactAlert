@@ -1,30 +1,26 @@
 [gd_scene load_steps=5 format=2]
 
-[ext_resource path="res://addons/OrbitalPhysics2D/GravityInfluencer/GravityInfluencer.cs" type="Script" id=1]
-[ext_resource path="res://addons/OrbitalPhysics2D/GravityObject/GravityObject.cs" type="Script" id=2]
-[ext_resource path="res://Sprites/Misc/GravityCenter.png" type="Texture" id=3]
+[ext_resource path="res://addons/OrbitalPhysics2D/CustomPhysObject/CustomPhysObject.cs" type="Script" id=1]
+[ext_resource path="res://Sprites/Ships/Starter ship.png" type="Texture" id=2]
 [ext_resource path="res://addons/OrbitalPhysics2D/RailInterpolator/RailInterpolator.cs" type="Script" id=4]
+[ext_resource path="res://addons/OrbitalPhysics2D/GravityInfluencer/GravityInfluencer.cs" type="Script" id=5]
 
 [node name="MainNode" type="Node2D"]
 
-[node name="GravityObject" type="Node2D" parent="."]
-position = Vector2( 271.141, 215.31 )
-script = ExtResource( 2 )
-DebugColor = Color( 1, 0, 0, 1 )
-FirstPointAccel = Vector2( 100, 0 )
+[node name="CustomPhysObject" type="Node2D" parent="."]
+position = Vector2( 204, 178 )
+script = ExtResource( 1 )
+DebugColor = Color( 0, 0.929412, 1, 1 )
+FirstPointAccel = Vector2( 10, 0 )
 FirstPointRotAccel = 1.0
 
-[node name="RailInterpolator" type="Node2D" parent="GravityObject"]
-rotation = 116.239
+[node name="RailInterpolator" type="Node2D" parent="CustomPhysObject"]
 script = ExtResource( 4 )
 
-[node name="Sprite" type="Sprite" parent="GravityObject/RailInterpolator"]
-texture = ExtResource( 3 )
+[node name="Sprite" type="Sprite" parent="CustomPhysObject/RailInterpolator"]
+texture = ExtResource( 2 )
 
-[node name="GravityInfluencer" type="Node" parent="GravityObject"]
-script = ExtResource( 1 )
-__meta__ = {
-"_editor_description_": ""
-}
-InfRad = 10.0
-DebugColor = Color( 0.054902, 0.882353, 0.764706, 1 )
+[node name="GravityInfluencer" type="Node" parent="CustomPhysObject"]
+script = ExtResource( 5 )
+InfRad = 100.0
+DebugColor = Color( 1, 0, 0, 1 )

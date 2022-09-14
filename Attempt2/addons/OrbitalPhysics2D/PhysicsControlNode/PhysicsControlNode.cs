@@ -6,32 +6,20 @@ using System.Collections.Generic;
 /// </summary>
 public class PhysicsControlNode: Node{
 
-    private List<GravityObject> Objects = new List<GravityObject>();
+    private List<CustomPhysObject> Objects = new List<CustomPhysObject>();
 
     public InfluenceController InfContr = null;
 
     public CollisionController CollContr = null;
 
-    public void AddObject(GravityObject Object){
+    public RPListController RPLists = null;
+
+    public void Add(CustomPhysObject Object){
         Objects.Add(Object);
     }
     
-    public void RemoveObject(GravityObject Object){
+    public void Remove(CustomPhysObject Object){
         Objects.Remove(Object);
-    }
-
-    public void Reset(){
-        foreach (var obj in Objects)
-        {
-            obj.RailPoints.ResetToStart();
-        }
-    }
-
-    public void Update(float delta){
-        foreach (var obj in Objects)
-        {
-            obj.RailPoints.AppendPoint(delta);
-        }
     }
 
     public override void _EnterTree()
@@ -42,8 +30,8 @@ public class PhysicsControlNode: Node{
     public override void _PhysicsProcess(float delta)
     {
         base._PhysicsProcess(delta);
-        Reset();
-        Update(delta);
+        RPLists.Reset();
+        RPLists.UpdatePhysic(delta);
     }
 
 }
