@@ -1,11 +1,9 @@
 using Godot;
 
-public class PhysicsControlAddon:Node{
+public class PhysicsControlAddon{
     public PhysicsControlNode Parent;
 
-    public override void _EnterTree()
-    {
-        base._EnterTree();
-        Parent = GetParent<PhysicsControlNode>();
+    public PhysicsControlAddon(PhysicsControlNode parent){
+        Parent = parent;
     }
 }

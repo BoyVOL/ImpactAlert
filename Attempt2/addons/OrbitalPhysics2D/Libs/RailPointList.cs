@@ -14,20 +14,28 @@ public class RailPointList{
     /// Method that clears rail and sets it's last element as it's first
     /// </summary>
     public void ResetToStart(){
-        for (int i = 0; i < Points.Count-1; i++)
-        {
-            Points.RemoveAt(i);
-        }
+        int Count = Points.Count-1;
+        Points.RemoveRange(0,Count);
         Points[0].time = 0;
     }
 
     /// <summary>
     /// Method wich inserts new point at a specific time based on already existing ones
+    /// Next nodes will be recalculated
     /// </summary>
     /// <param name="time"></param>
-    public void InsertPoint(float time){
-        RailPoint PointBefore = Points[GetBeforeTime(time)];
-        Points.Add(PointBefore.GetNext(time-PointBefore.time));
+    public int InsertPoint(float time){
+        int id = GetBeforeTime(time);
+        RailPoint PointBefore = Points[id];
+        Points.Insert(id+1,PointBefore.GetNext(time-PointBefore.time));
+        return id+1;
+    }
+
+    public void RecalcAfter(int id){
+        for (int i = id; i < Points.Count-1; i++)
+        {
+            Points[i+1] = Points[i].GetNext(Points[i+1].time-Points[i].time);
+        }
     }
 
     /// <summary>

@@ -61,12 +61,12 @@ public class CustomPhysObject: Node2D{
     }
 
     public void DrawPath(){
-        Vector2[] Points = new Vector2[PhysRail.Count()];
-        for (int i = 0; i < PhysRail.Count(); i++)
-        {
-            Points[i] = PhysRail[i].Position-PhysRail[0].Position;
-        }
-        DrawMultiline(Points,DebugColor,10);
+            Vector2[] Points = new Vector2[PhysRail.Count()];
+            for (int i = 0; i < PhysRail.Count(); i++)
+            {
+                Points[i] = PhysRail[i].Position-PhysRail[0].Position;
+            }
+            DrawPolyline(Points,DebugColor,2);
     }
 
     public void DrawInfluencer(){
@@ -76,20 +76,23 @@ public class CustomPhysObject: Node2D{
         }
     }
 
+    public void LoadObject(){
+        PhysNode.PhysRail.Add(PhysRail);
+    }
+
     public override void _EnterTree()
     {
         base._EnterTree();
         SetFirstPoint();
         PhysNode = GetNode<PhysicsControlNode>("/root/Autoload/PhysicsControlNode");
         PhysNode.Add(this);
-        PhysNode.RPLists.AddPhysic(PhysRail);
     }
 
     public override void _ExitTree()
     {
         base._ExitTree();
         PhysNode.Remove(this);
-        PhysNode.RPLists.RemovePhysic(PhysRail);
+        PhysNode.PhysRail.Remove(PhysRail);
     }
 
     public override void _Process(float delta)

@@ -11,7 +11,7 @@
 position = Vector2( 204, 178 )
 script = ExtResource( 1 )
 DebugColor = Color( 0, 0.929412, 1, 1 )
-FirstPointAccel = Vector2( 10, 0 )
+FirstPointAccel = Vector2( 100, 0 )
 FirstPointRotAccel = 1.0
 
 [node name="RailInterpolator" type="Node2D" parent="CustomPhysObject"]
