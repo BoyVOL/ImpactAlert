@@ -53,7 +53,6 @@ public class PhysicsControlNode: Node{
         PhysRail.Reset();
         LoadAll();
         PhysRail.AppendPoint(delta);
-        PhysRail.DebugInsert(delta);
     }
 
 }

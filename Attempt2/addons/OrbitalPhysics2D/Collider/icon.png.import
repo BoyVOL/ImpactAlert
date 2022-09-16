@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/icon.png-3e961029a04bdcd6379f537342dfd062.stex"
+path="res://.import/icon.png-0ba71b34bdefa055a00385027abc24ce.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/OrbitalPhysics2D/CollisionController/icon.png"
-dest_files=[ "res://.import/icon.png-3e961029a04bdcd6379f537342dfd062.stex" ]
+source_file="res://addons/OrbitalPhysics2D/Collider/icon.png"
+dest_files=[ "res://.import/icon.png-0ba71b34bdefa055a00385027abc24ce.stex" ]
 
 [params]
 
