@@ -8,21 +8,21 @@ public class PhysicsControlNode: Node{
 
     private List<CustomPhysObject> Objects = new List<CustomPhysObject>();
 
-    public InfluenceController InfContr = null;
+    public InfluenceController InfContr;
 
-    public CollisionController CollContr = null;
+    public CollisionController CollContr;
 
-    public RPListController PhysRail = null;
+    public InfListController PhysRail;
 
-    public RPListController PredictRail = null;
+    public InfListController PredictRail;
 
     public List<CustomPhysObject> NotLoaded = new List<CustomPhysObject>();
 
     public PhysicsControlNode():base(){
         InfContr = new InfluenceController(this);
         CollContr = new CollisionController(this);
-        PhysRail = new RPListController(this);
-        PredictRail = new RPListController(this);
+        PhysRail = new InfListController(this,InfContr);
+        PredictRail = new InfListController(this,InfContr);
     }
 
     public void Add(CustomPhysObject Object){
@@ -52,7 +52,8 @@ public class PhysicsControlNode: Node{
         base._PhysicsProcess(delta);
         PhysRail.Reset();
         LoadAll();
-        PhysRail.AppendPoint(delta);
+        PhysRail.AppendPoint(delta,1);
+        PhysRail.DebugInsert(delta);
     }
 
 }

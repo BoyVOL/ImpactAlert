@@ -16,10 +16,15 @@ public class RPListController: PhysicsControlAddon{
         }
     }
 
-    public void AppendPoint(float delta){
+    /// <summary>
+    /// Method for appending point at id 
+    /// </summary>
+    /// <param name="delta"></param>
+    /// <param name="id"></param>
+    public void AppendPoint(float delta,int id){
         foreach (var list in Rails)
         {
-            list.AppendPoint(delta);
+            if(list.Count()==id) list.AppendPoint(delta);
         }
     }
 
