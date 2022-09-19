@@ -7,7 +7,7 @@ public class CustomPhysObject: Node2D{
     /// <summary>
     /// Ref to controlling object
     /// </summary>
-    protected PhysicsControlNode PhysNode = null;
+    public PhysicsControlNode PhysNode = null;
     
     [Export]
     public Color DebugColor;
@@ -38,6 +38,9 @@ public class CustomPhysObject: Node2D{
 
     [Export]
     private float FirstPointRotAccel = 0;
+
+    [Export]
+    public float mass = 1;
 
     /// <summary>
     /// Method for setting up first point of this rail

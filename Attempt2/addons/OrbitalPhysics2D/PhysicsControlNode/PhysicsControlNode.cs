@@ -1,5 +1,6 @@
 using Godot;
 using System.Collections.Generic;
+using System;
 
 /// <summary>
 /// Класс, отвечающий за обработку физических взаимодействий 
@@ -8,20 +9,20 @@ public class PhysicsControlNode: Node{
 
     private List<CustomPhysObject> Objects = new List<CustomPhysObject>();
 
-    public InfluenceController InfContr;
+    public PhysInfController InfContr;
 
     public CollisionController CollContr;
 
-    public InfListController PhysRail;
+    public CollListController PhysRail;
 
     public InfListController PredictRail;
 
     public List<CustomPhysObject> NotLoaded = new List<CustomPhysObject>();
 
     public PhysicsControlNode():base(){
-        InfContr = new InfluenceController(this);
+        InfContr = new PhysInfController(this);
         CollContr = new CollisionController(this);
-        PhysRail = new InfListController(this,InfContr);
+        PhysRail = new CollListController(this,InfContr,CollContr);
         PredictRail = new InfListController(this,InfContr);
     }
 
