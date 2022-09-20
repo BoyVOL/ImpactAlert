@@ -10,7 +10,10 @@ public class CustomPhysObject: Node2D{
     public PhysicsControlNode PhysNode = null;
     
     [Export]
-    public Color DebugColor;
+    public Color PhysRailColor;
+    
+    [Export]
+    public Color PredictionColor;
 
     public List<Influencer> InfList = new List<Influencer>();
 
@@ -54,6 +57,7 @@ public class CustomPhysObject: Node2D{
         Point.Acceleration = FirstPointAccel;
         Point.RotAccel = FirstPointRotAccel;
         PhysRail.SetFirstPoint(Point);
+        PredictionRail.SetFirstPoint(Point);
     }
 
     /// <summary>
@@ -63,13 +67,22 @@ public class CustomPhysObject: Node2D{
         Position = PhysRail[0].Position;
     }
 
-    public void DrawPath(){
+    public void DrawPhys(){
             Vector2[] Points = new Vector2[PhysRail.Count()];
             for (int i = 0; i < PhysRail.Count(); i++)
             {
                 Points[i] = PhysRail[i].Position-PhysRail[0].Position;
             }
-            DrawPolyline(Points,DebugColor,2);
+            if(Points.Length > 1) DrawPolyline(Points,PhysRailColor,2);
+    }
+
+    public void DrawPred(){
+            Vector2[] Points = new Vector2[PhysRail.Count()];
+            for (int i = 0; i < PredictionRail.Count(); i++)
+            {
+                Points[i] = PredictionRail[i].Position-PredictionRail[0].Position;
+            }
+            if(Points.Length > 1) DrawPolyline(Points,PredictionColor,2);
     }
 
     public void DrawInfluencer(){
@@ -81,6 +94,7 @@ public class CustomPhysObject: Node2D{
 
     public void LoadObject(){
         PhysNode.PhysRail.Add(PhysRail);
+        PhysNode.PredictRail.Add(PredictionRail);
     }
 
     public override void _EnterTree()
@@ -116,7 +130,8 @@ public class CustomPhysObject: Node2D{
     {
         base._Draw();
         #if DEBUG
-        DrawPath();
+        DrawPhys();
+        DrawPred();
         DrawInfluencer();
         #endif
     }

@@ -1,0 +1,28 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://addons/OrbitalPhysics2D/CustomPhysObject/CustomPhysObject.cs" type="Script" id=1]
+[ext_resource path="res://addons/OrbitalPhysics2D/GravityInfluencer/GravityInfluencer.cs" type="Script" id=2]
+[ext_resource path="res://addons/OrbitalPhysics2D/RailInterpolator/RailInterpolator.cs" type="Script" id=3]
+[ext_resource path="res://addons/OrbitalPhysics2D/Collider/Collider.cs" type="Script" id=4]
+[ext_resource path="res://Sprites/Ships/Starter ship.png" type="Texture" id=5]
+
+[node name="CustomPhysObject" type="Node2D"]
+position = Vector2( 1, 1 )
+script = ExtResource( 1 )
+PhysRailColor = Color( 0, 1, 0.952941, 1 )
+PredictionColor = Color( 0, 0.415686, 1, 1 )
+mass = 1e+13
+
+[node name="RailInterpolator" type="Node2D" parent="."]
+script = ExtResource( 3 )
+
+[node name="Sprite" type="Sprite" parent="RailInterpolator"]
+texture = ExtResource( 5 )
+
+[node name="Collider" type="Node" parent="."]
+script = ExtResource( 4 )
+
+[node name="GravityInfluencer" type="Node" parent="."]
+script = ExtResource( 2 )
+InfRad = 10.0
+DebugColor = Color( 1, 0, 0, 1 )

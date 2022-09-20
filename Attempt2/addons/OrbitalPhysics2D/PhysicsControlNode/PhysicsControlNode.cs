@@ -51,10 +51,16 @@ public class PhysicsControlNode: Node{
     public override void _PhysicsProcess(float delta)
     {
         base._PhysicsProcess(delta);
-        PhysRail.Reset();
         LoadAll();
+        PhysRail.Reset();
+        PredictRail.Reset();
+        PhysRail.UpdateAccel(0,true,delta);
         PhysRail.AppendPoint(delta,1);
-        PhysRail.DebugInsert(delta);
+        PredictRail.AppendPoint(delta,1);
+        /*for (int i = 0; i < 10; i++)
+        {
+            PredictRail.AppendPoint(delta,i+1);
+        }*/
     }
 
 }
