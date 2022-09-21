@@ -17,9 +17,9 @@ public class RailInterpolator: Node2D{
     /// </summary>
     public void SwitchToInterState(){
         int PrevPointID = Parent.PhysRail.GetBeforeTime(Offset);
-        if(PrevPointID >= Parent.PhysRail.Count()-1){
-            Position = Parent.PhysRail[Parent.PhysRail.Count()-1].Position-Parent.Position;
-            Rotation = Parent.PhysRail[Parent.PhysRail.Count()-1].Rotation-Parent.Rotation;
+        if(PrevPointID >= Parent.PhysRail.Count-1){
+            Position = Parent.PhysRail[Parent.PhysRail.Count-1].Position-Parent.Position;
+            Rotation = Parent.PhysRail[Parent.PhysRail.Count-1].Rotation-Parent.Rotation;
         } else {
             int NextPointID = PrevPointID + 1;
             Vector2 InterSpeed = CalcInterpolSpeed(Parent.PhysRail[PrevPointID],Parent.PhysRail[NextPointID]);

@@ -22,13 +22,13 @@ public class CustomPhysObject: Node2D{
     /// </summary>
     /// <typeparam name="PhysRail"></typeparam>
     /// <returns></returns>
-    public RailPointList PhysRail = new RailPointList();
+    public RailPointList PhysRail;
 
     /// <summary>
     /// List af all points that predict movement of this object for certain period of time
     /// </summary>
     /// <returns></returns>
-    public RailPointList PredictionRail = new RailPointList();
+    public RailPointList PredictionRail;
 
     [Export]
     private Vector2 FirstPointSpeed = Vector2.Zero;
@@ -44,6 +44,11 @@ public class CustomPhysObject: Node2D{
 
     [Export]
     public float mass = 1;
+
+    public CustomPhysObject():base(){
+        PhysRail = new RailPointList(this);
+        PredictionRail = new RailPointList(this);
+    }
 
     /// <summary>
     /// Method for setting up first point of this rail
@@ -68,8 +73,8 @@ public class CustomPhysObject: Node2D{
     }
 
     public void DrawPhys(){
-            Vector2[] Points = new Vector2[PhysRail.Count()];
-            for (int i = 0; i < PhysRail.Count(); i++)
+            Vector2[] Points = new Vector2[PhysRail.Count];
+            for (int i = 0; i < PhysRail.Count; i++)
             {
                 Points[i] = PhysRail[i].Position-PhysRail[0].Position;
             }
@@ -77,8 +82,8 @@ public class CustomPhysObject: Node2D{
     }
 
     public void DrawPred(){
-            Vector2[] Points = new Vector2[PhysRail.Count()];
-            for (int i = 0; i < PredictionRail.Count(); i++)
+            Vector2[] Points = new Vector2[PredictionRail.Count];
+            for (int i = 0; i < PredictionRail.Count; i++)
             {
                 Points[i] = PredictionRail[i].Position-PredictionRail[0].Position;
             }
@@ -130,8 +135,8 @@ public class CustomPhysObject: Node2D{
     {
         base._Draw();
         #if DEBUG
-        DrawPhys();
         DrawPred();
+        DrawPhys();
         DrawInfluencer();
         #endif
     }

@@ -15,7 +15,10 @@ public class PhysicsControlNode: Node{
 
     public CollListController PhysRail;
 
-    public InfListController PredictRail;
+    public PredictListController PredictRail;
+
+    [Export]
+    public float MaxPredictionRange = 10;
 
     public List<CustomPhysObject> NotLoaded = new List<CustomPhysObject>();
 
@@ -23,7 +26,7 @@ public class PhysicsControlNode: Node{
         InfContr = new PhysInfController(this);
         CollContr = new CollisionController(this);
         PhysRail = new CollListController(this,InfContr,CollContr);
-        PredictRail = new InfListController(this,InfContr);
+        PredictRail = new PredictListController(this,InfContr);
     }
 
     public void Add(CustomPhysObject Object){
@@ -48,19 +51,31 @@ public class PhysicsControlNode: Node{
         base._EnterTree();
     }
 
+    public void PhysRailUpdate(float delta){
+        PhysRail.Reset();
+        PhysRail.UpdateAccel(0,true,delta);
+        PhysRail.AppendPoint(delta,1);
+    }
+
+    public int CalcStepCount(float delta){
+        return (int)(MaxPredictionRange/delta);
+    }
+
+    public void PredictRailUpdate(float delta){
+        PredictRail.LoadFromPhys();
+        for (int i = 0; i < CalcStepCount(delta); i++)
+        {
+            PredictRail.UpdateAccel(i,false,delta);
+            PredictRail.AppendPoint(delta,i+1);
+        }
+    }
+
     public override void _PhysicsProcess(float delta)
     {
         base._PhysicsProcess(delta);
         LoadAll();
-        PhysRail.Reset();
-        PredictRail.Reset();
-        PhysRail.UpdateAccel(0,true,delta);
-        PhysRail.AppendPoint(delta,1);
-        PredictRail.AppendPoint(delta,1);
-        /*for (int i = 0; i < 10; i++)
-        {
-            PredictRail.AppendPoint(delta,i+1);
-        }*/
+        PhysRailUpdate(delta);
+        PredictRailUpdate(delta);
     }
 
 }

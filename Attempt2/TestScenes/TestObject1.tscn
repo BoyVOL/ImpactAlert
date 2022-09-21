@@ -7,7 +7,6 @@
 [ext_resource path="res://Sprites/Ships/Starter ship.png" type="Texture" id=5]
 
 [node name="CustomPhysObject" type="Node2D"]
-position = Vector2( 1, 1 )
 script = ExtResource( 1 )
 PhysRailColor = Color( 0, 1, 0.952941, 1 )
 PredictionColor = Color( 0, 0.415686, 1, 1 )

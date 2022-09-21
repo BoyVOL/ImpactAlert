@@ -24,7 +24,7 @@ public class RPListController: PhysicsControlAddon{
     public void AppendPoint(float delta,int id){
         foreach (var list in Rails)
         {
-            if(list.Count()==id) list.AppendPoint(delta);
+            if(list.Count==id) list.AppendPoint(delta);
         }
     }
 
