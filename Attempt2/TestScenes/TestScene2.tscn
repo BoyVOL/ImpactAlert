@@ -9,7 +9,6 @@ position = Vector2( 831, 528 )
 
 [node name="Camera2D" type="Camera2D" parent="CustomPhysObject3"]
 offset = Vector2( 10, 0 )
-current = true
 
 [node name="CustomPhysObject4" parent="." instance=ExtResource( 1 )]
 position = Vector2( 653, 237 )
