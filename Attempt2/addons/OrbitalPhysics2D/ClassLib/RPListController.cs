@@ -28,15 +28,6 @@ public class RPListController: PhysicsControlAddon{
         }
     }
 
-    public void DebugInsert(float delta){
-        foreach (var list in Rails)
-        {
-            int id = list.InsertPoint(delta/2);
-            list[id].Position.y+=20;
-            list.RecalcAfter(id);
-        }
-    }
-
     public void Add(RailPointList List){
         Rails.Add(List);
     }

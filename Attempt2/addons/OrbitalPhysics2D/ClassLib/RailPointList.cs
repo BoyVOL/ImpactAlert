@@ -30,13 +30,6 @@ public class RailPointList: List<RailPoint>{
         return id+1;
     }
 
-    public void RecalcAfter(int id){
-        for (int i = id; i < Count-1; i++)
-        {
-            this[i+1] = this[i].GetNext(this[i+1].time-this[i].time);
-        }
-    }
-
     /// <summary>
     /// Method which adds new point at the end of the list with a specific step
     /// </summary>

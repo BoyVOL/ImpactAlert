@@ -18,10 +18,10 @@ script = ExtResource( 3 )
 [node name="Sprite" type="Sprite" parent="RailInterpolator"]
 texture = ExtResource( 5 )
 
-[node name="Collider" type="Node" parent="."]
-script = ExtResource( 4 )
-
 [node name="GravityInfluencer" type="Node" parent="."]
 script = ExtResource( 2 )
 InfRad = 10.0
 DebugColor = Color( 1, 0, 0, 1 )
+
+[node name="Collider" type="Node" parent="."]
+script = ExtResource( 4 )

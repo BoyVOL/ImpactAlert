@@ -67,31 +67,33 @@ using Godot;
         }
 
 		/// <summary>
-		/// Возвращает значение времени максимального с указанной точкой. За ноль взят момент времени в текущей точке.
-        /// Если время выходит за границы отрезка времени - берётся ближайшая точка на этом отрезке.
+		/// Возвращает значение времени максимального сближения с указанной точкой. За ноль взят момент времени в текущей точке.
 		/// </summary>
 		/// <param name="Target">Вторая точка, с которой просчитывается пересечение путей</param>
-        /// <param name="T">интервал времени, на котором проходит проверка</param>
 		/// <returns></returns>
-		public float CPA(RailPoint Target, float T){
+		public float CPA(RailPoint Target, float T, bool clamped = true){
             float Result = MathExtra.cpaTime(Position,Target.Position,GetInterSpeed(T),Target.GetInterSpeed(T));
-            if(Result < 0) Result = 0;
-            if(Result > T) Result = T;
+            if(clamped){
+                if(Result < 0) Result = 0;
+                if(Result > T) Result = T;
+            }
 			return Result;
 		}
 
 		/// <summary>
-		/// Возвращает значение времени пересечения с указанной точкой. За ноль взят момент времени в текущей точке.
+		/// Возвращает значение времени пересечения сближения с указанной точкой. За ноль взят момент времени в текущей точке.
         /// Если время выходит за границы отрезка времени - берётся ближайшая точка на этом отрезке.
 		/// Перегрузка для 2д вектора
 		/// </summary>
 		/// <param name="Vector">2Д вектор, с которым просчитывается пересечение путей</param>
         /// <param name="T">интервал времени, на котором проходит проверка</param>
 		/// <returns></returns>
-		public float CPA(Vector2 Vector, float T){
+		public float CPA(Vector2 Vector, float T, bool clamped = true){
 			float Result = MathExtra.cpaTime(Position,Vector,GetInterSpeed(T),new Vector2(0,0));
-            if(Result < 0) Result = 0;
-            if(Result > T) Result = T;
+            if(clamped){
+                if(Result < 0) Result = 0;
+                if(Result > T) Result = T;
+            }
 			return Result;
 		}
 

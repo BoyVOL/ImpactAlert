@@ -55,7 +55,6 @@ public class PhysicsControlNode: Node{
         PhysRail.Reset();
         PhysRail.UpdateAccel(0,true,delta);
         PhysRail.AppendPoint(delta,1);
-        //PhysRail.DebugInsert(delta);
     }
 
     public int CalcStepCount(float delta){
@@ -77,6 +76,7 @@ public class PhysicsControlNode: Node{
         LoadAll();
         PhysRailUpdate(delta);
         PredictRailUpdate(delta);
+        CollContr.CollisionTest();
     }
 
 }
