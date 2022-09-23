@@ -22,11 +22,10 @@ public class RailInterpolator: Node2D{
             Rotation = Parent.PhysRail[Parent.PhysRail.Count-1].Rotation-Parent.Rotation;
         } else {
             int NextPointID = PrevPointID + 1;
-            Vector2 InterSpeed = CalcInterpolSpeed(Parent.PhysRail[PrevPointID],Parent.PhysRail[NextPointID]);
-            float InterRotSpeed = CalcInterpolRot(Parent.PhysRail[PrevPointID],Parent.PhysRail[NextPointID]);
             float LocalOffset = Offset-Parent.PhysRail[PrevPointID].time;
-            Position = (Parent.PhysRail[PrevPointID].Position + LocalOffset*InterSpeed)-Parent.Position;
-            Rotation = (Parent.PhysRail[PrevPointID].Rotation + LocalOffset*InterRotSpeed)-Parent.Rotation;
+            float TimeFrame = Parent.PhysRail[PrevPointID+1].time-Parent.PhysRail[PrevPointID].time;
+            Position = Parent.PhysRail[PrevPointID].GetInterPos(LocalOffset,TimeFrame)-Parent.Position;
+            Rotation = Parent.PhysRail[PrevPointID].GetInterRot(LocalOffset,TimeFrame)-Parent.Rotation;
         }
 
     }

@@ -17,6 +17,8 @@ public class CustomPhysObject: Node2D{
 
     public List<Influencer> InfList = new List<Influencer>();
 
+    public List<Collider> ColList = new List<Collider>();
+
     /// <summary>
     /// List of all simulation points of this object
     /// </summary>
@@ -90,10 +92,27 @@ public class CustomPhysObject: Node2D{
             if(Points.Length > 1) DrawPolyline(Points,PredictionColor,2);
     }
 
-    public void DrawInfluencer(){
-        for (int i = 0; i < InfList.Count; i++)
+    public void DrawInfluencers(){
+        foreach (var inf in InfList)
         {
-            DrawArc(Vector2.Zero,InfList[i].InfRad,0,(float)Math.PI*2,100,InfList[i].DebugColor);
+            DrawArc(Vector2.Zero,inf.InfRad,0,(float)Math.PI*2,100,inf.DebugColor);
+        }
+    }
+
+    public void DrawColliders(){
+        foreach (var col in ColList)
+        {
+            DrawArc(Vector2.Zero,col.Radius,0,(float)Math.PI*2,100,col.RadiusColor);
+        }
+    }    
+
+    public void DrawCollisions(){
+        foreach (var col in ColList)
+        {
+            foreach (var collision in col.CollisionPoints)
+            {
+                DrawCircle(collision-Position,4,col.CollisionColor);
+            }
         }
     }
 
@@ -137,7 +156,9 @@ public class CustomPhysObject: Node2D{
         #if DEBUG
         DrawPred();
         DrawPhys();
-        DrawInfluencer();
+        DrawInfluencers();
+        DrawColliders();
+        DrawCollisions();
         #endif
     }
 }

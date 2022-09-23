@@ -57,13 +57,26 @@ using Godot;
             Result.time = time + T;
             return Result;
         }
-
-        public Vector2 GetInterPos(float T){
-            return Position+Speed*T+(Acceleration*T*T)/2;
+        
+        /// <summary>
+        /// Метод, возвращающий положение на отрезке времени от 0 до maxT, равную T
+        /// </summary>
+        /// <param name="T"></param>
+        /// <param name="maxT"></param>
+        /// <returns></returns>
+        public Vector2 GetInterPos(float T, float maxT){
+            return Position+GetInterSpeed(maxT)*T;
         }
-
-        public float GetInterRot(float T){
-            return Rotation+RotSpeed*T+(RotAccel*T*T)/2;
+        
+        /// <summary>
+        /// Метод, возвращающий вращение на отрезке времени от 0 до maxT, равную T
+        /// </summary>
+        /// <param name="T"></param>
+        /// <param name="maxT"></param>
+        /// <returns></returns>
+        public float GetInterRot(float T, float maxT){
+            float InterRt = GetInterRotSpeed(maxT);
+            return Rotation+InterRt*T;
         }
 
 		/// <summary>
@@ -115,17 +128,6 @@ using Godot;
         public float GetInterRotSpeed(float T){
             float RotSpeed2 = RotSpeed+RotAccel*T;
             return (RotSpeed+RotSpeed2)/2;
-        }
-        
-        /// <summary>
-        /// Метод, возвращающий вращение на отрезке времени от 0 до maxT, равную T
-        /// </summary>
-        /// <param name="T"></param>
-        /// <param name="maxT"></param>
-        /// <returns></returns>
-        public float GetInterRot(float T, float maxT){
-            float InterRt = GetInterRotSpeed(maxT);
-            return Rotation+InterRt*T;
         }
 
         public RailPoint(){
