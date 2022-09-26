@@ -3,10 +3,24 @@ using System.Collections.Generic;
 
 public class Collider:SelfUnloadingNode{
 
+    public struct Collision{
+        public float time;
+
+        public Collider collider;
+
+        public bool Physic;
+
+        public Collision(float Time, Collider Collider, bool phys){
+            time = Time;
+            collider = Collider;
+            Physic = phys;
+        }
+    }
+
     [Export]
     public float Radius = 1;
 
-    public List<Vector2> CollisionPoints = new List<Vector2>();
+    public List<Collision> Collisions = new List<Collision>();
 
     [Export]
     public Color RadiusColor;
@@ -36,5 +50,31 @@ public class Collider:SelfUnloadingNode{
         } else {
             return Parent.PredictionRail[id].GetInterPos(CollTime,Parent.PredictionRail[id+1].time-Parent.PredictionRail[id].time);
         }
+    }
+    
+    Collision ScanForApproaches(Collider collider, RailPointList OwnRail, RailPointList OtherRail){
+        if(OwnRail.Count != OtherRail.Count) throw new System.Exception("Rail counts dont match");
+        float Minlength = OwnRail[0].Position.DistanceSquaredTo(OtherRail[0].Position);
+        float MinTime = 0;
+        for (int i = 0; i < OwnRail.Count-1; i++)
+        {
+        }
+        return new Collision(MinTime,collider,false);
+    }
+
+    public void ScanForApproaches(Collider collider, bool Phys){
+        if(Phys) {
+            ScanForApproaches(collider,Parent.PhysRail,collider.Parent.PhysRail);
+        } else {
+            ScanForApproaches(collider,Parent.PredictionRail,collider.Parent.PredictionRail);
+        }
+    }
+
+    public void AddCollision(Collision Coll){
+        Collisions.Add(Coll);
+    }
+
+    public void ClearCollisions(){
+        Collisions.Clear();
     }
 }

@@ -52,6 +52,16 @@ public class RailPointList: List<RailPoint>{
         return Count-1;
     }
 
+    public Vector2 InterpolatePos(float T){
+        int beforeID = GetBeforeTime(T);
+        float TDiff = T-this[beforeID].time;
+        if(beforeID < Count-1){ 
+            return this[beforeID].GetInterPos(TDiff,this[beforeID+1].time-this[beforeID].time);
+        } else {
+            return this[beforeID].Position;
+        }
+    }
+
     /// <summary>
     /// Method that will set first rail point
     /// </summary>
