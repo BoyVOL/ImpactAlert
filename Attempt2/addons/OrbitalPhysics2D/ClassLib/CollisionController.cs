@@ -17,8 +17,10 @@ public class CollisionController: AddonWithList<Collider>{
             for (int j = 0; j < Items.Count; j++)
             {
                 if(i>j){
-                    Items[i].ScanForApproaches(Items[j],true);
-                    Items[j].ScanForApproaches(Items[i],true);
+                    Items[i].ScanRailForApproaches(Items[j],true);
+                    Items[i].ScanRailForApproaches(Items[j],false);
+                    Items[j].ScanRailForApproaches(Items[i],true);
+                    Items[j].ScanRailForApproaches(Items[i],false);
                 }
             }
         }

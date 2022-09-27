@@ -112,11 +112,7 @@ public class CustomPhysObject: Node2D{
             foreach (var collision in col.Collisions)
             {
                 Vector2 Pos;
-                if(collision.Physic){
-                    Pos = PhysRail.InterpolatePos(collision.time);
-                } else {
-                    Pos = PredictionRail.InterpolatePos(collision.time);
-                }
+                Pos = PredictionRail.InterpolatePos(collision.time);
                 DrawCircle(Pos-Position,3,collision.collider.CollisionColor);
             }
         }

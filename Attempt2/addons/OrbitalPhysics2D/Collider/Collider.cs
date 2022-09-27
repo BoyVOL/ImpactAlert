@@ -8,12 +8,9 @@ public class Collider:SelfUnloadingNode{
 
         public Collider collider;
 
-        public bool Physic;
-
-        public Collision(float Time, Collider Collider, bool phys){
+        public Collision(float Time, Collider Collider){
             time = Time;
             collider = Collider;
-            Physic = phys;
         }
     }
 
@@ -52,21 +49,33 @@ public class Collider:SelfUnloadingNode{
         }
     }
     
-    Collision ScanForApproaches(Collider collider, RailPointList OwnRail, RailPointList OtherRail){
-        if(OwnRail.Count != OtherRail.Count) throw new System.Exception("Rail counts dont match");
-        float Minlength = OwnRail[0].Position.DistanceSquaredTo(OtherRail[0].Position);
-        float MinTime = 0;
-        for (int i = 0; i < OwnRail.Count-1; i++)
-        {
-        }
-        return new Collision(MinTime,collider,false);
+    Collision ScanForApproaches(Collider collider, RailPointList OwnRail, RailPointList OtherRail,int id){
+        float TimeFrame = OwnRail[id+1].time-OwnRail[id].time;
+        float calltime = OwnRail[id].CPA(OtherRail[id],TimeFrame)+OwnRail[id].time;
+        Collision Result = new Collision(calltime,collider);
+        return Result;
     }
 
-    public void ScanForApproaches(Collider collider, bool Phys){
+    public Collision ScanForApproaches(Collider collider, bool Phys,int id){
         if(Phys) {
-            ScanForApproaches(collider,Parent.PhysRail,collider.Parent.PhysRail);
+            return ScanForApproaches(collider,Parent.PhysRail,collider.Parent.PhysRail,id);
         } else {
-            ScanForApproaches(collider,Parent.PredictionRail,collider.Parent.PredictionRail);
+            return ScanForApproaches(collider,Parent.PredictionRail,collider.Parent.PredictionRail,id);
+        }
+    }
+
+    public void ScanRailForApproaches(Collider collider, RailPointList OwnRail, RailPointList OtherRail){
+        for (int i = 0; i < OwnRail.Count-1; i++)
+        {
+            Collisions.Add(ScanForApproaches(collider,OwnRail,OtherRail,i));
+        }
+    }
+
+    public void ScanRailForApproaches(Collider collider, bool Phys){
+        if(Phys) {
+            ScanRailForApproaches(collider,Parent.PhysRail,collider.Parent.PhysRail);
+        } else {
+            ScanRailForApproaches(collider,Parent.PredictionRail,collider.Parent.PredictionRail);
         }
     }
 
