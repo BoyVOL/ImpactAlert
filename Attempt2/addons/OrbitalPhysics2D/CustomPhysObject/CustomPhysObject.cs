@@ -8,6 +8,8 @@ public class CustomPhysObject: Node2D{
     /// Ref to controlling object
     /// </summary>
     public PhysicsControlNode PhysNode = null;
+
+    public Collider Collider = null;
     
     [Export]
     public Color PhysRailColor;
@@ -16,8 +18,6 @@ public class CustomPhysObject: Node2D{
     public Color PredictionColor;
 
     public List<Influencer> InfList = new List<Influencer>();
-
-    public List<Collider> ColList = new List<Collider>();
 
     /// <summary>
     /// List of all simulation points of this object
@@ -99,17 +99,15 @@ public class CustomPhysObject: Node2D{
         }
     }
 
-    public void DrawColliders(){
-        foreach (var col in ColList)
-        {
-            DrawArc(Vector2.Zero,col.Radius,0,(float)Math.PI*2,100,col.RadiusColor);
+    public void DrawCollider(){
+        if(Collider != null){
+            DrawArc(Vector2.Zero,Collider.Radius,0,(float)Math.PI*2,100,Collider.RadiusColor);
         }
     }    
 
     public void DrawCollisions(){
-        foreach (var col in ColList)
-        {
-            foreach (var collision in col.Collisions)
+        if(Collider != null){
+            foreach (var collision in Collider.Collisions)
             {
                 Vector2 Pos;
                 Pos = PredictionRail.InterpolatePos(collision.time);
@@ -159,7 +157,7 @@ public class CustomPhysObject: Node2D{
         DrawPred();
         DrawPhys();
         DrawInfluencers();
-        DrawColliders();
+        DrawCollider();
         DrawCollisions();
         #endif
     }
