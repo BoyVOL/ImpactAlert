@@ -3,21 +3,21 @@ using System.Collections.Generic;
 
 public class Rangefinder:SelfUnloadingNode{
 
-    public struct Collision{
+    public struct Approach{
         public float time;
 
-        public Collider collider;
+        public Rangefinder Rangefinder;
 
-        public Collision(float Time, Collider Collider){
+        public Approach(float Time, Rangefinder rangefinder){
             time = Time;
-            collider = Collider;
+            Rangefinder = rangefinder;
         }
     }
 
     [Export]
     public float Radius = 1;
 
-    public List<Collision> Collisions = new List<Collision>();
+    public List<Approach> Collisions = new List<Approach>();
 
     [Export]
     public Color RadiusColor;
@@ -25,14 +25,14 @@ public class Rangefinder:SelfUnloadingNode{
     [Export]
     public Color CollisionColor;
     
-    Collision ScanForApproaches(Collider collider, RailPointList OwnRail, RailPointList OtherRail,int id){
+    Approach ScanForApproaches(Collider collider, RailPointList OwnRail, RailPointList OtherRail,int id){
         float TimeFrame = OwnRail[id+1].time-OwnRail[id].time;
         float calltime = OwnRail[id].CPA(OtherRail[id],TimeFrame)+OwnRail[id].time;
-        Collision Result = new Collision(calltime,collider);
+        Approach Result = new Approach(calltime,collider);
         return Result;
     }
 
-    public Collision ScanForApproaches(Collider collider, bool Phys,int id){
+    public Approach ScanForApproaches(Collider collider, bool Phys,int id){
         if(Phys) {
             return ScanForApproaches(collider,Parent.PhysRail,collider.Parent.PhysRail,id);
         } else {
@@ -55,7 +55,7 @@ public class Rangefinder:SelfUnloadingNode{
         }
     }
 
-    public void AddCollision(Collision Coll){
+    public void AddCollision(Approach Coll){
         Collisions.Add(Coll);
     }
 

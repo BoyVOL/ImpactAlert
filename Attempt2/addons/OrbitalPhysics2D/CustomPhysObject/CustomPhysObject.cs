@@ -111,7 +111,7 @@ public class CustomPhysObject: Node2D{
             {
                 Vector2 Pos;
                 Pos = PredictionRail.InterpolatePos(collision.time);
-                DrawCircle(Pos-Position,3,collision.collider.CollisionColor);
+                DrawCircle(Pos-Position,3,collision.Rangefinder.CollisionColor);
             }
         }
     }
