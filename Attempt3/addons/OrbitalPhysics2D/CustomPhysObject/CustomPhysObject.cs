@@ -33,16 +33,16 @@ public partial class CustomPhysObject: Node2D{
 	public RailPointList PredictionRail;
 
 	[Export]
-	private Vector2 FirstPointSpeed = Vector2.Zero;
+	private Vector2 FirstPointSpeed;
 
 	[Export]
-	private float FirstPointRotSpeed = 0;
+	private float FirstPointRotSpeed;
 
 	[Export]
-	private Vector2 FirstPointAccel = Vector2.Zero;
+	private Vector2 FirstPointAccel;
 
 	[Export]
-	private float FirstPointRotAccel = 0;
+	private float FirstPointRotAccel;
 
 	[Export]
 	public float mass = 1;
@@ -72,6 +72,7 @@ public partial class CustomPhysObject: Node2D{
 	/// </summary>
 	public void UpdatePos(){
 		Position = PhysRail[0].Position;
+		Rotation = PhysRail[0].Rotation;
 	}
 
 	public void DrawPhys(){
@@ -88,6 +89,7 @@ public partial class CustomPhysObject: Node2D{
 			for (int i = 0; i < PredictionRail.Count; i++)
 			{
 				Points[i] = PredictionRail[i].Position-PredictionRail[0].Position;
+				Points[i] = Points[i].Rotated(-Rotation);
 			}
 			if(Points.Length > 1) DrawPolyline(Points,PredictionColor,2);
 	}
@@ -146,6 +148,7 @@ public partial class CustomPhysObject: Node2D{
 		base._PhysicsProcess(delta);
 		UpdatePos();
 		#if DEBUG
+		QueueRedraw();
 		#endif
 	}
 

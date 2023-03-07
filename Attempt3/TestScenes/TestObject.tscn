@@ -1,0 +1,20 @@
+[gd_scene load_steps=5 format=3 uid="uid://u4idjb8sdnq2"]
+
+[ext_resource type="Script" path="res://addons/OrbitalPhysics2D/CustomPhysObject/CustomPhysObject.cs" id="1_mr3j5"]
+[ext_resource type="Texture2D" uid="uid://db5h8o611vwvl" path="res://Sprites/Ships/Starter ship.png" id="2_g0dcf"]
+[ext_resource type="Script" path="res://TestScenes/Sprite2D.cs" id="3_1xgki"]
+[ext_resource type="Script" path="res://addons/OrbitalPhysics2D/GravityInfluencer/GravityInfluencer.cs" id="4_2rap4"]
+
+[node name="CustomPhysObject" type="Node2D"]
+script = ExtResource("1_mr3j5")
+PredictionColor = Color(1, 0, 0, 1)
+mass = 100.0
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(1.86667, 1.86667)
+texture = ExtResource("2_g0dcf")
+script = ExtResource("3_1xgki")
+
+[node name="GravityInfluencer" type="Node" parent="."]
+script = ExtResource("4_2rap4")
+massMultiplier = 1e+12

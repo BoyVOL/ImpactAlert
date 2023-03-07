@@ -1,6 +1,18 @@
-[gd_scene load_steps=2 format=3 uid="uid://cmqx87qmj8idp"]
+[gd_scene load_steps=3 format=3 uid="uid://cmqx87qmj8idp"]
 
 [ext_resource type="Script" path="res://TestScenes/Test.cs" id="1_pyfct"]
+[ext_resource type="PackedScene" uid="uid://u4idjb8sdnq2" path="res://TestScenes/TestObject.tscn" id="2_xx2l8"]
 
 [node name="Node2D" type="Node2D"]
 script = ExtResource("1_pyfct")
+
+[node name="CustomPhysObject" parent="." instance=ExtResource("2_xx2l8")]
+position = Vector2(105.407, 94.9305)
+FirstPointSpeed = Vector2(100, 0)
+FirstPointRotSpeed = -1.0
+
+[node name="TestObject1" parent="." instance=ExtResource("2_xx2l8")]
+position = Vector2(222, 182)
+FirstPointSpeed = Vector2(0, 100)
+FirstPointRotSpeed = 10.0
+mass = 2.0
