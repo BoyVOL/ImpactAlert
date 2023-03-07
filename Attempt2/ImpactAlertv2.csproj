@@ -1,9 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project Sdk="Godot.NET.Sdk/3.3.0">
+<Project Sdk="Godot.NET.Sdk/4.0.0">
   <PropertyGroup>
-    <TargetFramework>net472</TargetFramework>
+    <TargetFramework>net6</TargetFramework>
     <RootNamespace>ImpactAlertv2</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Content Include="addons\OrbitalPhysics2D\CustomPhysObject\CustomPhysObject.cs" />
   </ItemGroup>
 </Project>

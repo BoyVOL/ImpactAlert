@@ -1,0 +1,69 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v6.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v6.0": {
+      "ImpactAlertv2/1.0.0": {
+        "dependencies": {
+          "Godot.SourceGenerators": "4.0.0",
+          "GodotSharp": "4.0.0",
+          "GodotSharpEditor": "4.0.0"
+        },
+        "runtime": {
+          "ImpactAlertv2.dll": {}
+        }
+      },
+      "Godot.SourceGenerators/4.0.0": {},
+      "GodotSharp/4.0.0": {
+        "runtime": {
+          "lib/net6.0/GodotSharp.dll": {
+            "assemblyVersion": "4.0.0.0",
+            "fileVersion": "4.0.0.0"
+          }
+        }
+      },
+      "GodotSharpEditor/4.0.0": {
+        "dependencies": {
+          "GodotSharp": "4.0.0"
+        },
+        "runtime": {
+          "lib/net6.0/GodotSharpEditor.dll": {
+            "assemblyVersion": "4.0.0.0",
+            "fileVersion": "4.0.0.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "ImpactAlertv2/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Godot.SourceGenerators/4.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-u+xcapvfVha2BtTF7cRHrNfo+mxH4uGsJrEDQFM3FG+Kww61m2Qs/s2IqgEzR/CLFwidrdgn624xFHk738KnQw==",
+      "path": "godot.sourcegenerators/4.0.0",
+      "hashPath": "godot.sourcegenerators.4.0.0.nupkg.sha512"
+    },
+    "GodotSharp/4.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-SbiM07Eh6m1vASfzSIMIfwdpFvI6E+c0+VA5aOB3SKl/pWnl8ToAc8eR1wbjBnkw7D13A8+Nk8j/AJvWiHOCTw==",
+      "path": "godotsharp/4.0.0",
+      "hashPath": "godotsharp.4.0.0.nupkg.sha512"
+    },
+    "GodotSharpEditor/4.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-VmNKvHgFdK67l/e8BfUqzVSXS3wZqZhYREdh1VKzZCY61vKxXqppIUcUb8QzsS0RaK00jXVK4LqlcxrgpG9sUQ==",
+      "path": "godotsharpeditor/4.0.0",
+      "hashPath": "godotsharpeditor.4.0.0.nupkg.sha512"
+    }
+  }
+}

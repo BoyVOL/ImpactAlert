@@ -1,0 +1,33 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[application]
+
+config/name="ImpactAlert v3"
+run/main_scene="res://TestScenes/Test.tscn"
+config/features=PackedStringArray("4.0", "C#", "GL Compatibility")
+config/icon="res://icon.svg"
+
+[autoload]
+
+Autoload="*res://addons/OrbitalPhysics2D//AutoloadScenes/Autoload.tscn"
+
+[dotnet]
+
+project/assembly_name="ImpactAlert v3"
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/OrbitalPhysics2D/plugin.cfg")
+
+[rendering]
+
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"

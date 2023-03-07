@@ -1,30 +1,34 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=3 uid="uid://dige0e5dm5315"]
 
-[ext_resource path="res://addons/OrbitalPhysics2D/CustomPhysObject/CustomPhysObject.cs" type="Script" id=1]
-[ext_resource path="res://addons/OrbitalPhysics2D/GravityInfluencer/GravityInfluencer.cs" type="Script" id=2]
-[ext_resource path="res://addons/OrbitalPhysics2D/RailInterpolator/RailInterpolator.cs" type="Script" id=3]
-[ext_resource path="res://addons/OrbitalPhysics2D/Collider/Collider.cs" type="Script" id=4]
-[ext_resource path="res://Sprites/Ships/Starter ship.png" type="Texture" id=5]
+[ext_resource type="Script" path="res://addons/OrbitalPhysics2D/CustomPhysObject/CustomPhysObject.cs" id="1"]
+[ext_resource type="Script" path="res://addons/OrbitalPhysics2D/GravityInfluencer/GravityInfluencer.cs" id="2"]
+[ext_resource type="Script" path="res://addons/OrbitalPhysics2D/RailInterpolator/RailInterpolator.cs" id="3"]
+[ext_resource type="Script" path="res://addons/OrbitalPhysics2D/Collider/Collider.cs" id="4"]
+[ext_resource type="Texture2D" uid="uid://db5h8o611vwvl" path="res://Sprites/Ships/Starter ship.png" id="5"]
+[ext_resource type="Script" path="res://addons/OrbitalPhysics2D/PredictionRailController/PredictionRailController.cs" id="6_bry1y"]
 
 [node name="CustomPhysObject" type="Node2D"]
-script = ExtResource( 1 )
-PhysRailColor = Color( 0, 1, 0.952941, 1 )
-PredictionColor = Color( 0, 0.415686, 1, 1 )
+script = ExtResource("1")
+PhysRailColor = Color(0, 1, 0.952941, 1)
+PredictionColor = Color(0, 0.415686, 1, 1)
 mass = 1e+13
 
 [node name="RailInterpolator" type="Node2D" parent="."]
-script = ExtResource( 3 )
+script = ExtResource("3")
 
-[node name="Sprite" type="Sprite" parent="RailInterpolator"]
-texture = ExtResource( 5 )
+[node name="Sprite" type="Sprite2D" parent="RailInterpolator"]
+texture = ExtResource("5")
 
 [node name="GravityInfluencer" type="Node" parent="."]
-script = ExtResource( 2 )
+script = ExtResource("2")
 InfRad = 10.0
-DebugColor = Color( 1, 0, 0, 1 )
+DebugColor = Color(1, 0, 0, 1)
 
 [node name="Collider" type="Node" parent="."]
-script = ExtResource( 4 )
+script = ExtResource("4")
 Radius = 20.0
-RadiusColor = Color( 0, 0.156863, 1, 1 )
-CollisionColor = Color( 1, 0, 0, 1 )
+RadiusColor = Color(0, 0.156863, 1, 1)
+CollisionColor = Color(1, 0, 0, 1)
+
+[node name="PredictionRailController" type="Node2D" parent="."]
+script = ExtResource("6_bry1y")

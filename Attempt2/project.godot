@@ -6,21 +6,18 @@
 ;   [section] ; section goes between []
 ;   param=value ; assign values to parameters
 
-config_version=4
+config_version=5
 
 [application]
 
 config/name="ImpactAlertv2"
-run/main_scene="res://TestScenes/TestScene2.tscn"
+run/main_scene="res://TestScenes/TestScene3.tscn"
+config/features=PackedStringArray("4.0", "C#")
 config/icon="res://icon.png"
 
-[autoload]
+[dotnet]
 
-Autoload="*res://addons/OrbitalPhysics2D//AutoloadScenes/Autoload.tscn"
-
-[editor_plugins]
-
-enabled=PoolStringArray( "res://addons/OrbitalPhysics2D/plugin.cfg" )
+project/assembly_name="ImpactAlertv2"
 
 [mono]
 
@@ -34,4 +31,6 @@ common/enable_pause_aware_picking=true
 
 [rendering]
 
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"
 environment/default_environment="res://default_env.tres"
