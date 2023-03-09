@@ -72,7 +72,6 @@ public partial class CustomPhysObject: Node2D{
 	/// </summary>
 	public void UpdatePos(){
 		Position = PhysRail[0].Position;
-		Rotation = PhysRail[0].Rotation;
 	}
 
 	public void DrawPhys(){

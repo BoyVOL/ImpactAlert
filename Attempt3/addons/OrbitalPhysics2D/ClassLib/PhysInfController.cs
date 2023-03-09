@@ -1,7 +1,7 @@
 using Godot;
 using System.Collections.Generic;
 
-public partial class PhysInfController: InfController<PhysInfluencer>{
+public partial class PhysInfController: InfController<AccelInfluencer>{
 
     public PhysInfController(PhysicsControlNode parent):base(parent){
 

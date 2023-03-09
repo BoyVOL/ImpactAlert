@@ -17,7 +17,7 @@ public partial class OrbitalPhysics2D : EditorPlugin
 
     public override void _EnterTree(){
         base._EnterTree();
-        GD.Print("Plugin ready");
+        GD.Print("Plugin loaded");
         AddCustomType("PhysicsControlNode","Node");
         AddCustomType("GravityInfluencer","Node");
         AddCustomType("Collider","Node");
@@ -37,6 +37,7 @@ public partial class OrbitalPhysics2D : EditorPlugin
         RemoveCustomType("PhysicsControlNode");
         RemoveCustomType("PredictionRailController");
         RemoveAutoloadSingleton("Autoload");
+        GD.Print("Plugin unloaded");
     }
 
     public override void _Process(double delta)

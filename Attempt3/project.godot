@@ -27,6 +27,10 @@ project/assembly_name="ImpactAlert v3"
 
 enabled=PackedStringArray("res://addons/OrbitalPhysics2D/plugin.cfg")
 
+[physics]
+
+common/physics_ticks_per_second=20
+
 [rendering]
 
 renderer/rendering_method="gl_compatibility"

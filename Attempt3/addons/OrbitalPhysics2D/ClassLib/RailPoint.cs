@@ -150,7 +150,7 @@ using Godot;
         /// <returns></returns>
         public string Stringify(){
             string Result = "";
-            Result += "Position = ("+Position.X+";"+Position.Y+")";
+            Result += "Position = ("+Position.X+";"+Position.Y+"), Speed = ("+Speed.X+";"+Speed.Y+", Accel = ("+Acceleration.X+";"+Acceleration.Y+")";
             return Result;
         }
      

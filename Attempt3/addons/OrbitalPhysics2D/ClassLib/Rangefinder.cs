@@ -1,6 +1,9 @@
 using Godot;
 using System.Collections.Generic;
 
+/// <summary>
+/// Class that searches for all approaches to other rangefinders
+/// </summary>
 public partial class Rangefinder:SelfUnloadingNode{
 
 	public struct Approach{

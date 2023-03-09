@@ -5,7 +5,7 @@ public abstract partial class Influencer: SelfUnloadingNode{
 
 	[Export]
 	/// <summary>
-	/// Max radius in which object can spread influence
+	/// Max radius in which phys object with this influencer can influence others
 	/// </summary>
 	public float InfRad;
 
