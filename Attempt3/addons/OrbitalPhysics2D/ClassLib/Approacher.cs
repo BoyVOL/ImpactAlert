@@ -2,18 +2,18 @@ using Godot;
 using System.Collections.Generic;
 
 /// <summary>
-/// Class that searches for all approaches to other rangefinders
+/// Class that searches for all approaches to other Approachers
 /// </summary>
-public partial class Rangefinder:SelfUnloadingNode{
+public partial class Approacher:SelfUnloadingNode{
 
 	public struct Approach{
 		public float time;
 
-		public Rangefinder Rangefinder;
+		public Approacher Approacher;
 
-		public Approach(float Time, Rangefinder rangefinder){
+		public Approach(float Time, Approacher approacher){
 			time = Time;
-			Rangefinder = rangefinder;
+			Approacher = approacher;
 		}
 	}
 

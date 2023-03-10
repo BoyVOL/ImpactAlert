@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 public partial class RailPointList: List<RailPoint>{
 
-    public CustomPhysObject Parent;
+    public PhysRailNode Parent;
 
-    public RailPointList(CustomPhysObject parent){
+    public RailPointList(PhysRailNode parent){
         Parent = parent;
     }
 

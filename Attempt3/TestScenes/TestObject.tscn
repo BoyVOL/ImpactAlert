@@ -31,4 +31,5 @@ script = ExtResource("5_6ymed")
 [node name="Collider" type="Node" parent="."]
 script = ExtResource("6_a0fwi")
 Radius = 20.0
+RadiusColor = Color(0, 0, 0, 1)
 CollisionColor = Color(0, 0, 1, 1)

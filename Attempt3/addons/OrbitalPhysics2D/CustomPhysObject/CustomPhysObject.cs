@@ -2,7 +2,7 @@ using Godot;
 using System;
 using System.Collections.Generic;
 
-public partial class CustomPhysObject: Node2D{
+public partial class CustomPhysObject: PredictRailNode{
 
 	/// <summary>
 	/// Ref to controlling object
@@ -10,27 +10,8 @@ public partial class CustomPhysObject: Node2D{
 	public PhysicsControlNode PhysNode = null;
 
 	public Collider Collider = null;
-	
-	[Export]
-	public Color PhysRailColor;
-	
-	[Export]
-	public Color PredictionColor;
 
 	public List<Influencer> InfList = new List<Influencer>();
-
-	/// <summary>
-	/// List of all simulation points of this object
-	/// </summary>
-	/// <typeparam name="PhysRail"></typeparam>
-	/// <returns></returns>
-	public RailPointList PhysRail;
-
-	/// <summary>
-	/// List af all points that predict movement of this object for certain period of time
-	/// </summary>
-	/// <returns></returns>
-	public RailPointList PredictionRail;
 
 	[Export]
 	private Vector2 FirstPointSpeed;
@@ -46,11 +27,6 @@ public partial class CustomPhysObject: Node2D{
 
 	[Export]
 	public float mass = 1;
-
-	public CustomPhysObject():base(){
-		PhysRail = new RailPointList(this);
-		PredictionRail = new RailPointList(this);
-	}
 
 	/// <summary>
 	/// Method for setting up first point of this rail
@@ -83,16 +59,6 @@ public partial class CustomPhysObject: Node2D{
 			if(Points.Length > 1) DrawPolyline(Points,PhysRailColor,2);
 	}
 
-	public void DrawPred(){
-			Vector2[] Points = new Vector2[PredictionRail.Count];
-			for (int i = 0; i < PredictionRail.Count; i++)
-			{
-				Points[i] = PredictionRail[i].Position-PredictionRail[0].Position;
-				Points[i] = Points[i].Rotated(-Rotation);
-			}
-			if(Points.Length > 1) DrawPolyline(Points,PredictionColor,2);
-	}
-
 	public void DrawInfluencers(){
 		foreach (var inf in InfList)
 		{
@@ -112,7 +78,7 @@ public partial class CustomPhysObject: Node2D{
 			{
 				Vector2 Pos;
 				Pos = PredictionRail.InterpolatePos(collision.time);
-				DrawCircle(Pos-Position,3,collision.Rangefinder.CollisionColor);
+				DrawCircle(Pos-Position,3,collision.Approacher.CollisionColor);
 			}
 		}
 	}
@@ -155,7 +121,6 @@ public partial class CustomPhysObject: Node2D{
 	{
 		base._Draw();
 		#if DEBUG
-		DrawPred();
 		DrawPhys();
 		DrawInfluencers();
 		DrawCollider();
