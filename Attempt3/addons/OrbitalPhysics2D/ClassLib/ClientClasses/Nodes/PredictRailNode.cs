@@ -3,6 +3,11 @@ using System;
 using System.Collections.Generic;
 
 public partial class PredictRailNode: PhysRailNode{
+
+	/// <summary>
+	/// Ref to controlling object
+	/// </summary>
+	public PhysicsControlNode PhysNode = null;
 	
 	[Export]
 	public Color PredictionColor;
@@ -25,6 +30,19 @@ public partial class PredictRailNode: PhysRailNode{
 				Points[i] = Points[i].Rotated(-Rotation);
 			}
 			if(Points.Length > 1) DrawPolyline(Points,PredictionColor,2);
+	}
+
+	public override void _EnterTree(){
+		base._EnterTree();
+		PhysNode = GetNode<PhysicsControlNode>("/root/Autoload/PhysicsControlNode");
+	}
+
+	public override void _PhysicsProcess(double delta)
+	{
+		base._PhysicsProcess(delta);
+		#if DEBUG
+		QueueRedraw();
+		#endif
 	}
 
 	public override void _Draw()

@@ -1,15 +1,18 @@
 using Godot;
 
-public partial class InfListController: RPListController{
+/// <summary>
+/// Subclass of rail updater that enables influence betweeb rails
+/// </summary>
+public partial class InfRPListController: RPListController{
 
     public PhysInfController InfContr;
 
-    public InfListController(PhysicsControlNode parent, PhysInfController infContr):base(parent){
+    public InfRPListController(PhysicsControlNode parent, PhysInfController infContr):base(parent){
         InfContr = infContr;
     }
     
     public void UpdateAccel(int id, bool PhysRail, float t){
-        foreach (var rail in Rails)
+        foreach (var rail in Items)
         {
             rail[id].Acceleration = InfContr.CombineAccels(rail[id],PhysRail,id,rail);
             Vector2 FirstAccel = rail[id].Acceleration;

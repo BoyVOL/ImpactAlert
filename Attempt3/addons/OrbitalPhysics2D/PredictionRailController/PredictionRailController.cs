@@ -1,9 +1,13 @@
 using Godot;
 using System.Collections.Generic;
 
-public partial class PredictionRailController: Node2D{
+public partial class PredictionRailController: PredictRailNode{
+    
+    CustomPhysObject Parent;
 
-    public Node2D Parent;
+    public PredictionRailController(): base(){
+        
+    }
 
     public override void _EnterTree(){
         base._EnterTree();

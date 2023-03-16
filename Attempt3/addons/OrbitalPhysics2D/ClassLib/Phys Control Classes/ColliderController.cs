@@ -1,9 +1,9 @@
 using Godot;
 using System.Collections.Generic;
 
-public partial class CollisionController: AddonWithList<Collider>{
+public partial class ColliderController: AddonWithList<Collider>{
 
-    public CollisionController(PhysicsControlNode parent):base(parent){
+    public ColliderController(PhysicsControlNode parent):base(parent){
 
     }
 

@@ -9,8 +9,8 @@
 
 [node name="CustomPhysObject" type="Node2D"]
 script = ExtResource("1_mr3j5")
-PredictionColor = Color(1, 0, 0, 1)
 mass = 100.0
+PredictionColor = Color(1, 0, 0, 1)
 
 [node name="GravityInfluencer" type="Node" parent="."]
 script = ExtResource("4_2rap4")

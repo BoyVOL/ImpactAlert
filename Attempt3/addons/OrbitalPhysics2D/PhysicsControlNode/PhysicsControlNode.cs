@@ -11,11 +11,11 @@ public partial class PhysicsControlNode: Node{
 
     public PhysInfController InfContr;
 
-    public CollisionController CollContr;
+    public ColliderController CollContr;
 
-    public CollListController PhysRail;
+    public CollRPListController PhysRail;
 
-    public PredictListController PredictRail;
+    public PredRPListController PredictRail;
 
     [Export]
     public float MaxPredictionRange = 10;
@@ -24,9 +24,9 @@ public partial class PhysicsControlNode: Node{
 
     public PhysicsControlNode():base(){
         InfContr = new PhysInfController(this);
-        CollContr = new CollisionController(this);
-        PhysRail = new CollListController(this,InfContr,CollContr);
-        PredictRail = new PredictListController(this,InfContr);
+        CollContr = new ColliderController(this);
+        PhysRail = new CollRPListController(this,InfContr,CollContr);
+        PredictRail = new PredRPListController(this,InfContr);
     }
 
     public void Add(CustomPhysObject Object){

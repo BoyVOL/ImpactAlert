@@ -1,5 +1,8 @@
 using Godot;
 
+/// <summary>
+/// Base class for rail influencers that change rail's motion
+/// </summary>
 public abstract partial class AccelInfluencer:Influencer{
 
 	public override void _EnterTree()

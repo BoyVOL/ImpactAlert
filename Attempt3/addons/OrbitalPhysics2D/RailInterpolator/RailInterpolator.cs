@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 public partial class RailInterpolator: Node2D{
 
-    public CustomPhysObject Parent;
+    public PhysRailNode Parent;
 
     /// <summary>
     /// Time offset im ms

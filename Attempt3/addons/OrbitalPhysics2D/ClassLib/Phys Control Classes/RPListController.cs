@@ -1,16 +1,17 @@
 using Godot;
 using System.Collections.Generic;
 
-public partial class RPListController: PhysicsControlAddon{
+/// <summary>
+/// Subclass of physic control node addon for containing and updating rails
+/// </summary>
+public partial class RPListController: AddonWithList<RailPointList>{
     
     public RPListController(PhysicsControlNode parent):base(parent){
 
     }
 
-    public List<RailPointList> Rails = new List<RailPointList>();
-
     public void Reset(){
-        foreach (var list in Rails)
+        foreach (var list in Items)
         {
             list.ResetToStart();
         }
@@ -22,25 +23,13 @@ public partial class RPListController: PhysicsControlAddon{
     /// <param name="delta"></param>
     /// <param name="id"></param>
     public void AppendPoint(float delta,int id){
-        foreach (var list in Rails)
+        foreach (var list in Items)
         {
             if(list.Count==id) list.AppendPoint(delta);
         }
     }
-
-    public void Add(RailPointList List){
-        Rails.Add(List);
-    }
     
     public RailPointList this[int i]{
-        get => Rails[i];
-    }
-
-    public void Remove(RailPointList List){
-        Rails.Remove(List);
-    }
-
-    public int Count(){
-        return Rails.Count;
+        get => Items[i];
     }
 }
