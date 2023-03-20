@@ -11,6 +11,17 @@ public partial class InfRPListController: RPListController{
         InfContr = infContr;
     }
     
+    public Vector2 CombineAccels(RailPoint target, int id, RailPointList ThisRail){
+        Vector2 result = Vector2.Zero;
+        foreach (var rail in Items)
+        {   
+            if(rail != ThisRail){  
+                //result += item.GetAccel(target,physRail, id);
+            }
+        }
+        return result;
+    }
+    
     public void UpdateAccel(int id, bool PhysRail, float t){
         foreach (var rail in Items)
         {

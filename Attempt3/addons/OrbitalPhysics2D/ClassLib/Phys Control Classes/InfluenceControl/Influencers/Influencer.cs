@@ -9,6 +9,8 @@ public abstract partial class Influencer: SelfUnloadingNode{
 	/// </summary>
 	public float InfRad;
 
+	public RailPointList Rail;
+
 	[Export]
 	public Color DebugColor;
 
@@ -16,6 +18,7 @@ public abstract partial class Influencer: SelfUnloadingNode{
 	{
 		base._EnterTree();
 		Parent.InfList.Add(this);
+		Rail.Influencers.Add(this);
 	}
 
 	public override void _Process(double delta)

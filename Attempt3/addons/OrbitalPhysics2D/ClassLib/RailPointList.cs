@@ -3,6 +3,8 @@ using System.Collections.Generic;
 
 public partial class RailPointList: List<RailPoint>{
 
+    public List<Influencer> Influencers = new List<Influencer>();
+
     public PhysRailNode Parent;
 
     public RailPointList(PhysRailNode parent){
