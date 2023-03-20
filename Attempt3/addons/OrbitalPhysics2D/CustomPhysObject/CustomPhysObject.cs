@@ -34,11 +34,6 @@ public partial class CustomPhysObject: CollisionRailNode{
 		PredictionRail.SetFirstPoint(Point);
 	}
 
-	public void LoadObject(){
-		PhysNode.PhysRail.Add(PhysRail);
-		PhysNode.PredictRail.Add(PredictionRail);
-	}
-
 	public override void _EnterTree()
 	{
 		base._EnterTree();
@@ -56,12 +51,6 @@ public partial class CustomPhysObject: CollisionRailNode{
 	public override void _Process(double delta)
 	{
 		base._Process(delta);
-	}
-
-	public override void _PhysicsProcess(double delta)
-	{
-		UpdatePos();
-		base._PhysicsProcess(delta);
 	}
 
 	public override void _Draw()

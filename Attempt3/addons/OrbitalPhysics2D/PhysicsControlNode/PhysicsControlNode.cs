@@ -17,6 +17,8 @@ public partial class PhysicsControlNode: Node{
 
     public PredRPListController PredictRail;
 
+    public PredRPListController FramePredictRail;
+
     [Export]
     public float MaxPredictionRange = 10;
 
@@ -27,6 +29,7 @@ public partial class PhysicsControlNode: Node{
         CollContr = new ColliderController(this);
         PhysRail = new CollRPListController(this,InfContr,CollContr);
         PredictRail = new PredRPListController(this,InfContr);
+        FramePredictRail = new PredRPListController(this,InfContr);
     }
 
     public void Add(CustomPhysObject Object){

@@ -3,11 +3,6 @@ using System;
 using System.Collections.Generic;
 
 public partial class PredictRailNode: PhysRailNode{
-
-	/// <summary>
-	/// Ref to controlling object
-	/// </summary>
-	public PhysicsControlNode PhysNode = null;
 	
 	[Export]
 	public Color PredictionColor;
@@ -35,6 +30,11 @@ public partial class PredictRailNode: PhysRailNode{
 	public override void _EnterTree(){
 		base._EnterTree();
 		PhysNode = GetNode<PhysicsControlNode>("/root/Autoload/PhysicsControlNode");
+	}
+
+	public override void LoadObject(){
+		base.LoadObject();
+		PhysNode.PredictRail.Add(PredictionRail);
 	}
 
 	public override void _PhysicsProcess(double delta)

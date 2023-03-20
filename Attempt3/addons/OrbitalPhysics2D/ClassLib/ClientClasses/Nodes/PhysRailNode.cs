@@ -4,6 +4,11 @@ using System.Collections.Generic;
 
 public partial class PhysRailNode: Node2D{
 
+	/// <summary>
+	/// Ref to controlling object
+	/// </summary>
+	public PhysicsControlNode PhysNode = null;
+
 	
 	[Export]
 	public Color PhysRailColor;
@@ -24,6 +29,16 @@ public partial class PhysRailNode: Node2D{
 	/// </summary>
 	public void UpdatePos(){
 		Position = PhysRail[0].Position;
+	}
+
+	public override void _PhysicsProcess(double delta)
+	{
+		UpdatePos();
+		base._PhysicsProcess(delta);
+	}
+
+	public virtual void LoadObject(){
+		PhysNode.PhysRail.Add(PhysRail);
 	}
 
 	public void DrawPhys(){
