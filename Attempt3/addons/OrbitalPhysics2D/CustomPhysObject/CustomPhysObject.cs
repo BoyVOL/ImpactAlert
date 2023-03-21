@@ -48,6 +48,17 @@ public partial class CustomPhysObject: CollisionRailNode{
 		PhysNode.PhysRail.Remove(PhysRail);
 	}
 
+	public void DrawInfluencers(){
+		foreach (var inf in PhysRail.Influencers)
+		{
+			DrawArc(Vector2.Zero,inf.InfRad,0,(float)Math.PI*2,100,inf.DebugColor);
+		}
+		foreach (var inf in PredictionRail.Influencers)
+		{
+			DrawArc(Vector2.Zero,inf.InfRad,0,(float)Math.PI*2,100,inf.DebugColor);
+		}
+	}
+
 	public override void _Process(double delta)
 	{
 		base._Process(delta);
@@ -57,6 +68,7 @@ public partial class CustomPhysObject: CollisionRailNode{
 	{
 		base._Draw();
 		#if DEBUG
+		DrawInfluencers();
 		#endif
 	}
 }

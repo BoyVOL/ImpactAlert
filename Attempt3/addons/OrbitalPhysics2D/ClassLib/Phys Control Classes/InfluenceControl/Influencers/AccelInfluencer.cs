@@ -19,6 +19,6 @@ public abstract partial class AccelInfluencer:Influencer{
 	/// <param name="PhysRail"></param>
 	/// <param name="id"></param>
 	/// <returns></returns>
-	public abstract Vector2 GetAccel(RailPoint Target, bool PhysRail, int id);
+	public abstract Vector2 GetAccel(RailPoint Target, int id);
 
 }

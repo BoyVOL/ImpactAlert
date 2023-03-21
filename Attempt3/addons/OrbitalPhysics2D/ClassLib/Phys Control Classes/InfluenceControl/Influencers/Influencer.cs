@@ -17,8 +17,8 @@ public abstract partial class Influencer: SelfUnloadingNode{
 	public override void _EnterTree()
 	{
 		base._EnterTree();
-		Parent.InfList.Add(this);
-		Rail.Influencers.Add(this);
+		Parent.PhysRail.Influencers.Add(this);
+		Parent.PredictionRail.Influencers.Add(this);
 	}
 
 	public override void _Process(double delta)

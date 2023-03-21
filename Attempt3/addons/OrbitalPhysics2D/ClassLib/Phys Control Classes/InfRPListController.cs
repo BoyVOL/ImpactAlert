@@ -16,7 +16,8 @@ public partial class InfRPListController: RPListController{
         foreach (var rail in Items)
         {   
             if(rail != ThisRail){  
-                //result += item.GetAccel(target,physRail, id);
+                foreach(AccelInfluencer inf in rail.Influencers)
+                result += inf.GetAccel(target, id);
             }
         }
         return result;
@@ -25,10 +26,10 @@ public partial class InfRPListController: RPListController{
     public void UpdateAccel(int id, bool PhysRail, float t){
         foreach (var rail in Items)
         {
-            rail[id].Acceleration = InfContr.CombineAccels(rail[id],PhysRail,id,rail);
+            rail[id].Acceleration = CombineAccels(rail[id],id,rail);
             Vector2 FirstAccel = rail[id].Acceleration;
             RailPoint Temp = rail[id].GetNext(t);
-            Vector2 SecAccel = InfContr.CombineAccels(Temp,PhysRail,id,rail);
+            Vector2 SecAccel = CombineAccels(Temp,id,rail);
             rail[id].Acceleration = (FirstAccel+SecAccel)/2;
         }
     }

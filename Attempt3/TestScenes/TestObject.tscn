@@ -1,15 +1,15 @@
-[gd_scene load_steps=6 format=3 uid="uid://u4idjb8sdnq2"]
+[gd_scene load_steps=5 format=3 uid="uid://u4idjb8sdnq2"]
 
 [ext_resource type="Script" path="res://addons/OrbitalPhysics2D/CustomPhysObject/CustomPhysObject.cs" id="1_mr3j5"]
 [ext_resource type="Texture2D" uid="uid://db5h8o611vwvl" path="res://Sprites/Ships/Starter ship.png" id="2_g0dcf"]
 [ext_resource type="Script" path="res://addons/OrbitalPhysics2D/RailInterpolator/RailInterpolator.cs" id="3_rqayk"]
 [ext_resource type="Script" path="res://addons/OrbitalPhysics2D/GravityInfluencer/GravityInfluencer.cs" id="4_2rap4"]
-[ext_resource type="Script" path="res://addons/OrbitalPhysics2D/Collider/Collider.cs" id="6_a0fwi"]
 
 [node name="CustomPhysObject" type="Node2D"]
 script = ExtResource("1_mr3j5")
 mass = 100.0
-PredictionColor = Color(1, 0, 0, 0)
+PredictionColor = Color(1, 0, 0, 1)
+PhysRailColor = Color(0, 1, 0, 1)
 
 [node name="GravityInfluencer" type="Node" parent="."]
 script = ExtResource("4_2rap4")
@@ -23,9 +23,3 @@ script = ExtResource("3_rqayk")
 [node name="Sprite2D" type="Sprite2D" parent="RailInterpolator"]
 scale = Vector2(1.86667, 1.86667)
 texture = ExtResource("2_g0dcf")
-
-[node name="Collider" type="Node" parent="."]
-script = ExtResource("6_a0fwi")
-Radius = 20.0
-RadiusColor = Color(0, 0, 0, 1)
-CollisionColor = Color(0, 0, 1, 1)

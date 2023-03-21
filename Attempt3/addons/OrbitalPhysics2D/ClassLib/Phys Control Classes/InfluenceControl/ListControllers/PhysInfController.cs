@@ -19,7 +19,7 @@ public partial class PhysInfController: InfController<AccelInfluencer>{
         foreach (var item in Items)
         {   
             if((physRail && item.Parent.PhysRail != Exclude) || (!physRail && item.Parent.PredictionRail != Exclude)){  
-                result += item.GetAccel(target,physRail, id);
+                result += item.GetAccel(target, id);
             }
         }
         return result;
