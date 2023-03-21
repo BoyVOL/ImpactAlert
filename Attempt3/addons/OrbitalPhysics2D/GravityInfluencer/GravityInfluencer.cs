@@ -1,7 +1,7 @@
 using Godot;
 using System.Collections.Generic;
 
-public partial class GravityInfluencer: AccelInfluencer{
+public partial class GravityInfluencer: ObjectInfluencer{
 
     [Export]
     public float massMultiplier=1;

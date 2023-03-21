@@ -15,7 +15,7 @@ public partial class RPListController: AddonWithList<RailPointList>{
         foreach (var rail in Items)
         {   
             if(rail != ThisRail){  
-                foreach(AccelInfluencer inf in rail.Influencers)
+                foreach(ObjectInfluencer inf in rail.Influencers)
                 result += inf.GetAccel(target, id);
             }
         }
