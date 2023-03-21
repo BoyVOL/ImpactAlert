@@ -1,4 +1,4 @@
-public partial class PredRPListController: InfRPListController{
+public partial class PredRPListController: RPListController{
 
     public PredRPListController(PhysicsControlNode parent):base(parent){
 
