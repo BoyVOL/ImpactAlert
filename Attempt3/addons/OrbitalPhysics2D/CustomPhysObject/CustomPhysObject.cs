@@ -2,7 +2,7 @@ using Godot;
 using System;
 using System.Collections.Generic;
 
-public partial class CustomPhysObject: PredictRailNode{
+public partial class CustomPhysObject: PhysRailNode{
 
 	[Export]
 	private Vector2 FirstPointSpeed;

@@ -1,7 +1,7 @@
 using Godot;
 using System.Collections.Generic;
 
-public partial class PredictionRailController: PredictRailNode{
+public partial class PredictionRailController: PhysRailNode{
     
     CustomPhysObject Parent;
 
