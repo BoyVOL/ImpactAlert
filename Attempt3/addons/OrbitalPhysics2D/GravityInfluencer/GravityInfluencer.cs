@@ -6,7 +6,7 @@ public partial class GravityInfluencer: AccelInfluencer{
     [Export]
     public float massMultiplier=1;
 
-    public override Vector2 GetAccel(RailPoint target, int id, RailPointList Rail)
+    public override Vector2 GetAccel(RailPoint target, int id)
     {
         float M = Parent.mass*massMultiplier;
         float R2 = Rail[id].Position.DistanceSquaredTo(target.Position);

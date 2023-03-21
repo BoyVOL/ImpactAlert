@@ -5,10 +5,16 @@ using Godot;
 /// </summary>
 public abstract partial class AccelInfluencer:Influencer{
 
+
 	public override void _EnterTree()
 	{
 		base._EnterTree();
-		Parent.PhysNode.InfContr.Add(this);
+		Parent.PhysRail.Influencers.Add(this);
+		Rail = Parent.PhysRail;
+		Influencer copy = (Influencer)Duplicate();
+		Parent.PredictionRail.Influencers.Add(copy);
+		copy.Rail = Parent.PredictionRail;
+		copy.Parent = Parent;
 	}
 
 	/// <summary>
