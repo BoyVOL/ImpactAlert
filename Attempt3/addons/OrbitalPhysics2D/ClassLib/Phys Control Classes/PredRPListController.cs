@@ -1,6 +1,6 @@
 public partial class PredRPListController: InfRPListController{
 
-    public PredRPListController(PhysicsControlNode parent, PhysInfController infContr):base(parent,infContr){
+    public PredRPListController(PhysicsControlNode parent):base(parent){
 
     }
 

@@ -5,10 +5,7 @@ using Godot;
 /// </summary>
 public partial class InfRPListController: RPListController{
 
-    public PhysInfController InfContr;
-
-    public InfRPListController(PhysicsControlNode parent, PhysInfController infContr):base(parent){
-        InfContr = infContr;
+    public InfRPListController(PhysicsControlNode parent):base(parent){
     }
     
     public Vector2 CombineAccels(RailPoint target, int id, RailPointList ThisRail){

@@ -9,10 +9,6 @@ public partial class PhysicsControlNode: Node{
 
     private List<CustomPhysObject> Objects = new List<CustomPhysObject>();
 
-    public PhysInfController InfContr;
-
-    public ColliderController CollContr;
-
     public CollRPListController PhysRail;
 
     public PredRPListController PredictRail;
@@ -25,11 +21,9 @@ public partial class PhysicsControlNode: Node{
     public List<CustomPhysObject> NotLoaded = new List<CustomPhysObject>();
 
     public PhysicsControlNode():base(){
-        InfContr = new PhysInfController(this);
-        CollContr = new ColliderController(this);
-        PhysRail = new CollRPListController(this,InfContr,CollContr);
-        PredictRail = new PredRPListController(this,InfContr);
-        FramePredictRail = new PredRPListController(this,InfContr);
+        PhysRail = new CollRPListController(this);
+        PredictRail = new PredRPListController(this);
+        FramePredictRail = new PredRPListController(this);
     }
 
     public void Add(CustomPhysObject Object){
@@ -79,7 +73,6 @@ public partial class PhysicsControlNode: Node{
         LoadAll();
         PhysRailUpdate((float)delta);
         PredictRailUpdate((float)delta);
-        CollContr.CollisionTest();
     }
 
 }
