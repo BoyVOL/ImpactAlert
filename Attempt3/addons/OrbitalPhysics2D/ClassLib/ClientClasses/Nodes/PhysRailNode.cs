@@ -79,6 +79,17 @@ public partial class PhysRailNode: Node2D{
 			if(Points.Length > 1) DrawPolyline(Points,PredictionColor,2);
 	}
 
+	public void DrawInfluencers(){
+		foreach (var inf in PhysRail.Influencers)
+		{
+			DrawArc(Vector2.Zero,inf.InfRad,0,(float)Math.PI*2,100,inf.DebugColor);
+		}
+		foreach (var inf in PredictionRail.Influencers)
+		{
+			DrawArc(Vector2.Zero,inf.InfRad,0,(float)Math.PI*2,100,inf.DebugColor);
+		}
+	}
+
 	public override void _EnterTree(){
 		base._EnterTree();
 		PhysNode = GetNode<PhysicsControlNode>("/root/Autoload/PhysicsControlNode");
@@ -106,6 +117,7 @@ public partial class PhysRailNode: Node2D{
 		DrawCollider();
 		DrawCollisions();
 		DrawPred();
+		DrawInfluencers();
 		#endif
 	}
 }

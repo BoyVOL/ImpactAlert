@@ -3,7 +3,7 @@ using Godot;
 /// <summary>
 /// Base class for rail influencers that change rail's motion
 /// </summary>
-public abstract partial class ObjectInfluencer:Influencer{
+public partial class ObjectInfluencer:Influencer{
 
 
 	public override void _EnterTree()
@@ -22,9 +22,10 @@ public abstract partial class ObjectInfluencer:Influencer{
 	/// provided by this specific one with others
 	/// </summary>
 	/// <param name="Target"></param>
-	/// <param name="PhysRail"></param>
 	/// <param name="id"></param>
 	/// <returns></returns>
-	public abstract Vector2 GetAccel(RailPoint Target, int id);
+	public virtual Vector2 GetAccel(RailPoint Target, int id){
+		return Vector2.Zero;
+	}
 
 }

@@ -9,11 +9,18 @@ public partial class RPListController: AddonWithList<RailPointList>{
     public RPListController(PhysicsControlNode parent):base(parent){
 
     }
+
+    public void LoadFromPhys(){
+        foreach (var rail in Items)
+        {
+            rail.SetFirstPoint(rail.Parent.PhysRail[0]);
+        }
+    }
     
     public Vector2 CombineAccels(RailPoint target, int id, RailPointList ThisRail){
         Vector2 result = Vector2.Zero;
         foreach (var rail in Items)
-        {   
+        {
             if(rail != ThisRail){  
                 foreach(ObjectInfluencer inf in rail.Influencers)
                 result += inf.GetAccel(target, id);
@@ -22,7 +29,7 @@ public partial class RPListController: AddonWithList<RailPointList>{
         return result;
     }
     
-    public void UpdateAccel(int id, bool PhysRail, float t){
+    public void UpdateAccel(int id, float t){
         foreach (var rail in Items)
         {
             rail[id].Acceleration = CombineAccels(rail[id],id,rail);

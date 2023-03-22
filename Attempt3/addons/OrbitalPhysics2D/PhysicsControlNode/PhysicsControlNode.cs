@@ -9,11 +9,11 @@ public partial class PhysicsControlNode: Node{
 
     private List<CustomPhysObject> Objects = new List<CustomPhysObject>();
 
-    public CollRPListController PhysRail;
+    public RPListController PhysRail;
 
-    public PredRPListController PredictRail;
+    public RPListController PredictRail;
 
-    public PredRPListController FramePredictRail;
+    public RPListController FramePredictRail;
 
     [Export]
     public float MaxPredictionRange = 10;
@@ -21,9 +21,9 @@ public partial class PhysicsControlNode: Node{
     public List<CustomPhysObject> NotLoaded = new List<CustomPhysObject>();
 
     public PhysicsControlNode():base(){
-        PhysRail = new CollRPListController(this);
-        PredictRail = new PredRPListController(this);
-        FramePredictRail = new PredRPListController(this);
+        PhysRail = new RPListController(this);
+        PredictRail = new RPListController(this);
+        FramePredictRail = new RPListController(this);
     }
 
     public void Add(CustomPhysObject Object){
@@ -50,7 +50,7 @@ public partial class PhysicsControlNode: Node{
 
     public void PhysRailUpdate(double delta){
         PhysRail.Reset();
-        PhysRail.UpdateAccel(0,true,(float)delta);
+        PhysRail.UpdateAccel(0,(float)delta);
         PhysRail.AppendPoint((float)delta,1);
     }
 
@@ -62,7 +62,7 @@ public partial class PhysicsControlNode: Node{
         PredictRail.LoadFromPhys();
         for (int i = 0; i < CalcStepCount(delta); i++)
         {
-            PredictRail.UpdateAccel(i,false,delta);
+            PredictRail.UpdateAccel(i,delta);
             PredictRail.AppendPoint(delta,i+1);
         }
     }
