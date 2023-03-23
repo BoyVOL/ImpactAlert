@@ -10,10 +10,10 @@ public abstract partial class ObjectRailAddon: SelfUnloadingNode{
 	public override void _EnterTree()
 	{
 		base._EnterTree();
-		Rail = Parent.PhysRail;
+		Rail = Parent.PredictionRail;
         AddToRail();
 		ObjectRailAddon copy = (ObjectRailAddon)Duplicate();
-		copy.Rail = Parent.PredictionRail;
+		copy.Rail = Parent.PhysRail;
 		copy.Parent = Parent;
         copy.AddToRail();
 	}
