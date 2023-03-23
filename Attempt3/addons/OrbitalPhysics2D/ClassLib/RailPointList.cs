@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 public partial class RailPointList: List<RailPoint>{
 
-    public List<Influencer> Influencers = new List<Influencer>();
+    public List<ObjectInfluencer> Influencers = new List<ObjectInfluencer>();
 
     public PhysRailNode Parent;
 

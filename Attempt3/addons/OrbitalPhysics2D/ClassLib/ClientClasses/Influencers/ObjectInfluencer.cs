@@ -3,19 +3,8 @@ using Godot;
 /// <summary>
 /// Base class for rail influencers that change rail's motion
 /// </summary>
-public partial class ObjectInfluencer:Influencer{
+public partial class ObjectInfluencer:ObjectRailAddon{
 
-
-	public override void _EnterTree()
-	{
-		base._EnterTree();
-		Parent.PhysRail.Influencers.Add(this);
-		Rail = Parent.PhysRail;
-		Influencer copy = (Influencer)Duplicate();
-		Parent.PredictionRail.Influencers.Add(copy);
-		copy.Rail = Parent.PredictionRail;
-		copy.Parent = Parent;
-	}
 
 	/// <summary>
 	/// Metod for infController to combine acceleration 
@@ -28,4 +17,22 @@ public partial class ObjectInfluencer:Influencer{
 		return Vector2.Zero;
 	}
 
+	
+	[Export]
+	/// <summary>
+	/// Max radius in which phys object with this influencer can influence others
+	/// </summary>
+	public float InfRad;
+
+	[Export]
+	public Color DebugColor;
+
+	public override void AddToRail(){
+		Rail.Influencers.Add(this);
+	}
+
+	public override void _Process(double delta)
+	{
+		base._Process(delta);
+	}
 }
