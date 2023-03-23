@@ -41,6 +41,8 @@ public partial class PhysicsControlNode: Node{
     
     public void Remove(CustomPhysObject Object){
         Objects.Remove(Object);
+        if(Object.PhysRail != null) PhysRail.Remove(Object.PhysRail);
+        if(Object.PredictionRail != null) PredictRail.Remove(Object.PredictionRail);
     }
 
     public override void _EnterTree()

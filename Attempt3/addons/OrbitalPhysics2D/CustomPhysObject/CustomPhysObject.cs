@@ -45,7 +45,6 @@ public partial class CustomPhysObject: PhysRailNode{
 	{
 		base._ExitTree();
 		PhysNode.Remove(this);
-		PhysNode.PhysRail.Remove(PhysRail);
 	}
 
 	public override void _Process(double delta)
