@@ -19,6 +19,11 @@ public partial class CustomPhysObject: PhysRailNode{
 	[Export]
 	public float mass = 1;
 
+	public CustomPhysObject(): base(){		
+		PredictionRail = new RailPointList(this);
+		PhysRail = new RailPointList(this);
+	}
+
 	/// <summary>
 	/// Method for setting up first point of this rail
 	/// </summary>

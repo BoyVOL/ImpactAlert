@@ -32,24 +32,26 @@ public partial class PhysRailNode: Node2D{
 	public Collider Collider = null;
 
 	public PhysRailNode():base(){
-		PredictionRail = new RailPointList(this);
-		PhysRail = new RailPointList(this);
 	}
 
 	/// <summary>
 	/// Method for updating node pos according to simulation
 	/// </summary>
 	public void UpdatePos(){
-		Position = PhysRail[0].Position;
+		if(PhysRail!=null){	
+			Position = PhysRail[0].Position;
+		}
 	}
 
 	public void DrawPhys(){
+		if(PhysRail != null){
 			Vector2[] Points = new Vector2[PhysRail.Count];
 			for (int i = 0; i < PhysRail.Count; i++)
 			{
 				Points[i] = PhysRail[i].Position-PhysRail[0].Position;
 			}
 			if(Points.Length > 1) DrawPolyline(Points,PhysRailColor,2);
+		}
 	}
 
 	public void DrawCollisions(){
@@ -70,6 +72,7 @@ public partial class PhysRailNode: Node2D{
 	}
 
 	public void DrawPred(){
+		if(PredictionRail != null){
 			Vector2[] Points = new Vector2[PredictionRail.Count];
 			for (int i = 0; i < PredictionRail.Count; i++)
 			{
@@ -77,16 +80,21 @@ public partial class PhysRailNode: Node2D{
 				Points[i] = Points[i].Rotated(-Rotation);
 			}
 			if(Points.Length > 1) DrawPolyline(Points,PredictionColor,2);
+		}
 	}
 
 	public void DrawInfluencers(){
-		foreach (var inf in PhysRail.Influencers)
-		{
-			DrawArc(Vector2.Zero,inf.InfRad,0,(float)Math.PI*2,100,inf.DebugColor);
+		if(PhysRail!=null){	
+			foreach (var inf in PhysRail.Influencers)
+			{
+				DrawArc(Vector2.Zero,inf.InfRad,0,(float)Math.PI*2,100,inf.DebugColor);
+			}
 		}
-		foreach (var inf in PredictionRail.Influencers)
-		{
-			DrawArc(Vector2.Zero,inf.InfRad,0,(float)Math.PI*2,100,inf.DebugColor);
+		if(PredictionRail != null){
+			foreach (var inf in PredictionRail.Influencers)
+			{
+				DrawArc(Vector2.Zero,inf.InfRad,0,(float)Math.PI*2,100,inf.DebugColor);
+			}
 		}
 	}
 
@@ -103,8 +111,12 @@ public partial class PhysRailNode: Node2D{
 	}
 
 	public virtual void LoadObject(){
-		PhysNode.PhysRail.Add(PhysRail);
-		PhysNode.PredictRail.Add(PredictionRail);
+		if(PhysRail != null){	
+			PhysNode.PhysRail.Add(PhysRail);
+		}
+		if(PredictionRail != null){
+			PhysNode.PredictRail.Add(PredictionRail);
+		}
 	}
 
 	public override void _PhysicsProcess(double delta)

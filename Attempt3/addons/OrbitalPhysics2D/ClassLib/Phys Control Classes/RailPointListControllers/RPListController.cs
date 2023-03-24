@@ -15,6 +15,12 @@ public partial class RPListController: AddonWithList<RailPointList>{
         {
             if(rail.Parent.PhysRail != null){   
                 rail.SetFirstPoint(rail.Parent.PhysRail[0]);
+            } else {
+                PredictionRailController parent = (PredictionRailController)rail.Parent;
+                if(parent.Parent.PhysRail != null){
+                    GD.Print(parent.Parent.PhysRail[0]);
+                    rail.SetFirstPoint(parent.Parent.PhysRail[0]);
+                }
             }
         }
     }
@@ -43,9 +49,9 @@ public partial class RPListController: AddonWithList<RailPointList>{
     }
 
     public void Reset(){
-        foreach (var list in Items)
+        foreach (var rail in Items)
         {
-            list.ResetToStart();
+            rail.ResetToStart();
         }
     }
 
