@@ -13,7 +13,9 @@ public partial class AddonWithList<T> : PhysicsControlAddon{
     }
 
     public void Add(T item){
-        Items.Add(item);
+        if(!Items.Contains(item)){
+            Items.Add(item);
+        }
     }
 
     public void Remove(T item){

@@ -13,7 +13,9 @@ public partial class RPListController: AddonWithList<RailPointList>{
     public void LoadFromPhys(){
         foreach (var rail in Items)
         {
-            rail.SetFirstPoint(rail.Parent.PhysRail[0]);
+            if(rail.Parent.PhysRail != null){   
+                rail.SetFirstPoint(rail.Parent.PhysRail[0]);
+            }
         }
     }
     

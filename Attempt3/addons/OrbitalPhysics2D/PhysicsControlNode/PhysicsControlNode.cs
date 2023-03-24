@@ -7,7 +7,7 @@ using System;
 /// </summary>
 public partial class PhysicsControlNode: Node{
 
-    private List<CustomPhysObject> Objects = new List<CustomPhysObject>();
+    private List<PhysRailNode> Objects = new List<PhysRailNode>();
 
     public RPListController PhysRail;
 
@@ -18,7 +18,7 @@ public partial class PhysicsControlNode: Node{
     [Export]
     public float MaxPredictionRange = 10;
 
-    public List<CustomPhysObject> NotLoaded = new List<CustomPhysObject>();
+    public List<PhysRailNode> NotLoaded = new List<PhysRailNode>();
 
     public PhysicsControlNode():base(){
         PhysRail = new RPListController(this);
@@ -26,12 +26,12 @@ public partial class PhysicsControlNode: Node{
         FramePredictRail = new RPListController(this);
     }
 
-    public void Add(CustomPhysObject Object){
+    public void Add(PhysRailNode Object){
         NotLoaded.Add(Object);
     }
 
     public void LoadAll(){
-        foreach (CustomPhysObject item in NotLoaded)
+        foreach (PhysRailNode item in NotLoaded)
         {
             Objects.Add(item);
             item.LoadObject();
@@ -39,7 +39,7 @@ public partial class PhysicsControlNode: Node{
         NotLoaded.Clear();
     }
     
-    public void Remove(CustomPhysObject Object){
+    public void Remove(PhysRailNode Object){
         Objects.Remove(Object);
         if(Object.PhysRail != null) PhysRail.Remove(Object.PhysRail);
         if(Object.PredictionRail != null) PredictRail.Remove(Object.PredictionRail);

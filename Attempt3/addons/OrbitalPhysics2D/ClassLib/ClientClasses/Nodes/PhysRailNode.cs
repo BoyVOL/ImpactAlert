@@ -93,6 +93,13 @@ public partial class PhysRailNode: Node2D{
 	public override void _EnterTree(){
 		base._EnterTree();
 		PhysNode = GetNode<PhysicsControlNode>("/root/Autoload/PhysicsControlNode");
+		PhysNode.Add(this);
+	}
+
+	public override void _ExitTree()
+	{
+		base._ExitTree();
+		PhysNode.Remove(this);
 	}
 
 	public virtual void LoadObject(){

@@ -34,22 +34,15 @@ public partial class CustomPhysObject: PhysRailNode{
 		PredictionRail.SetFirstPoint(Point);
 	}
 
-	public override void _EnterTree()
-	{
-		base._EnterTree();
-		SetFirstPoint();
-		PhysNode.Add(this);
-	}
-
-	public override void _ExitTree()
-	{
-		base._ExitTree();
-		PhysNode.Remove(this);
-	}
-
 	public override void _Process(double delta)
 	{
 		base._Process(delta);
+	}
+
+	public override void _EnterTree()
+	{
+		SetFirstPoint();
+		base._EnterTree();
 	}
 
 	public override void _Draw()
