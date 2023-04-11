@@ -18,8 +18,7 @@ public partial class RPListController: AddonWithList<RailPointList>{
             } else {
                 PredictionRailController parent = (PredictionRailController)rail.Parent;
                 if(parent.Parent.PhysRail != null){
-                    GD.Print(parent.Parent.PhysRail[0]);
-                    rail.SetFirstPoint(parent.Parent.PhysRail[0]);
+                    rail.SetFirstPoint(new RailPoint(parent.Parent.PhysRail[0]));
                 }
             }
         }

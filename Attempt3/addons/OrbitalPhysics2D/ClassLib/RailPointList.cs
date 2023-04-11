@@ -72,4 +72,13 @@ public partial class RailPointList: List<RailPoint>{
         Clear();
         Add(point);
     }
+
+    public string Stringify(int count = 5){
+        string Result = "";
+        for (int i = 0; i < Count && i < count; i++)
+        {
+            Result+=" "+this[i].Stringify();
+        }
+        return Result;
+    }
 }

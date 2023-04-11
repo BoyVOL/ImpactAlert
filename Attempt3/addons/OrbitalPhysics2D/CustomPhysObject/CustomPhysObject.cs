@@ -44,6 +44,12 @@ public partial class CustomPhysObject: PhysRailNode{
 		base._Process(delta);
 	}
 
+	public override void _PhysicsProcess(double delta)
+	{
+		base._PhysicsProcess(delta);
+        //GD.Print("PHYS RAIL = "+PhysRail.Stringify(5));
+	}
+
 	public override void _EnterTree()
 	{
 		SetFirstPoint();

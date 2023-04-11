@@ -14,5 +14,10 @@ public partial class PredictionRailController: PhysRailNode{
         base._EnterTree();
         Parent = GetParent<CustomPhysObject>();
     }
+
+    public override void _PhysicsProcess(double delta){
+        base._PhysicsProcess(delta);
+        //GD.Print("NEW RAIL = "+PredictionRail.Stringify(5));
+    }
         
 }
