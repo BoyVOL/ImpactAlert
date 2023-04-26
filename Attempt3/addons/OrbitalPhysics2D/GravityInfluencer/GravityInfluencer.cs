@@ -11,7 +11,10 @@ public partial class GravityInfluencer: ObjectInfluencer{
         float M = Parent.mass*massMultiplier;
         float R2 = Rail[id].Position.DistanceSquaredTo(target.Position);
         Vector2 Dir = target.Position.DirectionTo(Rail[id].Position);
-        float Module = (float)(PhysConst.GRAV*(M/R2));
+        float Module = 0;
+        if(R2 > float.Epsilon){
+            Module = (float)(PhysConst.GRAV*(M/R2));
+        }
         return Module*Dir;
     }
 }

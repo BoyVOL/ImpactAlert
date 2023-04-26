@@ -1,9 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://u4idjb8sdnq2"]
+[gd_scene load_steps=5 format=3 uid="uid://u4idjb8sdnq2"]
 
 [ext_resource type="Script" path="res://addons/OrbitalPhysics2D/CustomPhysObject/CustomPhysObject.cs" id="1_mr3j5"]
 [ext_resource type="Texture2D" uid="uid://db5h8o611vwvl" path="res://Sprites/Ships/Starter ship.png" id="2_g0dcf"]
 [ext_resource type="Script" path="res://addons/OrbitalPhysics2D/RailInterpolator/RailInterpolator.cs" id="3_rqayk"]
-[ext_resource type="Script" path="res://addons/OrbitalPhysics2D/GravityInfluencer/GravityInfluencer.cs" id="4_2rap4"]
 [ext_resource type="Script" path="res://addons/OrbitalPhysics2D/PredictionRailController/PredictionRailController.cs" id="5_05j0p"]
 
 [node name="CustomPhysObject" type="Node2D"]
@@ -11,12 +10,6 @@ script = ExtResource("1_mr3j5")
 mass = 100.0
 PredictionColor = Color(1, 0, 0, 1)
 PhysRailColor = Color(0, 1, 0, 1)
-
-[node name="GravityInfluencer" type="Node" parent="."]
-script = ExtResource("4_2rap4")
-massMultiplier = 1e+12
-InfRad = 100.0
-DebugColor = Color(0.333333, 0.729412, 0, 1)
 
 [node name="RailInterpolator" type="Node2D" parent="."]
 script = ExtResource("3_rqayk")
@@ -28,3 +21,4 @@ texture = ExtResource("2_g0dcf")
 [node name="PredictionRailController" type="Node2D" parent="."]
 script = ExtResource("5_05j0p")
 PredictionColor = Color(0, 0, 1, 1)
+PhysRailColor = Color(0, 0, 1, 0)
