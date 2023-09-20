@@ -54,6 +54,10 @@ public partial class RailPointList: List<RailPoint>{
         return Count-1;
     }
 
+    public void LeapFrogAdjust(int id, float T){
+        this[id].Speed = this[id-1].Speed+(this[id-1].Acceleration+this[id].Acceleration)/2*T;
+    }
+
     public Vector2 InterpolatePos(float T){
         int beforeID = GetBeforeTime(T);
         float TDiff = T-this[beforeID].time;

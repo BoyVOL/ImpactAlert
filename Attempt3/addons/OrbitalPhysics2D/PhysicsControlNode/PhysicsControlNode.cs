@@ -52,8 +52,10 @@ public partial class PhysicsControlNode: Node{
 
 	public void PhysRailUpdate(double delta){
 		PhysRail.Reset();
-		PhysRail.UpdateAccel(0,(float)delta);
+		PhysRail.UpdateAccel(0);
 		PhysRail.AppendPoint((float)delta,1);
+		PhysRail.UpdateAccel(1);
+		PhysRail.LeapFrogAdjust(1,(float)delta);
 	}
 
 	public int CalcStepCount(float delta){
@@ -64,8 +66,10 @@ public partial class PhysicsControlNode: Node{
 		PredictRail.LoadFromPhys();
 		for (int i = 0; i < CalcStepCount(delta); i++)
 		{
-			PredictRail.UpdateAccel(i,delta);
+			PredictRail.UpdateAccel(i);
 			PredictRail.AppendPoint(delta,i+1);
+			PredictRail.UpdateAccel(i+1);
+			PredictRail.LeapFrogAdjust(i+1,(float)delta);
 		}
 	}
 

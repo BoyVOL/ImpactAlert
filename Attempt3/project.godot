@@ -29,7 +29,7 @@ enabled=PackedStringArray("res://addons/OrbitalPhysics2D/plugin.cfg")
 
 [physics]
 
-common/physics_ticks_per_second=20
+common/physics_ticks_per_second=30
 
 [rendering]
 

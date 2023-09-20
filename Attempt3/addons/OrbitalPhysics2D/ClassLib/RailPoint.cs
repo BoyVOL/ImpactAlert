@@ -49,8 +49,8 @@ using Godot;
         public RailPoint GetNext(float T){
             RailPoint Result = new RailPoint();
             Result.Position = Position+Speed*T+(Acceleration*T*T)/2;
-            Result.Rotation = Rotation+RotSpeed*T+(RotAccel*T*T)/2;
             Result.Speed = Speed+Acceleration*T;
+            Result.Rotation = Rotation+RotSpeed*T+(RotAccel*T*T)/2;
             Result.RotSpeed = RotSpeed+RotAccel*T;
             Result.Acceleration = Acceleration;
             Result.RotAccel = RotAccel;

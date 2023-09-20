@@ -36,18 +36,10 @@ public partial class RPListController: AddonWithList<RailPointList>{
         return result;
     }
     
-    public void UpdateAccel(int id, float t){
+    public void UpdateAccel(int id){
         foreach (var rail in Items)
         {
             rail[id].Acceleration = CombineAccels(rail[id],id,rail);
-            for (int i = 0; i < 4; i++)
-            {
-                Vector2 FirstAccel = rail[id].Acceleration;
-                RailPoint Temp = rail[id].GetNext(t);
-                Vector2 SecAccel = CombineAccels(Temp,id,rail);
-                rail[id].Acceleration = FirstAccel.Lerp(SecAccel,0.157f);
-                //GD.Print("Accel:",FirstAccel.Length(),", ",SecAccel.Length(),", ",FirstAccel.Lerp(SecAccel,0.1555555555f).Length(),", ",FirstAccel.Lerp(SecAccel,0.5f).Length());
-            }
         }
     }
 
@@ -67,6 +59,13 @@ public partial class RPListController: AddonWithList<RailPointList>{
         foreach (var list in Items)
         {
             if(list.Count==id) list.AppendPoint(delta);
+        }
+    }
+
+    public void LeapFrogAdjust(int id, float T){
+        foreach(var list in Items)
+        {
+            list.LeapFrogAdjust(id,T);
         }
     }
     
