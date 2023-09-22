@@ -2,12 +2,12 @@ using Godot;
 
 public partial class SelfUnloadingNode: Node{
 
-    public CustomPhysObject Parent;
+    public PhysRailNode Parent;
 
     public override void _EnterTree()
     {
         base._EnterTree();
-        Parent = GetParent<CustomPhysObject>();
+        Parent = GetParent<PhysRailNode>();
     }
 
     public override void _Ready()

@@ -16,9 +16,6 @@ public partial class CustomPhysObject: PhysRailNode{
 	[Export]
 	private float FirstPointRotAccel;
 
-	[Export]
-	public float mass = 1;
-
 	public CustomPhysObject(): base(){		
 		PredictionRail = new RailPointList(this);
 		PhysRail = new RailPointList(this);

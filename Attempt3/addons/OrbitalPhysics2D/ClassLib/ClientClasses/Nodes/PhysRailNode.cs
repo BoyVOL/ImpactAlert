@@ -7,6 +7,9 @@ public partial class PhysRailNode: Node2D{
 	[Export]
 	public Color PredictionColor;
 
+	[Export]
+	public float mass = 1;
+
 	/// <summary>
 	/// List af all points that predict movement of this object for certain period of time
 	/// </summary>
@@ -29,7 +32,7 @@ public partial class PhysRailNode: Node2D{
 	/// <returns></returns>
 	public RailPointList PhysRail;
 
-	public Approacher Collider = null;
+	public Approacher Approacher = null;
 
 	public PhysRailNode():base(){
 	}
@@ -54,20 +57,20 @@ public partial class PhysRailNode: Node2D{
 		}
 	}
 
-	public void DrawCollisions(){
-		if(Collider != null){
-			foreach (var collision in Collider.Collisions)
+	public void DrawApproaches(){
+		if(Approacher != null){
+			foreach (var approach in Approacher.Approaches)
 			{
 				Vector2 Pos;
-				Pos = PredictionRail.InterpolatePos(collision.time);
-				DrawCircle(Pos-Position,3,collision.Approacher.CollisionColor);
+				Pos = PredictionRail.InterpolatePos(approach.time);
+				DrawCircle(Pos-Position,3,approach.Approacher.ApproachColor);
 			}
 		}
 	}
 
-	public void DrawCollider(){
-		if(Collider != null){
-			DrawArc(Vector2.Zero,Collider.Radius,0,(float)Math.PI*2,100,Collider.RadiusColor);
+	public void DrawApproacher(){
+		if(Approacher != null){
+			DrawArc(Vector2.Zero,Approacher.Radius,0,(float)Math.PI*2,100,Approacher.RadiusColor);
 		}
 	}
 
@@ -133,8 +136,8 @@ public partial class PhysRailNode: Node2D{
 		base._Draw();
 		#if DEBUG
 		DrawPhys();
-		DrawCollider();
-		DrawCollisions();
+		DrawApproacher();
+		DrawApproaches();
 		DrawPred();
 		DrawInfluencers();
 		#endif
