@@ -29,7 +29,7 @@ public partial class PhysRailNode: Node2D{
 	/// <returns></returns>
 	public RailPointList PhysRail;
 
-	public Collider Collider = null;
+	public Approacher Collider = null;
 
 	public PhysRailNode():base(){
 	}
