@@ -9,7 +9,7 @@ script = ExtResource("1_pyfct")
 
 [node name="CustomPhysObject" parent="." instance=ExtResource("2_xx2l8")]
 position = Vector2(603, 114)
-FirstPointSpeed = Vector2(100, 0)
+FirstPointSpeed = Vector2(70, 0)
 FirstPointRotSpeed = -1.0
 
 [node name="TestObject1" parent="." instance=ExtResource("2_xx2l8")]
