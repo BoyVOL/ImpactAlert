@@ -2,6 +2,9 @@ using Godot;
 using System;
 using System.Collections.Generic;
 
+/// <summary>
+/// A class that represents entity able to move with orbital physics
+/// </summary>
 public partial class PhysRailNode: Node2D{
 	
 	[Export]
@@ -26,12 +29,15 @@ public partial class PhysRailNode: Node2D{
 	public Color PhysRailColor;
 
 	/// <summary>
-	/// List of all simulation points of this object
+	/// List of all simulation point lists of this object
 	/// </summary>
 	/// <typeparam name="PhysRail"></typeparam>
 	/// <returns></returns>
 	public RailPointList PhysRail;
 
+	/// <summary>
+	/// List of all approachers
+	/// </summary>
 	public Approacher Approacher = null;
 
 	public PhysRailNode():base(){

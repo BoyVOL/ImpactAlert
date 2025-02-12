@@ -1,5 +1,7 @@
 
-// Physical Constants in cgs Units
+/// <summary>
+/// Physical Constants in cgs Units
+/// </summary>
 public static partial class PhysConst{
 
 // Boltzman Constant. Units erg/deg(K) 

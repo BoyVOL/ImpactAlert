@@ -16,7 +16,7 @@ public partial class PhysicsControlNode: Node{
 	public RPListController FramePredictRail;
 
 	[Export]
-	public float MaxPredictionRange = 10;
+	public float MaxPredictionRange = 50;
 
 	public List<PhysRailNode> NotLoaded = new List<PhysRailNode>();
 

@@ -83,6 +83,8 @@ using Godot;
 		/// Возвращает значение времени максимального сближения с указанной точкой. За ноль взят момент времени в текущей точке.
 		/// </summary>
 		/// <param name="Target">Вторая точка, с которой просчитывается пересечение путей</param>
+        /// <param name="T">интервал времени, на котором проходит проверка</param>
+        /// <param name="clamped">Ограничен ли результат краями отрезка</param>
 		/// <returns></returns>
 		public float CPA(RailPoint Target, float T, bool clamped = true){
             float Result = MathExtra.cpaTime(Position,Target.Position,GetInterSpeed(T),Target.GetInterSpeed(T));
@@ -100,6 +102,7 @@ using Godot;
 		/// </summary>
 		/// <param name="Vector">2Д вектор, с которым просчитывается пересечение путей</param>
         /// <param name="T">интервал времени, на котором проходит проверка</param>
+        /// <param name="clamped">Ограничен ли результат краями отрезка</param>
 		/// <returns></returns>
 		public float CPA(Vector2 Vector, float T, bool clamped = true){
 			float Result = MathExtra.cpaTime(Position,Vector,GetInterSpeed(T),new Vector2(0,0));

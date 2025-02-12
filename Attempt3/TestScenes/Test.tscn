@@ -14,9 +14,9 @@ FirstPointRotSpeed = -1.0
 
 [node name="TestObject1" parent="." instance=ExtResource("2_xx2l8")]
 position = Vector2(484, 571)
-mass = 2.0
 FirstPointSpeed = Vector2(-150, 0)
 FirstPointRotSpeed = 10.0
+mass = 2.0
 
 [node name="CustomPhysObject2" parent="." instance=ExtResource("3_eh15j")]
 position = Vector2(587, 362)

@@ -1,5 +1,8 @@
 using Godot;
 
+/// <summary>
+/// Node class that made to be a parent of PhysRailNode
+/// </summary>
 public partial class SelfUnloadingNode: Node{
 
     public PhysRailNode Parent;
