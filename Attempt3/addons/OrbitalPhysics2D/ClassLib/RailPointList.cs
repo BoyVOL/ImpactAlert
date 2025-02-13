@@ -58,16 +58,6 @@ public partial class RailPointList: List<RailPoint>{
         this[id].Speed = this[id-1].Speed+(this[id-1].Acceleration+this[id].Acceleration)/2*T;
     }
 
-    public Vector2 InterpolatePos(float T){
-        int beforeID = GetBeforeTime(T);
-        float TDiff = T-this[beforeID].time;
-        if(beforeID < Count-1){ 
-            return this[beforeID].GetInterPos(TDiff,this[beforeID+1].time-this[beforeID].time);
-        } else {
-            return this[beforeID].Position;
-        }
-    }
-
     /// <summary>
     /// Method that will set first rail point
     /// </summary>
