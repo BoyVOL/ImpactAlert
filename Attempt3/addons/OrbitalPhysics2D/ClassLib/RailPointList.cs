@@ -53,6 +53,17 @@ public partial class RailPointList: List<RailPoint>{
         }
         return Count-1;
     }
+    
+    /// <summary>
+    /// Method for getting time interval between Rail point item with id index and the next one
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    public float TimeBetweenPoints(int id){
+        if(id < this.Count){
+            return this[id+1].time - this[id].time;
+        } return 0;
+    }
 
     public void LeapFrogAdjust(int id, float T){
         this[id].Speed = this[id-1].Speed+(this[id-1].Acceleration+this[id].Acceleration)/2*T;
