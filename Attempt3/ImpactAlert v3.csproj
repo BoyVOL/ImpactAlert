@@ -8,6 +8,5 @@
   <ItemGroup>
     <Content Include="addons\OrbitalPhysics2D\CustomPhysObject\CustomPhysObject.cs" />
     <Content Include="addons\OrbitalPhysics2D\ClassLib\Approacher.cs" />
-    <Content Include="addons\OrbitalPhysics2D\RailInterpolator\RailInterpolator.cs" />
   </ItemGroup>
 </Project>
