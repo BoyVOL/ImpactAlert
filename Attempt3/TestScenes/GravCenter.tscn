@@ -1,9 +1,9 @@
 [gd_scene load_steps=5 format=3 uid="uid://bugs7g7dedesb"]
 
-[ext_resource type="Script" path="res://addons/OrbitalPhysics2D/CustomPhysObject/CustomPhysObject.cs" id="1_4y1ek"]
-[ext_resource type="Script" path="res://addons/OrbitalPhysics2D/RailInterpolator/RailInterpolator.cs" id="2_ybtjc"]
+[ext_resource type="Script" uid="uid://bvnf1qnpu2g7g" path="res://addons/OrbitalPhysics2D/CustomPhysObject/CustomPhysObject.cs" id="1_4y1ek"]
+[ext_resource type="Script" uid="uid://bk0geu0iesfd0" path="res://addons/OrbitalPhysics2D/RailInterpolator/RailInterpolator.cs" id="2_ybtjc"]
 [ext_resource type="Texture2D" uid="uid://dnhw13r2xdgit" path="res://Sprites/Misc/GravityCenter.png" id="3_2p3sn"]
-[ext_resource type="Script" path="res://addons/OrbitalPhysics2D/GravityInfluencer/GravityInfluencer.cs" id="4_5lc5u"]
+[ext_resource type="Script" uid="uid://d0tqi64pauu5q" path="res://addons/OrbitalPhysics2D/GravityInfluencer/GravityInfluencer.cs" id="4_5lc5u"]
 
 [node name="CustomPhysObject" type="Node2D"]
 script = ExtResource("1_4y1ek")

@@ -1,10 +1,10 @@
 [gd_scene load_steps=6 format=3 uid="uid://u4idjb8sdnq2"]
 
-[ext_resource type="Script" path="res://addons/OrbitalPhysics2D/CustomPhysObject/CustomPhysObject.cs" id="1_mr3j5"]
+[ext_resource type="Script" uid="uid://bvnf1qnpu2g7g" path="res://addons/OrbitalPhysics2D/CustomPhysObject/CustomPhysObject.cs" id="1_mr3j5"]
 [ext_resource type="Texture2D" uid="uid://db5h8o611vwvl" path="res://Sprites/Ships/Starter ship.png" id="2_g0dcf"]
-[ext_resource type="Script" path="res://addons/OrbitalPhysics2D/RailInterpolator/RailInterpolator.cs" id="3_rqayk"]
-[ext_resource type="Script" path="res://addons/OrbitalPhysics2D/CollisionPredictor/CollisionPredictor.cs" id="5_1qp2c"]
-[ext_resource type="Script" path="res://addons/OrbitalPhysics2D/PredictionRailController/PredictionRailController.cs" id="5_05j0p"]
+[ext_resource type="Script" uid="uid://bk0geu0iesfd0" path="res://addons/OrbitalPhysics2D/RailInterpolator/RailInterpolator.cs" id="3_rqayk"]
+[ext_resource type="Script" uid="uid://je8exuc8kqla" path="res://addons/OrbitalPhysics2D/CollisionPredictor/CollisionPredictor.cs" id="5_1qp2c"]
+[ext_resource type="Script" uid="uid://c4odp8roihsgp" path="res://addons/OrbitalPhysics2D/PredictionRailController/PredictionRailController.cs" id="5_05j0p"]
 
 [node name="CustomPhysObject" type="Node2D"]
 script = ExtResource("1_mr3j5")
