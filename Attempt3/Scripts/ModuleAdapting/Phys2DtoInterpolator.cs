@@ -11,7 +11,7 @@ public partial class RailNode : ITwoTransforms
     
     public InterpolatePosition EndPosition
     {
-        get { return new InterpolatePosition(
+        get {return new InterpolatePosition(
             Items[1].Position, Items[1].Rotation); }
     }
 }
