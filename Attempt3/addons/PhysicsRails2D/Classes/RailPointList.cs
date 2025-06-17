@@ -3,12 +3,7 @@ using System.Collections.Generic;
 
 public partial class RailPointList: List<RailPoint>{
 
-    public List<ObjectInfluencer> Influencers = new List<ObjectInfluencer>();
-
-    public PhysRailNode Parent;
-
-    public RailPointList(PhysRailNode parent){
-        Parent = parent;
+    public RailPointList(){
     }
 
     /// <summary>
@@ -42,7 +37,7 @@ public partial class RailPointList: List<RailPoint>{
     }
 
     /// <summary>
-    /// Method for getting point before specified time
+    /// Method for getting nearest point before specified time
     /// </summary>
     /// <param name="T">specified time</param>
     /// <returns></returns>

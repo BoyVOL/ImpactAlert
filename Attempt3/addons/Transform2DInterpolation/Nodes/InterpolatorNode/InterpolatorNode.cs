@@ -36,7 +36,7 @@ public partial class InterpolatorNode : Node2D
         public float RotSpeed;
     }
 
-    public ITwoTransforms Parent;
+    public ITwoTransforms Parent = null;
 
     /// <summary>
     /// Time offset im ms
@@ -50,9 +50,11 @@ public partial class InterpolatorNode : Node2D
     /// </summary>
     public void SwitchToInterState()
     {
-        InterpolateSpeed Speed = CalcInterpolSpeed(Parent.StartPosition, Parent.EndPosition);
-        Position = Parent.StartPosition.Position+Speed.Speed*Offset-((Node2D)Parent).Position;
-        Rotation = Parent.StartPosition.Rotation+Speed.RotSpeed*Offset-((Node2D)Parent).Rotation;
+        if (Parent != null){    
+            InterpolateSpeed Speed = CalcInterpolSpeed(Parent.StartPosition, Parent.EndPosition);
+            Position = Parent.StartPosition.Position+Speed.Speed*Offset-((Node2D)Parent).Position;
+            Rotation = Parent.StartPosition.Rotation+Speed.RotSpeed*Offset-((Node2D)Parent).Rotation; 
+        }
     }
 
     /// <summary>

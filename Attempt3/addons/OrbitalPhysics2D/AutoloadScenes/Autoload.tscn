@@ -1,8 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://bw7qip06y771a"]
-
-[ext_resource type="Script" uid="uid://du5gng5xffvw4" path="res://addons/OrbitalPhysics2D/PhysicsControlNode/PhysicsControlNode.cs" id="1"]
-
-[node name="MainNode" type="Node"]
-
-[node name="PhysicsControlNode" type="Node" parent="."]
-script = ExtResource("1")

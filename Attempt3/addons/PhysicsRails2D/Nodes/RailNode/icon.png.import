@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ctxnbwc7ewt60"
-path="res://.godot/imported/icon.png-ae48ae1387ff634957c77d5dab451e55.ctex"
+uid="uid://33yd8d61ku4v"
+path="res://.godot/imported/icon.png-d474d244a26a62a0ed49233432651ee8.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/OrbitalPhysics2D/PhysicsControlNode/icon.png"
-dest_files=["res://.godot/imported/icon.png-ae48ae1387ff634957c77d5dab451e55.ctex"]
+source_file="res://addons/PhysicsRails2D/Nodes/RailNode/icon.png"
+dest_files=["res://.godot/imported/icon.png-d474d244a26a62a0ed49233432651ee8.ctex"]
 
 [params]
 
