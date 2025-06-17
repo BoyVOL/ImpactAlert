@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bxb0ixpadmlqa"
-path="res://.godot/imported/icon.png-3c64ed2468a5009e78db38a379ad60b0.ctex"
+uid="uid://daym1rm7ndjck"
+path="res://.godot/imported/icon3.png-2ded919ff285f1c9e3ecfe8b4658ebee.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/OrbitalPhysics2D/CollisionPredictor/icon.png"
-dest_files=["res://.godot/imported/icon.png-3c64ed2468a5009e78db38a379ad60b0.ctex"]
+source_file="res://Sprites/icon3.png"
+dest_files=["res://.godot/imported/icon3.png-2ded919ff285f1c9e3ecfe8b4658ebee.ctex"]
 
 [params]
 

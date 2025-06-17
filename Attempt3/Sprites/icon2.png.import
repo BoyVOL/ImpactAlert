@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://0twg3tgd6tb2"
-path="res://.godot/imported/icon.png-0187e2fc1100caa0c3642b4b93efbf91.ctex"
+uid="uid://bni5yp56i317a"
+path="res://.godot/imported/icon2.png-ce3e23961d82a679bee18bb6e7cd2312.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/OrbitalPhysics2D/RailInterpolator/icon.png"
-dest_files=["res://.godot/imported/icon.png-0187e2fc1100caa0c3642b4b93efbf91.ctex"]
+source_file="res://Sprites/icon2.png"
+dest_files=["res://.godot/imported/icon2.png-ce3e23961d82a679bee18bb6e7cd2312.ctex"]
 
 [params]
 

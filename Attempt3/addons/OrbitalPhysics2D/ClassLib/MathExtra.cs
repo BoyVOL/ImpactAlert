@@ -2,10 +2,7 @@
 using System.Collections.Generic;
 using Godot;
 public partial class MathExtra
-{   
-    [Export]
-    public float Test = 0;
-
+{  
     /// <summary>
     /// Метод, возвращающий момент времени максимального сближения двух объектов с заданными скоростями и начальными точками
     /// </summary>

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b0bwl70n11udc"
-path="res://.godot/imported/icon.png-5b67b92300066540a45502c371d8a4df.ctex"
+uid="uid://ujkq22gasj0k"
+path="res://.godot/imported/icon.png-f9ba9008f31679cd240e2c5f33a9a4fb.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/OrbitalPhysics2D/InfluenceController/icon.png"
-dest_files=["res://.godot/imported/icon.png-5b67b92300066540a45502c371d8a4df.ctex"]
+source_file="res://Sprites/icon.png"
+dest_files=["res://.godot/imported/icon.png-f9ba9008f31679cd240e2c5f33a9a4fb.ctex"]
 
 [params]
 
