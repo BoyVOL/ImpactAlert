@@ -2,10 +2,9 @@ using Godot;
 using System;
 using System.Collections.Generic;
 
-public partial class RailNode: Node2D{
+public partial class RailNode : Node2D
+{
 
-	
-	
 	[Export]
 	public Color RailColor;
 
@@ -27,32 +26,38 @@ public partial class RailNode: Node2D{
 	[Export]
 	private float FirstPointRotAccel;
 
-	public RailNode(): base(){		
+	public RailNode() : base()
+	{
 		Items = new RailPointList();
 	}
 
 	/// <summary>
 	/// Method for updating node pos according to simulation
 	/// </summary>
-	public void UpdatePos(){
-		if(Items!=null){	
+	public void UpdatePos()
+	{
+		if (Items != null)
+		{
 			Position = Items[0].Position;
 		}
 	}
 
-	public void DrawRail(){
-		if(Items != null){
+	public void DrawRail()
+	{
+		if (Items != null)
+		{
 			Vector2[] Points = new Vector2[Items.Count];
 			for (int i = 0; i < Items.Count; i++)
 			{
-				Points[i] = Items[i].Position-Items[0].Position;
+				Points[i] = Items[i].Position - Items[0].Position;
 				Points[i] = Points[i].Rotated(-Rotation);
 			}
-			if(Points.Length > 1) DrawPolyline(Points,RailColor,2);
+			if (Points.Length > 1) DrawPolyline(Points, RailColor, 2);
 		}
 	}
 
-	public override void _EnterTree(){
+	public override void _EnterTree()
+	{
 		SetFirstPoint();
 		base._EnterTree();
 	}
@@ -93,17 +98,17 @@ public partial class RailNode: Node2D{
 		Items.AppendPoint((float)delta);
 		Items.AppendPoint((float)delta);
 		Items.AppendPoint((float)delta);
-		#if DEBUG
+#if DEBUG
 		QueueRedraw();
-		#endif
+#endif
 	}
 
 	public override void _Draw()
 	{
 		base._Draw();
-		#if DEBUG
+#if DEBUG
 		DrawRail();
-		#endif
+#endif
 	}
 
 	/// <summary>
@@ -125,4 +130,28 @@ public partial class RailNode: Node2D{
 	{
 		base._Process(delta);
 	}
+
+}
+
+public struct AccelStruct
+{
+	public AccelStruct(Vector2 Lin, float Ang)
+	{
+		Linear = Lin;
+		Angular = Ang;
+	}
+
+	Vector2 Linear;
+
+	float Angular;
+}
+
+public interface IAccelerator
+{	
+	/// <summary>
+	/// Get Accel at specified time
+	/// </summary>
+	/// <param name="T"></param>
+	/// <returns></returns>
+	public AccelStruct GetAccel(double T);
 }

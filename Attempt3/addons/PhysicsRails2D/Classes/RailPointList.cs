@@ -16,15 +16,24 @@ public partial class RailPointList: List<RailPoint>{
     }
 
     /// <summary>
+    /// Shifting time increment intill Item[0].time becomes 0
+    /// </summary>
+    public void AdjustTime()
+    {
+
+    }
+
+    /// <summary>
     /// Method wich inserts new point at a specific time based on already existing ones
     /// Next nodes will be recalculated
     /// </summary>
     /// <param name="time"></param>
-    public int InsertPoint(float time){
+    public int InsertPoint(float time)
+    {
         int id = GetBeforeTime(time);
         RailPoint PointBefore = this[id];
-        this.Insert(id+1,PointBefore.GetNext(time-PointBefore.time));
-        return id+1;
+        this.Insert(id + 1, PointBefore.GetNext(time - PointBefore.time));
+        return id + 1;
     }
 
     /// <summary>
@@ -59,7 +68,7 @@ public partial class RailPointList: List<RailPoint>{
             return this[id+1].time - this[id].time;
         } return 0;
     }
-    
+
     public void LeapFrogAdjust(int id, float T)
     {
         this[id].Speed = this[id - 1].Speed + (this[id - 1].Acceleration + this[id].Acceleration) / 2 * T;
