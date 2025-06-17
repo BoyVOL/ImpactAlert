@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://u4idjb8sdnq2"]
+[gd_scene load_steps=6 format=3 uid="uid://u4idjb8sdnq2"]
 
 [ext_resource type="Script" uid="uid://bvnf1qnpu2g7g" path="res://addons/OrbitalPhysics2D/CustomPhysObject/CustomPhysObject.cs" id="1_mr3j5"]
 [ext_resource type="Texture2D" uid="uid://db5h8o611vwvl" path="res://Sprites/Ships/Starter ship.png" id="2_g0dcf"]
+[ext_resource type="Script" uid="uid://7pultjna17y7" path="res://addons/Transform2DInterpolation/Nodes/InterpolatorNode/InterpolatorNode.cs" id="4_5jrbl"]
 [ext_resource type="Script" uid="uid://je8exuc8kqla" path="res://addons/OrbitalPhysics2D/CollisionPredictor/CollisionPredictor.cs" id="5_1qp2c"]
 [ext_resource type="Script" uid="uid://c4odp8roihsgp" path="res://addons/OrbitalPhysics2D/PredictionRailController/PredictionRailController.cs" id="5_05j0p"]
 
@@ -22,6 +23,10 @@ Radius = 20.0
 RadiusColor = Color(0, 1, 0, 1)
 ApproachColor = Color(0, 0, 0, 1)
 
-[node name="StarterShip" type="Sprite2D" parent="."]
+[node name="InterpolatorNode" type="Node2D" parent="."]
+script = ExtResource("4_5jrbl")
+metadata/_custom_type_script = "uid://7pultjna17y7"
+
+[node name="StarterShip" type="Sprite2D" parent="InterpolatorNode"]
 position = Vector2(0, -1)
 texture = ExtResource("2_g0dcf")
