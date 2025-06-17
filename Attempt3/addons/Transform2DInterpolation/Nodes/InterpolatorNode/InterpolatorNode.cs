@@ -2,6 +2,9 @@ using Godot;
 using System;
 using System.Collections.Generic;
 
+/// <summary>
+/// Structure for transferring interpolation states to this module
+/// </summary>
 public struct InterpolatePosition
 {
     public InterpolatePosition(Vector2 pos, float rot)
@@ -15,21 +18,23 @@ public struct InterpolatePosition
     public float Rotation;
 }
 
-public struct InterpolateSpeed
-{
-    public InterpolateSpeed(Vector2 sp, float rot)
-    {
-        Speed = sp;
-        RotSpeed = rot;
-    }
-
-    public Vector2 Speed;
-
-    public float RotSpeed;
-}
-
 public partial class InterpolatorNode : Node2D
 {
+    /// <summary>
+    /// Structure for storing interpolation speed inside this class
+    /// </summary>
+    struct InterpolateSpeed
+    {
+        public InterpolateSpeed(Vector2 sp, float rot)
+        {
+            Speed = sp;
+            RotSpeed = rot;
+        }
+
+        public Vector2 Speed;
+
+        public float RotSpeed;
+    }
 
     public ITwoTransforms Parent;
 
@@ -55,8 +60,8 @@ public partial class InterpolatorNode : Node2D
     /// </summary>
     /// <param name="Point1">Start point of interpolation</param>
     /// <param name="Point2">End point of interpolation</param>
-    /// <returns></returns>
-    public InterpolateSpeed CalcInterpolSpeed(InterpolatePosition Point1, InterpolatePosition Point2)
+    /// <returns>structure with both vector and angular speed</returns>
+    InterpolateSpeed CalcInterpolSpeed(InterpolatePosition Point1, InterpolatePosition Point2)
     {
         return new InterpolateSpeed(
             (Point2.Position - Point1.Position) / PhysDelta,
