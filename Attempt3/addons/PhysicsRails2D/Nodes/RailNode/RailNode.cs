@@ -7,20 +7,13 @@ public partial class RailNode: Node2D{
 	
 	
 	[Export]
-	public Color PredictionColor;
-
-	[Export]
-	public float mass = 1;
+	public Color RailColor;
 
 	/// <summary>
 	/// List af all points that predict movement of this object for certain period of time
 	/// </summary>
 	/// <returns></returns>
 	public RailPointList Items;
-
-	
-	[Export]
-	public Color PhysRailColor;
 
 	[Export]
 	private Vector2 FirstPointSpeed;
@@ -55,7 +48,7 @@ public partial class RailNode: Node2D{
 				Points[i] = Items[i].Position-Items[0].Position;
 				Points[i] = Points[i].Rotated(-Rotation);
 			}
-			if(Points.Length > 1) DrawPolyline(Points,PredictionColor,2);
+			if(Points.Length > 1) DrawPolyline(Points,RailColor,2);
 		}
 	}
 
@@ -73,6 +66,33 @@ public partial class RailNode: Node2D{
 	{
 		UpdatePos();
 		base._PhysicsProcess(delta);
+		Items.AppendPoint((float)delta);
+		Items.SetFirstPoint(Items[1]);
+		Items.AppendPoint((float)delta);
+		Items.AppendPoint((float)delta);
+		Items.AppendPoint((float)delta);
+		Items.AppendPoint((float)delta);
+		Items.AppendPoint((float)delta);
+		Items.AppendPoint((float)delta);
+		Items.AppendPoint((float)delta);
+		Items.AppendPoint((float)delta);
+		Items.AppendPoint((float)delta);
+		Items.AppendPoint((float)delta);
+		Items.AppendPoint((float)delta);
+		Items.AppendPoint((float)delta);
+		Items.AppendPoint((float)delta);
+		Items.AppendPoint((float)delta);
+		Items.AppendPoint((float)delta);
+		Items.AppendPoint((float)delta);
+		Items.AppendPoint((float)delta);
+		Items.AppendPoint((float)delta);
+		Items.AppendPoint((float)delta);
+		Items.AppendPoint((float)delta);
+		Items.AppendPoint((float)delta);
+		Items.AppendPoint((float)delta);
+		Items.AppendPoint((float)delta);
+		Items.AppendPoint((float)delta);
+		Items.AppendPoint((float)delta);
 		#if DEBUG
 		QueueRedraw();
 		#endif
@@ -89,7 +109,8 @@ public partial class RailNode: Node2D{
 	/// <summary>
 	/// Method for setting up first point of this rail
 	/// </summary>
-	public void SetFirstPoint(){
+	public void SetFirstPoint()
+	{
 		RailPoint Point = new RailPoint();
 		Point.Position = Position;
 		Point.Rotation = Rotation;

@@ -52,8 +52,6 @@ using Godot;
             Result.Speed = Speed+Acceleration*T;
             Result.Rotation = Rotation+RotSpeed*T+(RotAccel*T*T)/2;
             Result.RotSpeed = RotSpeed+RotAccel*T;
-            Result.Acceleration = Acceleration;
-            Result.RotAccel = RotAccel;
             Result.time = time + T;
             return Result;
         }

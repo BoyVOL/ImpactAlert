@@ -12,6 +12,10 @@ position = Vector2(570, 328)
 
 [node name="RailNode2" parent="." instance=ExtResource("3_ybwpf")]
 position = Vector2(760, 108)
+RailColor = Color(0.258824, 0, 0.972549, 1)
+FirstPointSpeed = Vector2(100, 10)
+FirstPointAccel = Vector2(-30, 0)
+FirstPointRotAccel = 1.0
 
 [node name="RailNode3" parent="." instance=ExtResource("3_ybwpf")]
 position = Vector2(279, 469)

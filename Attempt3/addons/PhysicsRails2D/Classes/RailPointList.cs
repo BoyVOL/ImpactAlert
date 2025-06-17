@@ -59,13 +59,14 @@ public partial class RailPointList: List<RailPoint>{
             return this[id+1].time - this[id].time;
         } return 0;
     }
-
-    public void LeapFrogAdjust(int id, float T){
-        this[id].Speed = this[id-1].Speed+(this[id-1].Acceleration+this[id].Acceleration)/2*T;
+    
+    public void LeapFrogAdjust(int id, float T)
+    {
+        this[id].Speed = this[id - 1].Speed + (this[id - 1].Acceleration + this[id].Acceleration) / 2 * T;
     }
 
     /// <summary>
-    /// Method that will set first rail point
+    /// Method that will clear point and set it's first point as specified
     /// </summary>
     /// <param name="point"></param>
     public void SetFirstPoint(RailPoint point){
