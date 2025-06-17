@@ -68,7 +68,7 @@ public partial class PhysRailNode: Node2D{
 			foreach (var approach in Approacher.Approaches)
 			{
 				Vector2 Pos;
-				Pos = PredictionRail.InterpolatePos(approach.time);
+				Pos = PredictionRail.Parent.Position;
 				DrawCircle(Pos-Position,3,approach.Approacher.ApproachColor);
 			}
 		}
