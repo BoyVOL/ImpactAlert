@@ -16,11 +16,29 @@ public partial class RailPointList: List<RailPoint>{
     }
 
     /// <summary>
-    /// Shifting time increment intill Item[0].time becomes 0
+    /// Shifting time values of items untill Item[0].time == 0
     /// </summary>
     public void AdjustTime()
     {
+        if (Count < 1) throw new System.Exception("No items in list");
+        float shift = this[0].time;
+        foreach (RailPoint p in this)
+        {
+            p.time -= shift;
+        }
+    }
 
+    /// <summary>
+    /// Shifting time values of items with parameter
+    /// <paramref name="shift"/>
+    /// </summary>
+    public void AdjustTime(float shift)
+    {
+        if (Count < 1) throw new System.Exception("No items in list");
+        foreach (RailPoint p in this)
+        {
+            p.time -= shift;
+        }
     }
 
     /// <summary>
