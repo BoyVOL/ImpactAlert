@@ -1,17 +1,20 @@
 using Godot;
 using System.Collections.Generic;
 
-public partial class RailPointList: List<RailPoint>{
+public partial class RailPointList : List<RailPoint>
+{
 
-    public RailPointList(){
+    public RailPointList()
+    {
     }
 
     /// <summary>
     /// Method that clears rail and sets it's last element as it's first
     /// </summary>
-    public void ResetToStart(){
-        int LocCount = Count-1;
-        RemoveRange(0,LocCount);
+    public void ResetToStart()
+    {
+        int LocCount = Count - 1;
+        RemoveRange(0, LocCount);
         this[0].time = 0;
     }
 
@@ -58,8 +61,9 @@ public partial class RailPointList: List<RailPoint>{
     /// Method which adds new point at the end of the list with a specific step
     /// </summary>
     /// <param name="step"></param>
-    public void AppendPoint(float step){
-        RailPoint Last = this[Count-1];
+    public void AppendPoint(float step)
+    {
+        RailPoint Last = this[Count - 1];
         Add(Last.GetNext(step));
     }
 
@@ -68,23 +72,27 @@ public partial class RailPointList: List<RailPoint>{
     /// </summary>
     /// <param name="T">specified time</param>
     /// <returns></returns>
-    public int GetBeforeTime(float T){
+    public int GetBeforeTime(float T)
+    {
         for (int i = 0; i < Count; i++)
         {
-            if(this[i].time>T) return i-1;
+            if (this[i].time > T) return i - 1;
         }
-        return Count-1;
+        return Count - 1;
     }
-    
+
     /// <summary>
     /// Method for getting time interval between Rail point item with id index and the next one
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>
-    public float TimeBetweenPoints(int id){
-        if(id < this.Count){
-            return this[id+1].time - this[id].time;
-        } return 0;
+    public float TimeBetweenPoints(int id)
+    {
+        if (id < this.Count)
+        {
+            return this[id + 1].time - this[id].time;
+        }
+        return 0;
     }
 
     public void LeapFrogAdjust(int id, float T)
@@ -96,16 +104,18 @@ public partial class RailPointList: List<RailPoint>{
     /// Method that will clear point and set it's first point as specified
     /// </summary>
     /// <param name="point"></param>
-    public void SetFirstPoint(RailPoint point){
+    public void SetFirstPoint(RailPoint point)
+    {
         Clear();
         Add(point);
     }
 
-    public string Stringify(int count = 5){
+    public string Stringify(int count = 5)
+    {
         string Result = "";
         for (int i = 0; i < Count && i < count; i++)
         {
-            Result+=" "+this[i].Stringify();
+            Result += " " + this[i].Stringify();
         }
         return Result;
     }
