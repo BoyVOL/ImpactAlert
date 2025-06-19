@@ -1,0 +1,17 @@
+[gd_scene load_steps=4 format=3 uid="uid://0qf3qb1yg546"]
+
+[ext_resource type="Script" uid="uid://bnti6aad8bhod" path="res://addons/PhysicsRails2D/Nodes/RailNode/RailNode.cs" id="1_q35tq"]
+[ext_resource type="Script" uid="uid://7pultjna17y7" path="res://addons/Transform2DInterpolation/Nodes/InterpolatorNode/InterpolatorNode.cs" id="2_jv8dv"]
+[ext_resource type="Texture2D" uid="uid://db5h8o611vwvl" path="res://Sprites/Ships/Starter ship.png" id="3_p6xbd"]
+
+[node name="RailNode" type="Node2D"]
+script = ExtResource("1_q35tq")
+metadata/_custom_type_script = "uid://bnti6aad8bhod"
+
+[node name="InterpolatorNode" type="Node2D" parent="."]
+script = ExtResource("2_jv8dv")
+metadata/_custom_type_script = "uid://7pultjna17y7"
+
+[node name="StarterShip" type="Sprite2D" parent="InterpolatorNode"]
+position = Vector2(0, -1)
+texture = ExtResource("3_p6xbd")

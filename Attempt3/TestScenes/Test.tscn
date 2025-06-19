@@ -1,22 +1,21 @@
 [gd_scene load_steps=4 format=3 uid="uid://cmqx87qmj8idp"]
 
 [ext_resource type="Script" uid="uid://dljvh73ubuh3j" path="res://TestScenes/Test.cs" id="1_pyfct"]
-[ext_resource type="PackedScene" uid="uid://u4idjb8sdnq2" path="res://TestScenes/TestObject.tscn" id="2_xx2l8"]
-[ext_resource type="PackedScene" uid="uid://bugs7g7dedesb" path="res://TestScenes/GravCenter.tscn" id="3_eh15j"]
+[ext_resource type="PackedScene" uid="uid://f8glth4k1g68" path="res://TestScenes/GravCenter2.tscn" id="2_gx05y"]
+[ext_resource type="PackedScene" uid="uid://0qf3qb1yg546" path="res://TestScenes/TestObject2.tscn" id="3_ybwpf"]
 
 [node name="Node2D" type="Node2D"]
 script = ExtResource("1_pyfct")
 
-[node name="CustomPhysObject" parent="." instance=ExtResource("2_xx2l8")]
-position = Vector2(603, 114)
-FirstPointSpeed = Vector2(70, 0)
-FirstPointRotSpeed = -1.0
+[node name="RailNode" parent="." instance=ExtResource("2_gx05y")]
+position = Vector2(570, 328)
 
-[node name="TestObject1" parent="." instance=ExtResource("2_xx2l8")]
-position = Vector2(484, 571)
-FirstPointSpeed = Vector2(-150, 0)
-FirstPointRotSpeed = 10.0
-mass = 2.0
+[node name="RailNode2" parent="." instance=ExtResource("3_ybwpf")]
+position = Vector2(787, 104)
+RailColor = Color(0.258824, 0, 0.972549, 1)
+FirstPointSpeed = Vector2(100, 10)
+FirstPointAccel = Vector2(-30, 0)
+FirstPointRotAccel = 1.0
 
-[node name="CustomPhysObject2" parent="." instance=ExtResource("3_eh15j")]
-position = Vector2(587, 362)
+[node name="RailNode3" parent="." instance=ExtResource("3_ybwpf")]
+position = Vector2(279, 469)

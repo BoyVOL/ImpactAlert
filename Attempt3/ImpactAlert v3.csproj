@@ -9,5 +9,12 @@
     <Content Include="addons\OrbitalPhysics2D\CustomPhysObject\CustomPhysObject.cs" />
     <Content Include="addons\OrbitalPhysics2D\ClassLib\Approacher.cs" />
     <Content Include="addons\OrbitalPhysics2D\RailInterpolator\RailInterpolator.cs" />
+    <Content Include="Scripts\ModuleAdapting\Phys2DtoInterpolator.cs" />
+    <Content Include="Scripts\ModuleAdapting\Phys2DtoInterpolator.cs.uid" />
+    <Content Include="addons\Transform2DInterpolation\Transform2DInterpolation.cs" />
+    <Content Include="addons\PhysicsRails2D\PhysicsRails2D.cs" />
+    <Content Include="addons\PhysicsRails2D\Nodes\RailNode\RailNode.cs" />
+    <Content Include="addons\OrbitalPhysics2D\OrbitalPhysics2D.cs" />
+    <Content Include="addons\Transform2DInterpolation\Nodes\InterpolatorNode\InterpolatorNode.cs" />
   </ItemGroup>
 </Project>
