@@ -1,3 +1,7 @@
-[gd_scene format=3 uid="uid://cnhnhomw6jhn3"]
+[gd_scene load_steps=2 format=3 uid="uid://b1k1g8f3hqnb2"]
 
-[node name="AutomatorSingleton" type="Node"]
+[ext_resource type="Script" uid="uid://bwu3gmmviyxr6" path="res://addons/Rail2DAutomator/Nodes/RailAutomator/RailAutomator.cs" id="1_tkxn5"]
+
+[node name="RailAutomator" type="Node"]
+script = ExtResource("1_tkxn5")
+metadata/_custom_type_script = "uid://bwu3gmmviyxr6"
