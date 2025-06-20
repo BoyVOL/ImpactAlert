@@ -71,33 +71,6 @@ public partial class RailNode : Node2D
 	{
 		UpdatePos();
 		base._PhysicsProcess(delta);
-		Items.AppendPoint((float)delta);
-		Items.SetFirstPoint(Items[1]);
-		Items.AppendPoint((float)delta);
-		Items.AppendPoint((float)delta);
-		Items.AppendPoint((float)delta);
-		Items.AppendPoint((float)delta);
-		Items.AppendPoint((float)delta);
-		Items.AppendPoint((float)delta);
-		Items.AppendPoint((float)delta);
-		Items.AppendPoint((float)delta);
-		Items.AppendPoint((float)delta);
-		Items.AppendPoint((float)delta);
-		Items.AppendPoint((float)delta);
-		Items.AppendPoint((float)delta);
-		Items.AppendPoint((float)delta);
-		Items.AppendPoint((float)delta);
-		Items.AppendPoint((float)delta);
-		Items.AppendPoint((float)delta);
-		Items.AppendPoint((float)delta);
-		Items.AppendPoint((float)delta);
-		Items.AppendPoint((float)delta);
-		Items.AppendPoint((float)delta);
-		Items.AppendPoint((float)delta);
-		Items.AppendPoint((float)delta);
-		Items.AppendPoint((float)delta);
-		Items.AppendPoint((float)delta);
-		Items.AppendPoint((float)delta);
 #if DEBUG
 		QueueRedraw();
 #endif
