@@ -2,6 +2,8 @@ using Godot;
 using System;
 using System.Collections.Generic;
 
+namespace PhysicsRails2D;
+
 public partial class RailNode : Node2D
 {
 
@@ -108,11 +110,12 @@ public partial class RailNode : Node2D
 
 public interface IAccelerator
 {
-	
+
 	/// <summary>
 	/// Method for accelerating a specific rail point
 	/// </summary>
 	/// <param name="railPoint"></param>
-	public void Accelerate(RailPoint railPoint);
+	/// <param name="time">параметр для </param>
+	public void Accelerate(RailPoint railPoint, double time);
 
 }

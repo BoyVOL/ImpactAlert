@@ -2,6 +2,8 @@ using Godot;
 using System;
 using System.Collections.Generic;
 
+namespace PhysicsRails2D;
+
 public partial class RailAutomator : Node
 {
 
@@ -18,8 +20,8 @@ public partial class RailAutomator : Node
     {
         foreach (RailPointList rail in rails)
         {
-            if (rail.Count > 2) rail.RemoveRange(2, rail.Count - 2);
-            rail.ResetToStart();
+            if (rail.Count > 2) rail.LeftAtStart(2);
+            rail.LeftAtEnd(1);
         }
     }
 

@@ -1,10 +1,12 @@
 using Godot;
 
+namespace PhysicsRails2D;
+
     /// <summary>
     /// Структура, отвечающая за состояние точки в каждый момент времени
     /// </summary>
     public partial class RailPoint
-    {   
+    {
         /// <summary>
         /// Переменная, отвечающая за время
         /// </summary>
@@ -46,79 +48,87 @@ using Godot;
         /// <param name="Point">Предыдущая точка</param>
         /// <param name="T">интервал времени, на котором проходит симуляция</param>
         /// <returns></returns>
-        public RailPoint GetNext(float T){
+        public RailPoint GetNext(float T)
+        {
             RailPoint Result = new RailPoint();
-            Result.Position = Position+Speed*T+(Acceleration*T*T)/2;
-            Result.Speed = Speed+Acceleration*T;
-            Result.Rotation = Rotation+RotSpeed*T+(RotAccel*T*T)/2;
-            Result.RotSpeed = RotSpeed+RotAccel*T;
+            Result.Position = Position + Speed * T + (Acceleration * T * T) / 2;
+            Result.Speed = Speed + Acceleration * T;
+            Result.Rotation = Rotation + RotSpeed * T + (RotAccel * T * T) / 2;
+            Result.RotSpeed = RotSpeed + RotAccel * T;
             Result.time = time + T;
             return Result;
         }
-        
+
         /// <summary>
         /// Метод, возвращающий положение на отрезке времени от 0 до maxT, равную T
         /// </summary>
         /// <param name="T"></param>
         /// <param name="maxT"></param>
         /// <returns></returns>
-        public Vector2 GetInterPos(float T, float maxT){
-            return Position+GetInterSpeed(maxT)*T;
+        public Vector2 GetInterPos(float T, float maxT)
+        {
+            return Position + GetInterSpeed(maxT) * T;
         }
-        
+
         /// <summary>
         /// Метод, возвращающий вращение на отрезке времени от 0 до maxT, равную T
         /// </summary>
         /// <param name="T"></param>
         /// <param name="maxT"></param>
         /// <returns></returns>
-        public float GetInterRot(float T, float maxT){
+        public float GetInterRot(float T, float maxT)
+        {
             float InterRt = GetInterRotSpeed(maxT);
-            return Rotation+InterRt*T;
+            return Rotation + InterRt * T;
         }
 
-		/// <summary>
-		/// Возвращает значение времени максимального сближения с указанной точкой. За ноль взят момент времени в текущей точке.
-		/// </summary>
-		/// <param name="Target">Вторая точка, с которой просчитывается пересечение путей</param>
+        /// <summary>
+        /// Возвращает значение времени максимального сближения с указанной точкой. За ноль взят момент времени в текущей точке.
+        /// </summary>
+        /// <param name="Target">Вторая точка, с которой просчитывается пересечение путей</param>
         /// <param name="T">интервал времени, на котором проходит проверка</param>
         /// <param name="clamped">Ограничен ли результат краями отрезка</param>
-		/// <returns></returns>
-		public float CPA(RailPoint Target, float T, bool clamped = true){
-            float Result = MathExtra.cpaTime(Position,Target.Position,GetInterSpeed(T),Target.GetInterSpeed(T));
-            if(clamped){
-                if(Result < 0) Result = 0;
-                if(Result > T) Result = T;
+        /// <returns></returns>
+        public float CPA(RailPoint Target, float T, bool clamped = true)
+        {
+            float Result = MathExtra.cpaTime(Position, Target.Position, GetInterSpeed(T), Target.GetInterSpeed(T));
+            if (clamped)
+            {
+                if (Result < 0) Result = 0;
+                if (Result > T) Result = T;
             }
-			return Result;
-		}
+            return Result;
+        }
 
-		/// <summary>
-		/// Возвращает значение времени пересечения сближения с указанной точкой. За ноль взят момент времени в текущей точке.
+        /// <summary>
+        /// Возвращает значение времени пересечения сближения с указанной точкой. За ноль взят момент времени в текущей точке.
         /// Если время выходит за границы отрезка времени - берётся ближайшая точка на этом отрезке.
-		/// Перегрузка для 2д вектора
-		/// </summary>
-		/// <param name="Vector">2Д вектор, с которым просчитывается пересечение путей</param>
+        /// Перегрузка для 2д вектора
+        /// </summary>
+        /// <param name="Vector">2Д вектор, с которым просчитывается пересечение путей</param>
         /// <param name="T">интервал времени, на котором проходит проверка</param>
         /// <param name="clamped">Ограничен ли результат краями отрезка</param>
-		/// <returns></returns>
-		public float CPA(Vector2 Vector, float T, bool clamped = true){
-			float Result = MathExtra.cpaTime(Position,Vector,GetInterSpeed(T),new Vector2(0,0));
-            if(clamped){
-                if(Result < 0) Result = 0;
-                if(Result > T) Result = T;
+        /// <returns></returns>
+        public float CPA(Vector2 Vector, float T, bool clamped = true)
+        {
+            float Result = MathExtra.cpaTime(Position, Vector, GetInterSpeed(T), new Vector2(0, 0));
+            if (clamped)
+            {
+                if (Result < 0) Result = 0;
+                if (Result > T) Result = T;
             }
-			return Result;
-		}
+            return Result;
+        }
 
         /// <summary>
         /// Метод, который возвращает среднюю скорость от начала точки до участка времени Т
         /// </summary>
         /// <param name="T"></param>
         /// <returns></returns>
-        public Vector2 GetInterSpeed(float T){
-            Vector2 Speed2 = Speed+Acceleration*T;
-            return (Speed+Speed2)/2;
+        public Vector2 GetInterSpeed(float T)
+        {
+            Vector2 Speed2 = Speed + Acceleration * T;
+            return (Speed + Speed2) / 2;
         }
 
         /// <summary>
@@ -126,16 +136,19 @@ using Godot;
         /// </summary>
         /// <param name="T"></param>
         /// <returns></returns>
-        public float GetInterRotSpeed(float T){
-            float RotSpeed2 = RotSpeed+RotAccel*T;
-            return (RotSpeed+RotSpeed2)/2;
+        public float GetInterRotSpeed(float T)
+        {
+            float RotSpeed2 = RotSpeed + RotAccel * T;
+            return (RotSpeed + RotSpeed2) / 2;
         }
 
-        public RailPoint(){
-            
+        public RailPoint()
+        {
+
         }
 
-        public RailPoint(RailPoint Other){
+        public RailPoint(RailPoint Other)
+        {
             Position = Other.Position;
             Rotation = Other.Rotation;
             Speed = Other.Speed;
@@ -149,11 +162,12 @@ using Godot;
         /// Метод для преобразования контента в стринг
         /// </summary>
         /// <returns></returns>
-        public string Stringify(){
+        public string Stringify()
+        {
             string Result = "";
-            Result += "Position = ("+Position.X+";"+Position.Y+"), Speed = ("+Speed.X+";"+Speed.Y+", Accel = ("+Acceleration.X+";"+Acceleration.Y+")";
+            Result += "Position = (" + Position.X + ";" + Position.Y + "), Speed = (" + Speed.X + ";" + Speed.Y + ", Accel = (" + Acceleration.X + ";" + Acceleration.Y + ")";
             return Result;
         }
-     
-    
+
+
     }
