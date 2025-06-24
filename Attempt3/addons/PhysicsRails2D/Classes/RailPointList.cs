@@ -1,7 +1,7 @@
 using Godot;
 using System.Collections.Generic;
 
-public partial class RailPointList : List<RailPoint>
+public class RailPointList : List<RailPoint>
 {
 
     public RailPointList()
@@ -58,10 +58,10 @@ public partial class RailPointList : List<RailPoint>
     }
 
     /// <summary>
-    /// Method which adds new point at the end of the list with a specific step
+    /// Adds a simulated point ant the end of the list based on a previous point
     /// </summary>
     /// <param name="step"></param>
-    public void AppendPoint(float step)
+    public void Simulate(float step)
     {
         RailPoint Last = this[Count - 1];
         Add(Last.GetNext(step));
@@ -119,4 +119,13 @@ public partial class RailPointList : List<RailPoint>
         }
         return Result;
     }
+}
+
+public interface IAccelerator
+{
+    /// <summary>
+    /// Method for accelerating a specific rail point
+    /// </summary>
+    /// <param name="railPoint"></param>
+    public void Accelerate(RailPoint railPoint);
 }

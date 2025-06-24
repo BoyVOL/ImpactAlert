@@ -106,25 +106,13 @@ public partial class RailNode : Node2D
 
 }
 
-public struct AccelStruct
-{
-	public AccelStruct(Vector2 Lin, float Ang)
-	{
-		Linear = Lin;
-		Angular = Ang;
-	}
-
-	Vector2 Linear;
-
-	float Angular;
-}
-
 public interface IAccelerator
-{	
+{
+	
 	/// <summary>
-	/// Get Accel at specified time
+	/// Method for accelerating a specific rail point
 	/// </summary>
-	/// <param name="T"></param>
-	/// <returns></returns>
-	public AccelStruct GetAccel(double T);
+	/// <param name="railPoint"></param>
+	public void Accelerate(RailPoint railPoint);
+
 }
