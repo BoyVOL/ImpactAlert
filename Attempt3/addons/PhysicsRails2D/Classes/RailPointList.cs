@@ -61,7 +61,7 @@ public partial class RailPointList : List<RailPoint>
     /// Method which adds new point at the end of the list with a specific step
     /// </summary>
     /// <param name="step"></param>
-    public void AppendSimulated(float step)
+    public void Simulate(float step)
     {
         RailPoint Last = this[Count - 1];
         Add(Last.GetNext(step));
