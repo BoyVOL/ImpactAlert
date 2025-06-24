@@ -1,16 +1,11 @@
-[gd_scene load_steps=4 format=3 uid="uid://f8glth4k1g68"]
+[gd_scene load_steps=3 format=3 uid="uid://f8glth4k1g68"]
 
 [ext_resource type="Script" uid="uid://bnti6aad8bhod" path="res://addons/PhysicsRails2D/Nodes/RailNode/RailNode.cs" id="1_gak8p"]
-[ext_resource type="Script" uid="uid://7pultjna17y7" path="res://addons/Transform2DInterpolation/Nodes/InterpolatorNode/InterpolatorNode.cs" id="2_7jr6d"]
 [ext_resource type="Texture2D" uid="uid://dnhw13r2xdgit" path="res://Sprites/Misc/GravityCenter.png" id="3_0dcr2"]
 
 [node name="RailNode" type="Node2D"]
 script = ExtResource("1_gak8p")
 metadata/_custom_type_script = "uid://bnti6aad8bhod"
 
-[node name="InterpolatorNode" type="Node2D" parent="."]
-script = ExtResource("2_7jr6d")
-metadata/_custom_type_script = "uid://7pultjna17y7"
-
-[node name="Sprite2D" type="Sprite2D" parent="InterpolatorNode"]
+[node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("3_0dcr2")
