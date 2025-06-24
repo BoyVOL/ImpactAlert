@@ -17,5 +17,6 @@
     <Content Include="addons\OrbitalPhysics2D\OrbitalPhysics2D.cs" />
     <Content Include="addons\Transform2DInterpolation\Nodes\InterpolatorNode\InterpolatorNode.cs" />
     <Content Include="addons\Rail2DAutomator\Nodes\AutoRailNode\AutoRailNode.cs" />
+    <Content Include="addons\Rail2DAutomator\Nodes\RailAutomator\RailAutomator.cs" />
   </ItemGroup>
 </Project>
