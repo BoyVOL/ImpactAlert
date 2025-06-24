@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public partial class RailNode : Node2D
 {
 
+	//Коммент для теста гита
 	[Export]
 	public Color RailColor;
 
