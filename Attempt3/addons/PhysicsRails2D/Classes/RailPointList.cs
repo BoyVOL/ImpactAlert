@@ -58,7 +58,7 @@ public partial class RailPointList : List<RailPoint>
     }
 
     /// <summary>
-    /// Method which adds new point at the end of the list with a specific step
+    /// Adds a simulated point ant the end of the list based on a previous point
     /// </summary>
     /// <param name="step"></param>
     public void Simulate(float step)
