@@ -33,7 +33,7 @@ public partial class RailAutomator : Node
         {
             foreach (RailPointList rail in rails)
             {
-                rail.AppendPoint((float)delta);
+                rail.Simulate((float)delta);
             }
         }
     }
