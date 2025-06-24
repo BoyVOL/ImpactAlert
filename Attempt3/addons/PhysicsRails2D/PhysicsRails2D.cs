@@ -5,12 +5,13 @@ using System;
 [Tool]
 public partial class PhysicsRails2D : EditorPlugin
 {
+	String GlobalPath = "res://addons/PhysicsRails2D/";
 	public override void _EnterTree()
 	{
 		// Initialization of the plugin goes here.
+		AddCustomType("RailNode", "Node2D", GD.Load<Script>(GlobalPath+"Nodes/RailNode/RailNode.cs"),
+		GD.Load<Texture2D>(GlobalPath+"Nodes/RailNode//icon.png"));
 		GD.Print("PhysicsRails2D loaded");
-		AddCustomType("RailNode","Node2D",GD.Load<Script>("res://addons/PhysicsRails2D/Nodes/RailNode/RailNode.cs"),
-		GD.Load<Texture2D>("res://addons/PhysicsRails2D/Nodes/RailNode//icon.png"));
 	}
 
 	public override void _ExitTree()

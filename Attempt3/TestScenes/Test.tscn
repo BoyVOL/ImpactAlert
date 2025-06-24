@@ -19,3 +19,6 @@ FirstPointRotAccel = 1.0
 
 [node name="RailNode3" parent="." instance=ExtResource("3_ybwpf")]
 position = Vector2(279, 469)
+RailColor = Color(1, 0, 0, 1)
+FirstPointSpeed = Vector2(0, -50)
+FirstPointRotSpeed = 2.0
