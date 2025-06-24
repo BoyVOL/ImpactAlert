@@ -1,7 +1,7 @@
 using Godot;
 using System.Collections.Generic;
 
-public partial class RailPointList : List<RailPoint>
+public class RailPointList : List<RailPoint>
 {
 
     public RailPointList()
@@ -119,4 +119,13 @@ public partial class RailPointList : List<RailPoint>
         }
         return Result;
     }
+}
+
+public interface IAccelerator
+{
+    /// <summary>
+    /// Method for accelerating a specific rail point
+    /// </summary>
+    /// <param name="railPoint"></param>
+    public void Accelerate(RailPoint railPoint);
 }
