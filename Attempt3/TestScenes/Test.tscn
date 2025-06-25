@@ -8,7 +8,8 @@
 script = ExtResource("1_pyfct")
 
 [node name="RailNode" parent="." instance=ExtResource("2_gx05y")]
-position = Vector2(574, 300)
+position = Vector2(578, 329)
+FirstPointSpeed = Vector2(10, 0)
 
 [node name="RailNode2" parent="." node_paths=PackedStringArray("ExportInfluencers") instance=ExtResource("3_ybwpf")]
 position = Vector2(725, 189)
