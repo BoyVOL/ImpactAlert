@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace PhysicsRails2D;
+namespace PhysRails2D;
 
 /// <summary>
 /// Extra methods to work with lists

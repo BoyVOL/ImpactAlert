@@ -1,8 +1,7 @@
 using Godot;
 using System;
 using System.Collections.Generic;
-
-namespace PhysicsRails2D;
+using PhysRails2D;
 
 public partial class RailAutomator : Node
 {

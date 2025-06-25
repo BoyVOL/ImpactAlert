@@ -1,6 +1,8 @@
 using Godot;
 using System;
 
+namespace PhysRails2D;
+
 public partial class AutoRailNode : RailNode
 {
     RailAutomator Automator;

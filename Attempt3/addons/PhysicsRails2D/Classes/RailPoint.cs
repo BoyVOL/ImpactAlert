@@ -1,6 +1,6 @@
 using Godot;
 
-namespace PhysicsRails2D;
+namespace PhysRails2D;
 
     /// <summary>
     /// Структура, отвечающая за состояние точки в каждый момент времени

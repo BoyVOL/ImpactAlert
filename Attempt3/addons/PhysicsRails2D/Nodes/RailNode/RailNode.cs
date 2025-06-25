@@ -2,7 +2,7 @@ using Godot;
 using System;
 using System.Collections.Generic;
 
-namespace PhysicsRails2D;
+namespace PhysRails2D;
 
 public partial class RailNode : Node2D
 {

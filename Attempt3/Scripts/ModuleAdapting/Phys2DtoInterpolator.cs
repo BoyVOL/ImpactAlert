@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-namespace PhysicsRails2D;
+namespace PhysRails2D;
 
 public partial class RailNode : ITwoTransforms
 {

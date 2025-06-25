@@ -1,9 +1,8 @@
 using Godot;
 using System.Collections.Generic;
 using System.Linq;
-using PhysicsRails2D;
 
-namespace PhysicsRails2D;
+namespace PhysRails2D;
 
     public class RailPointList : ListExtra<RailPoint>
     {
