@@ -9,7 +9,7 @@ public partial class RailAutomator : Node
     public List<AutoRailNode> rails = new List<AutoRailNode>();
 
     [Export]
-    public int PredictionCount = 10;
+    public int PredictionCount = 100;
 
     /// <summary>
     /// Moves first point by one step

@@ -87,8 +87,8 @@ public partial class RailNode : Node2D
 	/// <param name="step"></param>
 	public void Simulate(double step)
 	{
-		ModifyWithAll(Items.Last(), step);
 		Items.Simulate((float)step);
+		ModifyWithAll(Items.Last(), step);
 	}
 
 	public override void _EnterTree()

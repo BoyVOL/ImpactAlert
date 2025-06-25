@@ -56,8 +56,8 @@ namespace PhysRails2D;
         /// <param name="step"></param>
         public void Simulate(float step)
         {
-            RailPoint Last = this[Count - 1];
-            Add(Last.GetNext(step));
+            Add(this.Last().GetNext(step));
+            LeapFrogAdjust(this.Count - 1, step);
         }
 
         /// <summary>
