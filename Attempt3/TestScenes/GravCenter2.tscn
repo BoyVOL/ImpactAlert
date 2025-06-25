@@ -3,8 +3,9 @@
 [ext_resource type="Script" uid="uid://bnti6aad8bhod" path="res://addons/PhysicsRails2D/Nodes/RailNode/RailNode.cs" id="1_gak8p"]
 [ext_resource type="Texture2D" uid="uid://dnhw13r2xdgit" path="res://Sprites/Misc/GravityCenter.png" id="3_0dcr2"]
 
-[node name="RailNode" type="Node2D"]
+[node name="RailNode" type="Node2D" node_paths=PackedStringArray("ExportInfluencers")]
 script = ExtResource("1_gak8p")
+ExportInfluencers = []
 metadata/_custom_type_script = "uid://bnti6aad8bhod"
 
 [node name="Sprite2D" type="Sprite2D" parent="."]

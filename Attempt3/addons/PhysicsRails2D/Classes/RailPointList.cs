@@ -113,16 +113,3 @@ namespace PhysRails2D;
             return Result;
         }
     }
-
-    public interface IListAccelerator : IAccelerator
-    {
-        public void AccelerateLast(RailPointList list, double time)
-        {
-            Accelerate(list.Last(), time);
-        }
-
-        public void AccelerateFirst(RailPointList list, double time)
-        {
-            Accelerate(list.First(), time);
-        }
-    }

@@ -7,18 +7,21 @@
 [node name="Node2D" type="Node2D"]
 script = ExtResource("1_pyfct")
 
-[node name="RailNode" parent="." instance=ExtResource("2_gx05y")]
+[node name="RailNode" parent="." node_paths=PackedStringArray("ExportInfluencers") instance=ExtResource("2_gx05y")]
 position = Vector2(570, 328)
+ExportInfluencers = []
 
-[node name="RailNode2" parent="." instance=ExtResource("3_ybwpf")]
+[node name="RailNode2" parent="." node_paths=PackedStringArray("ExportInfluencers") instance=ExtResource("3_ybwpf")]
 position = Vector2(787, 104)
 RailColor = Color(0.258824, 0, 0.972549, 1)
+ExportInfluencers = []
 FirstPointSpeed = Vector2(100, 10)
 FirstPointAccel = Vector2(-30, 0)
 FirstPointRotAccel = 1.0
 
-[node name="RailNode3" parent="." instance=ExtResource("3_ybwpf")]
+[node name="RailNode3" parent="." node_paths=PackedStringArray("ExportInfluencers") instance=ExtResource("3_ybwpf")]
 position = Vector2(279, 469)
 RailColor = Color(1, 0, 0, 1)
+ExportInfluencers = []
 FirstPointSpeed = Vector2(0, -50)
 FirstPointRotSpeed = 2.0

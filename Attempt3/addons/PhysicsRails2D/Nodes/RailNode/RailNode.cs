@@ -1,6 +1,8 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace PhysRails2D;
 
@@ -9,6 +11,14 @@ public partial class RailNode : Node2D
 
 	[Export]
 	public Color RailColor;
+
+	/// <summary>
+	/// Поле для связывания нод между собой
+	/// </summary>
+	[Export]
+	public Node[] ExportInfluencers = null;
+
+	public List<IINfluencer> Influencers = new List<IINfluencer>();
 
 	/// <summary>
 	/// List af all points that predict movement of this object for certain period of time
@@ -58,10 +68,38 @@ public partial class RailNode : Node2D
 		}
 	}
 
+	/// <summary>
+	/// Method for modifing a specific rail with all the attached influencers
+	/// </summary>
+	/// <param name="point"></param>
+	/// <param name="step"></param>
+	public void ModifyWithAll(RailPoint point, double step)
+	{
+		foreach (var item in Influencers)
+		{
+			item.Modify(point, step);
+		}
+	}
+
+	/// <summary>
+	/// Simulate with all linked influence applied
+	/// </summary>
+	/// <param name="step"></param>
+	public void Simulate(double step)
+	{
+		ModifyWithAll(Items.Last(), step);
+		Items.Simulate((float)step);
+	}
+
 	public override void _EnterTree()
 	{
 		SetFirstPoint();
 		base._EnterTree();
+		if (ExportInfluencers != null)
+		{
+			foreach(var item in ExportInfluencers)
+			Influencers.Add((IINfluencer)item);
+		}
 	}
 
 	public override void _ExitTree()
@@ -108,7 +146,7 @@ public partial class RailNode : Node2D
 
 }
 
-public interface IAccelerator
+public interface IINfluencer
 {
 
 	/// <summary>
@@ -116,6 +154,6 @@ public interface IAccelerator
 	/// </summary>
 	/// <param name="railPoint"></param>
 	/// <param name="time">параметр для </param>
-	public void Accelerate(RailPoint railPoint, double time);
+	public void Modify(RailPoint railPoint, double time);
 
 }

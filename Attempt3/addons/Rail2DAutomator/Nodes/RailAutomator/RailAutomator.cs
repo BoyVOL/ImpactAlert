@@ -6,7 +6,7 @@ using PhysRails2D;
 public partial class RailAutomator : Node
 {
 
-    public List<RailPointList> rails = new List<RailPointList>();
+    public List<AutoRailNode> rails = new List<AutoRailNode>();
 
     [Export]
     public int PredictionCount = 10;
@@ -17,10 +17,10 @@ public partial class RailAutomator : Node
     /// <param name="delta"></param>
     void MoveFirstPoint(double delta)
     {
-        foreach (RailPointList rail in rails)
+        foreach (AutoRailNode rail in rails)
         {
-            if (rail.Count > 2) rail.LeftAtStart(2);
-            rail.LeftAtEnd(1);
+            if (rail.Items.Count > 2) rail.Items.LeftAtStart(2);
+            rail.Items.LeftAtEnd(1);
         }
     }
 
@@ -32,7 +32,7 @@ public partial class RailAutomator : Node
     {
         for (int i = 0; i < PredictionCount - 1; i++)
         {
-            foreach (RailPointList rail in rails)
+            foreach (AutoRailNode rail in rails)
             {
                 rail.Simulate((float)delta);
             }

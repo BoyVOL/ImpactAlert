@@ -10,13 +10,13 @@ public partial class AutoRailNode : RailNode
     {
         base._EnterTree();
         Automator = GetNode<RailAutomator>("/root/RailAutomator");
-        Automator.rails.Add(Items);
+        Automator.rails.Add(this);
     }
 
     public override void _ExitTree()
     {
         base._ExitTree();
-        Automator.rails.Remove(Items);
+        Automator.rails.Remove(this);
     }
 
 
