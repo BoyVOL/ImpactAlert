@@ -10,12 +10,15 @@ public partial class GravTester : Node2D, IINfluencer
     [Export]
     float Mass = 1000;
 
-    public Vector2 GetGravAccel(Vector2 AtPoint)
+    [Export]
+    RailNode Rail;
+
+    public Vector2 GetGravAccel(Vector2 AtPoint, double shift = 0)
     {
-        Vector2 Pos = this.GetParent<Node2D>().Position;
+        Vector2 Pos = Rail.Items[Rail.Items.GetBeforeTime((float)shift)].Position;
         float RSqr = (Pos - AtPoint).LengthSquared();
         double Module = (Mass * PhysConst.GRAV) / RSqr;
-        return (Pos - AtPoint).Normalized()*(float)Module;
+        return (Pos - AtPoint).Normalized() * (float)Module;
     }
 
     /// <summary>
@@ -26,6 +29,6 @@ public partial class GravTester : Node2D, IINfluencer
     /// <param name="shift"></param>
     public void Modify(RailPoint point, double step, double shift = 0)
     {
-        point.Acceleration += GetGravAccel(point.Position);
+        point.Acceleration += GetGravAccel(point.Position,shift);
     }
 }

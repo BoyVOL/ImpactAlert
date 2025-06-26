@@ -9,9 +9,10 @@ script = ExtResource("1_h7gub")
 ExportInfluencers = []
 metadata/_custom_type_script = "uid://bjp5yijov043j"
 
-[node name="GravTester" type="Node2D" parent="."]
+[node name="GravTester" type="Node2D" parent="." node_paths=PackedStringArray("Rail")]
 script = ExtResource("2_gck3t")
 Mass = 1e+13
+Rail = NodePath("..")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("3_tc7nf")
