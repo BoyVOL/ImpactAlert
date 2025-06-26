@@ -9,14 +9,14 @@ script = ExtResource("1_pyfct")
 
 [node name="RailNode2" parent="." node_paths=PackedStringArray("ExportInfluencers") instance=ExtResource("3_ybwpf")]
 position = Vector2(793, 249)
-RailColor = Color(3.60981e-08, 0.42463, 0.21587, 1)
+RailColor = Color(0, 0.745098, 0.215686, 1)
 ExportInfluencers = [NodePath("../GravTester/GravTester"), NodePath("../GravTester2/GravTester")]
 FirstPointSpeed = Vector2(20, 20)
 FirstPointAccel = Vector2(-30, 0)
 FirstPointRotAccel = 1.0
 
 [node name="RailNode3" parent="." node_paths=PackedStringArray("ExportInfluencers") instance=ExtResource("3_ybwpf")]
-position = Vector2(242, 302)
+position = Vector2(371, 326)
 RailColor = Color(1, 0, 0, 1)
 ExportInfluencers = [NodePath("../GravTester/GravTester"), NodePath("../GravTester2/GravTester")]
 FirstPointSpeed = Vector2(0, -20)
