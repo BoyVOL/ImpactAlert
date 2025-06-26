@@ -18,7 +18,13 @@ public partial class GravTester : Node2D, IINfluencer
         return (Pos - AtPoint).Normalized()*(float)Module;
     }
 
-    public void Modify(RailPoint point, double step)
+    /// <summary>
+    /// Method that adds gravitational influence to point
+    /// </summary>
+    /// <param name="point"></param>
+    /// <param name="step"></param>
+    /// <param name="shift"></param>
+    public void Modify(RailPoint point, double step, double shift = 0)
     {
         point.Acceleration += GetGravAccel(point.Position);
     }

@@ -154,6 +154,6 @@ public interface IINfluencer
 	/// </summary>
 	/// <param name="railPoint"></param>
 	/// <param name="time">параметр для </param>
-	public void Modify(RailPoint railPoint, double time);
+	public void Modify(RailPoint railPoint, double time, double shift = 0);
 
 }
