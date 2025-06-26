@@ -24,7 +24,7 @@ FirstPointRotSpeed = 2.0
 
 [node name="GravTester2" parent="." node_paths=PackedStringArray("ExportInfluencers") instance=ExtResource("3_gx05y")]
 position = Vector2(523, 281)
-RailColor = Color(0, 0, 0.972549, 0.976471)
+RailColor = Color(0.517647, 0, 1, 0.976471)
 ExportInfluencers = [NodePath("../GravTester/GravTester")]
 FirstPointSpeed = Vector2(-30, 0)
 
