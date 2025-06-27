@@ -25,7 +25,7 @@ project/assembly_name="ImpactAlert v3"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/PhysicsRails2D/plugin.cfg", "res://addons/Rail2DAutomator/plugin.cfg", "res://addons/Transform2DInterpolation/plugin.cfg")
+enabled=PackedStringArray("res://addons/PhysicsRails2D/plugin.cfg", "res://addons/Rail2DAutomator/plugin.cfg", "res://addons/RailGravity2D/plugin.cfg", "res://addons/Transform2DInterpolation/plugin.cfg")
 
 [physics]
 
