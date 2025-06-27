@@ -5,10 +5,11 @@ using System;
 [Tool]
 public partial class Rail2DAutomator : EditorPlugin
 {
-	String GlobalPath = "res://addons/Rail2DAutomator/";
+	String GlobalPath;
 	public override void _EnterTree()
 	{
-		// Initialization of the plugin goes here.
+		// Initialization of the plugin goes here
+		GlobalPath = ((Resource)GetScript()).ResourcePath.GetBaseDir();
 		AddCustomType("RailAutomator", "Node", GD.Load<Script>(GlobalPath+"Nodes/RailAutomator/RailAutomator.cs"),
 		GD.Load<Texture2D>(GlobalPath+"Nodes/RailAutomator//icon.png"));
 		AddCustomType("AutoRailNode", "Node2D", GD.Load<Script>(GlobalPath+"Nodes/AutoRailNode/AutoRailNode.cs"),
