@@ -10,8 +10,8 @@ public partial class Transform2DInterpolation : EditorPlugin
 	{
 		// Initialization of the plugin goes here.
 		GlobalPath = ((Resource)GetScript()).ResourcePath.GetBaseDir();
-		AddCustomType("InterpolatorNode", "Node2D", GD.Load<Script>(GlobalPath+"Nodes/InterpolatorNode/InterpolatorNode.cs"),
-		GD.Load<Texture2D>(GlobalPath+"Nodes/InterpolatorNode//icon.png"));
+		AddCustomType("InterpolatorNode", "Node2D", GD.Load<Script>(GlobalPath+"/Nodes/InterpolatorNode/InterpolatorNode.cs"),
+		GD.Load<Texture2D>(GlobalPath+"/Nodes/InterpolatorNode//icon.png"));
 		GD.Print("Transform2DInterpolation loaded");
 	}
 

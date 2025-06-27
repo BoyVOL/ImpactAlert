@@ -10,8 +10,8 @@ public partial class PhysicsRails2D : EditorPlugin
 	{
 		GlobalPath = ((Resource)GetScript()).ResourcePath.GetBaseDir();
 		// Initialization of the plugin goes here.
-		AddCustomType("RailNode", "Node2D", GD.Load<Script>(GlobalPath+"Nodes/RailNode/RailNode.cs"),
-		GD.Load<Texture2D>(GlobalPath+"Nodes/RailNode//icon.png"));
+		AddCustomType("RailNode", "Node2D", GD.Load<Script>(GlobalPath+"/Nodes/RailNode/RailNode.cs"),
+		GD.Load<Texture2D>(GlobalPath+"/Nodes/RailNode//icon.png"));
 		GD.Print("PhysicsRails2D loaded");
 	}
 
