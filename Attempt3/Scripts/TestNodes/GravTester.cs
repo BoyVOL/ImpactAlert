@@ -26,9 +26,8 @@ public partial class GravTester : Node2D, IINfluencer
     /// </summary>
     /// <param name="point"></param>
     /// <param name="step"></param>
-    /// <param name="shift"></param>
-    public void Modify(RailPoint point, double step, double shift = 0)
+    public void Modify(RailPoint point, double step)
     {
-        point.Acceleration += GetGravAccel(point.Position,shift);
+        point.Acceleration += GetGravAccel(point.Position);
     }
 }

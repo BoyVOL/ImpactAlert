@@ -4,8 +4,9 @@
 [ext_resource type="Script" uid="uid://7pultjna17y7" path="res://addons/Transform2DInterpolation/Nodes/InterpolatorNode/InterpolatorNode.cs" id="2_jv8dv"]
 [ext_resource type="Texture2D" uid="uid://db5h8o611vwvl" path="res://Sprites/Ships/Starter ship.png" id="3_p6xbd"]
 
-[node name="AutoRailNode" type="Node2D"]
+[node name="AutoRailNode" type="Node2D" node_paths=PackedStringArray("ExportInfluencers")]
 script = ExtResource("1_q35tq")
+ExportInfluencers = []
 metadata/_custom_type_script = "uid://bjp5yijov043j"
 
 [node name="InterpolatorNode" type="Node2D" parent="."]

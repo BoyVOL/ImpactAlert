@@ -1,12 +1,21 @@
 using Godot;
+using PhysRails2D;
 using System;
 
-public partial class GravNode : Node
+public partial class GravNode : Node, IINfluencer
 {
     [Export]
     float Mass = 1000;
+    
+    RailNode Rail;
 
-    public Vector2 GetGravAccel(Vector2 AtPoint, Vector2 FromPoit, double shift = 0)
+    public override void _EnterTree()
+    {
+        base._EnterTree();
+        Rail = this.GetParent<RailNode>();
+    }
+
+    public Vector2 GetGravAccel(Vector2 AtPoint, Vector2 FromPoit)
     {
         Vector2 Pos = FromPoit;
         float RSqr = (Pos - AtPoint).LengthSquared();
@@ -14,9 +23,9 @@ public partial class GravNode : Node
         return (Pos - AtPoint).Normalized() * (float)Module;
     }
 
-    public Vector2 GetGravAccel(Vector2 AtPoint, double shift = 0)
+
+    public void Modify(RailPoint Point, double step)
     {
-        return GetGravAccel(AtPoint, GetParent<Node2D>().Position, shift);
+        Point.Acceleration += GetGravAccel(Point.Position,Rail.Items[Rail.Items.GetBeforeTime(Point.time)].Position);
     }
-    
 }

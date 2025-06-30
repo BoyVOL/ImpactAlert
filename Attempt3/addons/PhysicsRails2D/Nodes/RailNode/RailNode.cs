@@ -73,12 +73,11 @@ public partial class RailNode : Node2D
 	/// </summary>
 	/// <param name="point"></param>
 	/// <param name="step"></param>
-	/// <param name="shift"></param>
-	public void ModifyWithAll(RailPoint point, double step, double shift)
+	public void ModifyWithAll(RailPoint point, double step)
 	{
 		foreach (var item in Influencers)
 		{
-			item.Modify(point, step,shift);
+			item.Modify(point, step);
 		}
 	}
 
@@ -89,7 +88,7 @@ public partial class RailNode : Node2D
 	public void Simulate(double step)
 	{
 		Items.Simulate((float)step);
-		ModifyWithAll(Items.Last(), step, Items.Last().time);
+		ModifyWithAll(Items.Last(), step);
 	}
 
 	public override void _EnterTree()
@@ -153,8 +152,8 @@ public interface IINfluencer
 	/// <summary>
 	/// Method for accelerating a specific rail point
 	/// </summary>
-	/// <param name="railPoint"></param>
-	/// <param name="time">параметр для </param>
-	public void Modify(RailPoint railPoint, double time, double shift = 0);
+	/// <param name="railPoint">What point are we modifying</param>
+	/// <param name="time">what's time step of this modification</param>
+	public void Modify(RailPoint railPoint, double time);
 
 }
