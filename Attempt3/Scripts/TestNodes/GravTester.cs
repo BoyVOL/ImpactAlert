@@ -30,4 +30,9 @@ public partial class GravTester : Node2D, IINfluencer
     {
         point.Acceleration += GetGravAccel(point.Position);
     }
+
+    public RailNode GetOwnRail()
+    {
+        return Rail;
+    }
 }

@@ -20,6 +20,8 @@ public partial class RailNode : Node2D
 
 	public List<IINfluencer> Influencers = new List<IINfluencer>();
 
+	public List<IINfluencer> OnwInfs = new List<IINfluencer>();
+
 	/// <summary>
 	/// List af all points that predict movement of this object for certain period of time
 	/// </summary>
@@ -75,9 +77,9 @@ public partial class RailNode : Node2D
 	/// <param name="step"></param>
 	public void ModifyWithAll(RailPoint point, double step)
 	{
-		foreach (var item in Influencers)
+		foreach (IINfluencer item in Influencers)
 		{
-			item.Modify(point, step);
+			if(item.GetOwnRail() != this) item.Modify(point, step);
 		}
 	}
 
@@ -97,8 +99,15 @@ public partial class RailNode : Node2D
 		base._EnterTree();
 		if (ExportInfluencers != null)
 		{
-			foreach(var item in ExportInfluencers)
-			Influencers.Add((IINfluencer)item);
+			foreach (var item in ExportInfluencers)
+				Influencers.Add((IINfluencer)item);
+		}
+		foreach (var item in GetChildren())
+		{
+			if (item is IINfluencer)
+			{
+				this.OnwInfs.Add((IINfluencer)item);
+			}
 		}
 	}
 
@@ -156,4 +165,6 @@ public interface IINfluencer
 	/// <param name="time">what's time step of this modification</param>
 	public void Modify(RailPoint railPoint, double time);
 
+
+	public RailNode GetOwnRail();
 }

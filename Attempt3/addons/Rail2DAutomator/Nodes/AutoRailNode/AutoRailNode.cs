@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using PhysRails2D;
+using System.Linq;
 
 public partial class AutoRailNode : RailNode
 {
@@ -11,6 +12,8 @@ public partial class AutoRailNode : RailNode
         base._EnterTree();
         Automator = GetNode<RailAutomator>("/root/RailAutomator");
         Automator.rails.Add(this);
+        Automator.INfluencers.AddRange(OnwInfs);
+        Influencers = Automator.INfluencers;
     }
 
     public override void _ExitTree()

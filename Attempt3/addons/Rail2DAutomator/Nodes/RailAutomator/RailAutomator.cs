@@ -8,6 +8,8 @@ public partial class RailAutomator : Node
 
     public List<AutoRailNode> rails = new List<AutoRailNode>();
 
+    public List<PhysRails2D.IINfluencer> INfluencers = new List<IINfluencer>();
+
     [Export]
     public int PredictionCount = 100;
 

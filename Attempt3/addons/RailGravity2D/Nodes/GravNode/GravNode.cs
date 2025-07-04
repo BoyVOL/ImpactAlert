@@ -6,7 +6,7 @@ public partial class GravNode : Node, IINfluencer
 {
     [Export]
     float Mass = 1000;
-    
+
     RailNode Rail;
 
     public override void _EnterTree()
@@ -26,6 +26,11 @@ public partial class GravNode : Node, IINfluencer
 
     public void Modify(RailPoint Point, double step)
     {
-        Point.Acceleration += GetGravAccel(Point.Position,Rail.Items[Rail.Items.GetBeforeTime(Point.time)].Position);
+        Point.Acceleration += GetGravAccel(Point.Position, Rail.Items[Rail.Items.GetBeforeTime(Point.time)].Position);
+    }
+
+    public RailNode GetOwnRail()
+    {
+        return Rail;
     }
 }
